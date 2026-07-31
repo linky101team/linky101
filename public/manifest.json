@@ -1,0 +1,19 @@
+{
+  "name": "LinkY101",
+  "short_name": "LinkY101",
+  "description": "Networking and entrepreneurship for young people aged 13-18.",
+  "start_url": "/home",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

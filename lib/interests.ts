@@ -1,0 +1,16 @@
+export const INTEREST_TAGS = [
+  "Marketing",
+  "Branding",
+  "Finance",
+  "Tech",
+  "Social Media",
+  "Food & Drink",
+  "Fashion",
+  "Art & Design",
+  "Music",
+  "Sport",
+  "Environment",
+  "Gaming",
+  "Content Creation",
+  "Community",
+];
