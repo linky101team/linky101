@@ -47,7 +47,6 @@ export default function VerifyPage() {
           </div>
           <GradientButton
             variant="sky"
-            size="sm"
             className="mt-3 w-full"
             disabled={!email || status === "sending"}
             onClick={handleResend}

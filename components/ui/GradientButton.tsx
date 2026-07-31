@@ -1,24 +1,26 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
-export type GradientButtonVariant = "pink" | "yellow" | "green" | "sky" | "purple";
+export type GradientButtonVariant = "pink" | "green" | "yellow" | "ghost-pink" | "ghost-green" | "ghost-yellow" | "sky" | "purple";
 export type GradientButtonSize = "sm" | "md" | "lg";
 
 const VARIANT_CLASSES: Record<GradientButtonVariant, string> = {
-  pink: "bg-gradient-pink-purple border-pink shadow-glow-pink",
-  purple: "bg-gradient-purple-pink border-purple shadow-glow-purple",
-  sky: "bg-gradient-sky-purple border-sky shadow-glow-sky",
-  yellow: "bg-gradient-yellow-orange border-yellow shadow-glow-yellow text-ink",
-  green: "bg-gradient-green-sky border-green shadow-glow-green",
+  pink: "bg-[#FF6B6B] text-white",
+  green: "bg-[#2ECC71] text-white",
+  yellow: "bg-[#FFD93D] text-gray-900",
+  sky: "bg-[#039BE5] text-white",
+  purple: "bg-[#7C3AED] text-white",
+  "ghost-pink": "bg-transparent text-[#FF6B6B] border border-[#FF6B6B]",
+  "ghost-green": "bg-transparent text-[#2ECC71] border border-[#2ECC71]",
+  "ghost-yellow": "bg-transparent text-[#FFD93D] border border-[#FFD93D]",
 };
 
 const SIZE_CLASSES: Record<GradientButtonSize, string> = {
-  sm: "px-4 py-2 text-xs rounded-xl",
-  md: "px-6 py-3 text-sm rounded-2xl",
-  lg: "px-8 py-4 text-base rounded-2xl",
+  sm: "px-4 py-2 text-xs rounded-lg",
+  md: "px-6 py-3 text-sm rounded-xl",
+  lg: "px-8 py-4 text-base rounded-xl",
 };
 
-interface GradientButtonProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className"> {
+interface GradientButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className"> {
   variant?: GradientButtonVariant;
   size?: GradientButtonSize;
   children: ReactNode;
@@ -38,7 +40,7 @@ export default function GradientButton({
     <button
       type={type}
       disabled={disabled}
-      className={`border-3 font-black uppercase tracking-wide text-ink transition-transform active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100 ${VARIANT_CLASSES[variant]} ${SIZE_CLASSES[size]} ${className}`}
+      className={`font-bold transition-transform active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100 ${VARIANT_CLASSES[variant]} ${SIZE_CLASSES[size]} ${className}`}
       {...rest}
     >
       {children}

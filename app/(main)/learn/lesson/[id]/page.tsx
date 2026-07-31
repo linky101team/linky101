@@ -8,10 +8,7 @@ import { createClientSupabase } from "@/lib/supabase/client";
 import { completeCurriculumLesson } from "@/lib/actions/curriculum";
 import { useProfileStore } from "@/hooks/useProfile";
 import { getCategoryBySlug, CURRICULUM_COLOR_CLASSES } from "@/lib/curriculum";
-import { floatXP, floatCoins } from "@/lib/floatingRewards";
-import Confetti from "@/components/Confetti";
 import GradientButton from "@/components/ui/GradientButton";
-import LevelUpModal from "@/components/LevelUpModal";
 
 interface LessonSection {
   heading: string;
@@ -48,9 +45,9 @@ interface LessonData {
 }
 
 const TAKEAWAY_STYLES: Record<LessonTakeaway["color"], string> = {
-  yellow: "border-yellow bg-yellow/10 text-ink",
-  mint: "border-green bg-green/10 text-ink",
-  coral: "border-pink bg-pink/10 text-ink",
+  yellow: "border-[#FFD93D] bg-[#FFFDE7]",
+  mint: "border-[#4ECDC4] bg-[#E8F5E9]",
+  coral: "border-[#FF6B6B] bg-[#FFF0F0]",
 };
 
 type Stage = "reading" | "quiz" | "done";
@@ -72,10 +69,7 @@ export default function LessonDetailPage() {
   const [shake, setShake] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
-  const [xpEarned, setXpEarned] = useState(0);
-  const [coinsEarned, setCoinsEarned] = useState(0);
   const [firstCompletion, setFirstCompletion] = useState(false);
-  const [levelUp, setLevelUp] = useState<number | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -134,13 +128,8 @@ export default function LessonDetailPage() {
     try {
       const finalScore = score + (selected !== null && selected === lesson.content.quiz[qIndex].correct ? 1 : 0);
       const result = await completeCurriculumLesson(lesson.id, finalScore);
-      setXpEarned(result.xpEarned);
-      setCoinsEarned(result.coinsEarned);
       setFirstCompletion(result.firstCompletion);
-      if (result.xpEarned > 0) floatXP(result.xpEarned);
-      if (result.coinsEarned > 0) floatCoins(result.coinsEarned);
       refreshProfile();
-      if (result.leveledUp && result.newLevel) setLevelUp(result.newLevel);
     } finally {
       setSubmitting(false);
     }
@@ -148,16 +137,16 @@ export default function LessonDetailPage() {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg">
-        <p className="font-black uppercase text-text-muted">Loading lesson...</p>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#B3E5FC]">
+        <p className="font-semibold text-gray-500">Loading lesson...</p>
       </div>
     );
   }
 
   if (!lesson) {
     return (
-      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-bg p-6 text-center">
-        <p className="font-black uppercase text-ink">Lesson not found</p>
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-[#B3E5FC] p-6 text-center">
+        <p className="font-bold text-gray-900">Lesson not found</p>
         <GradientButton variant="sky" onClick={() => router.push("/learn")}>
           Back to Learn
         </GradientButton>
@@ -168,19 +157,19 @@ export default function LessonDetailPage() {
   const question = lesson.content.quiz[qIndex];
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-bg">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-[#B3E5FC]">
       <div className="relative mx-auto flex min-h-screen w-full max-w-[430px] flex-col px-5 py-6">
         <div className="mb-4 flex items-center justify-between">
           <button
             type="button"
             onClick={() => router.push("/learn")}
             aria-label="Back to Learn"
-            className="flex h-9 w-9 items-center justify-center rounded-full border-3 border-border bg-card text-text-muted"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500"
           >
-            <ChevronLeft className="h-5 w-5" strokeWidth={3} />
+            <ChevronLeft className="h-5 w-5" strokeWidth={2} />
           </button>
           {category && (
-            <span className={`rounded-full border-2 px-2 py-0.5 text-[9px] font-black uppercase tracking-wide ${colors.border} ${colors.text}`}>
+            <span className={`rounded-full px-3 py-1 text-xs font-semibold ${colors.bgLight} ${colors.text}`}>
               {category.emoji} {category.title}
             </span>
           )}
@@ -191,28 +180,28 @@ export default function LessonDetailPage() {
           <div className="flex flex-col gap-5 pb-24">
             <div className="text-center">
               <span className="text-5xl">{lesson.emoji}</span>
-              <h1 className="heading-game mt-2 text-xl">{lesson.title}</h1>
+              <h1 className="mt-2 text-xl font-bold text-gray-900">{lesson.title}</h1>
             </div>
 
-            <p className="rounded-2xl border-3 border-border bg-card p-4 text-sm font-bold text-ink shadow-card">
+            <div className="rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-700 shadow-sm">
               {lesson.content.intro}
-            </p>
+            </div>
 
             {lesson.content.sections.map((section, i) => (
               <div key={i} className="flex flex-col gap-1">
-                <p className={`text-sm font-black uppercase tracking-wide ${colors.text}`}>{section.heading}</p>
-                <p className="text-sm font-bold leading-relaxed text-ink">{section.body}</p>
+                <p className={`text-sm font-bold ${colors.text}`}>{section.heading}</p>
+                <p className="text-sm leading-relaxed text-gray-700">{section.body}</p>
               </div>
             ))}
 
             {lesson.content.takeaways?.map((takeaway, i) => (
-              <div key={i} className={`rounded-2xl border-3 p-4 text-sm font-bold ${TAKEAWAY_STYLES[takeaway.color]}`}>
-                💡 {takeaway.text}
+              <div key={i} className={`rounded-xl border p-4 text-sm text-gray-700 ${TAKEAWAY_STYLES[takeaway.color]}`}>
+                {takeaway.text}
               </div>
             ))}
 
             <GradientButton variant="sky" size="lg" className="mt-2 w-full" onClick={() => setStage("quiz")}>
-              {alreadyCompleted ? "Retake Mini-Quiz" : "Take the Mini-Quiz →"}
+              {alreadyCompleted ? "Retake Mini-Quiz" : "Take the Mini-Quiz"}
             </GradientButton>
           </div>
         )}
@@ -221,24 +210,24 @@ export default function LessonDetailPage() {
           <>
             <div className="mb-6 flex items-center justify-center gap-2">
               {lesson.content.quiz.map((_, i) => {
-                let dotClass = "border-border bg-transparent";
-                if (i < qIndex) dotClass = "border-green bg-green";
-                else if (i === qIndex) dotClass = `${colors.border} ${colors.bg} animate-pulse`;
+                let dotClass = "border-gray-200 bg-transparent";
+                if (i < qIndex) dotClass = "border-[#2ECC71] bg-[#2ECC71]";
+                else if (i === qIndex) dotClass = `border-gray-300 ${colors.bg} animate-pulse`;
                 return <span key={i} className={`h-2.5 w-2.5 shrink-0 rounded-full border-2 ${dotClass}`} />;
               })}
             </div>
 
             <motion.div animate={shake ? { x: [0, -8, 8, -8, 8, 0] } : { x: 0 }} transition={{ duration: 0.4 }}>
-              <h2 className="heading-game mb-6 text-lg">{question.question}</h2>
+              <h2 className="mb-6 text-lg font-bold text-gray-900">{question.question}</h2>
 
               <div className="flex flex-col gap-3">
                 {question.options.map((opt, i) => {
                   const isSelected = selected === i;
                   const isCorrectOption = i === question.correct;
-                  let stateClass = "border-border bg-card";
+                  let stateClass = "border-gray-200 bg-white";
                   if (selected !== null) {
-                    if (isCorrectOption) stateClass = "border-green bg-green/10 shadow-glow-green";
-                    else if (isSelected) stateClass = "border-orange bg-orange/10";
+                    if (isCorrectOption) stateClass = "border-[#2ECC71] bg-[#E8F5E9]";
+                    else if (isSelected) stateClass = "border-[#FF6B6B] bg-[#FFF0F0]";
                   }
                   return (
                     <button
@@ -246,11 +235,11 @@ export default function LessonDetailPage() {
                       type="button"
                       disabled={selected !== null}
                       onClick={() => handleSelect(i)}
-                      className={`flex items-center justify-between rounded-xl border-3 p-3 text-left text-sm font-bold text-ink ${stateClass}`}
+                      className={`flex items-center justify-between rounded-xl border p-3 text-left text-sm font-medium text-gray-900 transition-colors ${stateClass}`}
                     >
                       <span>{opt}</span>
-                      {selected !== null && isCorrectOption && <Check className="h-4 w-4 shrink-0 text-green" strokeWidth={3} />}
-                      {selected !== null && isSelected && !isCorrectOption && <X className="h-4 w-4 shrink-0 text-orange" strokeWidth={3} />}
+                      {selected !== null && isCorrectOption && <Check className="h-4 w-4 shrink-0 text-[#2ECC71]" strokeWidth={2.5} />}
+                      {selected !== null && isSelected && !isCorrectOption && <X className="h-4 w-4 shrink-0 text-[#FF6B6B]" strokeWidth={2.5} />}
                     </button>
                   );
                 })}
@@ -258,8 +247,8 @@ export default function LessonDetailPage() {
             </motion.div>
 
             {selected !== null && question.explanation && (
-              <div className="mt-4 rounded-xl border-3 border-sky bg-card p-3 text-sm font-bold text-text-muted shadow-card">
-                💡 {question.explanation}
+              <div className="mt-4 rounded-xl border border-gray-200 bg-white p-3 text-sm text-gray-600 shadow-sm">
+                {question.explanation}
               </div>
             )}
 
@@ -273,23 +262,19 @@ export default function LessonDetailPage() {
 
         {stage === "done" && (
           <div className="relative flex flex-1 flex-col items-center justify-center gap-3 text-center">
-            {firstCompletion && <Confetti />}
             <span className="text-5xl">{firstCompletion ? "🎉" : "✅"}</span>
-            <h1 className="heading-game text-2xl">Lesson Complete!</h1>
-            <p className="text-sm font-bold text-text-muted">
+            <h1 className="text-2xl font-bold text-gray-900">Lesson Complete!</h1>
+            <p className="text-sm text-gray-500">
               {score}/{lesson.content.quiz.length} correct on the mini-quiz
             </p>
 
             {submitting ? (
-              <p className="text-sm font-bold text-text-muted">Saving your progress...</p>
+              <p className="text-sm text-gray-500">Saving your progress...</p>
             ) : firstCompletion ? (
-              <div className="flex flex-col items-center gap-1">
-                <p className="text-lg font-black text-sky">+{xpEarned} XP earned!</p>
-                <p className="text-lg font-black text-yellow">+{coinsEarned} 🪙 LinkCoins earned!</p>
-              </div>
+              <p className="text-sm font-semibold text-[#2ECC71]">Great job! Progress saved.</p>
             ) : (
-              <p className="text-sm font-bold text-text-muted">
-                No extra rewards — you&apos;ve already completed this lesson before.
+              <p className="text-sm text-gray-500">
+                You&apos;ve already completed this lesson before.
               </p>
             )}
 
@@ -298,8 +283,6 @@ export default function LessonDetailPage() {
             </GradientButton>
           </div>
         )}
-
-        <LevelUpModal isOpen={levelUp !== null} newLevel={levelUp ?? 1} onClose={() => setLevelUp(null)} />
       </div>
     </div>
   );
