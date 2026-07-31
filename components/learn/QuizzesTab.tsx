@@ -62,12 +62,14 @@ export default function QuizzesTab() {
 
   return (
     <div className="flex flex-col gap-5 pb-24">
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
+      <div className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1">
         <button
           type="button"
           onClick={() => setActiveCategory("all")}
-          className={`shrink-0 rounded-full border-3 px-3 py-1.5 text-xs font-black uppercase tracking-wide ${
-            activeCategory === "all" ? "border-pink bg-pink text-white shadow-glow-pink" : "border-border text-text-muted"
+          className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold transition-all active:scale-95 ${
+            activeCategory === "all"
+              ? "bg-[#1A1A2E] text-white shadow-sm"
+              : "border border-gray-200 bg-white text-gray-500"
           }`}
         >
           All
@@ -79,8 +81,10 @@ export default function QuizzesTab() {
               key={key}
               type="button"
               onClick={() => setActiveCategory(key)}
-              className={`shrink-0 rounded-full border-3 px-3 py-1.5 text-xs font-black uppercase tracking-wide ${
-                activeCategory === key ? `${style.border} ${style.text} bg-card shadow-glow-pink` : "border-border text-text-muted"
+              className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold transition-all active:scale-95 ${
+                activeCategory === key
+                  ? `${style.bg} ${style.text} shadow-sm`
+                  : "border border-gray-200 bg-white text-gray-500"
               }`}
             >
               {style.emoji} {style.label}
@@ -96,7 +100,11 @@ export default function QuizzesTab() {
       </div>
 
       {filteredQuizzes.length === 0 && (
-        <p className="py-8 text-center text-sm font-bold text-text-muted">No quizzes in this category yet.</p>
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm">
+          <span className="text-4xl">🧠</span>
+          <p className="mt-2 font-bold text-gray-900">No quizzes here yet</p>
+          <p className="text-sm text-gray-500">New quizzes drop every week — check back soon.</p>
+        </div>
       )}
     </div>
   );

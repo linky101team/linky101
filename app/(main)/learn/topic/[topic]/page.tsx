@@ -125,15 +125,28 @@ export default function LearnTopicPage() {
           type="button"
           onClick={() => router.push("/discover")}
           aria-label="Back to Discover"
-          className="flex h-9 w-9 items-center justify-center rounded-full border-3 border-border bg-card text-text-muted"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-transform active:scale-95"
         >
-          <ChevronLeft className="h-5 w-5" strokeWidth={3} />
+          <ChevronLeft className="h-5 w-5" strokeWidth={2.5} />
         </button>
-        <span className="text-sm font-black uppercase tracking-wide text-pink">Topic: {topic}</span>
+        <span className="font-bold text-gray-900">{topic}</span>
       </div>
 
       {posts.length === 0 && !loading && (
-        <p className="text-sm font-bold text-text-muted">No posts on this topic yet — check back soon!</p>
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm">
+          <span className="text-4xl">💡</span>
+          <p className="mt-2 font-bold text-gray-900">Nothing on {topic} yet</p>
+          <p className="mt-1 text-sm text-gray-500">
+            Be the first — share a tip or question about {topic.toLowerCase()} on the Feed.
+          </p>
+          <button
+            type="button"
+            onClick={() => router.push("/community")}
+            className="mt-4 rounded-full bg-[#1A1A2E] px-5 py-2 text-sm font-bold text-white transition-transform active:scale-95"
+          >
+            Go to Feed →
+          </button>
+        </div>
       )}
 
       <div className="flex flex-col gap-4">
@@ -166,15 +179,15 @@ export default function LearnTopicPage() {
         })}
       </div>
 
-      {loading && <p className="text-center text-sm font-bold text-text-muted">Loading...</p>}
+      {loading && <p className="text-center text-sm font-semibold text-gray-400">Loading...</p>}
 
       {hasMore && !loading && posts.length > 0 && (
         <button
           type="button"
           onClick={handleLoadMore}
-          className="rounded-xl border-3 border-border bg-card py-2 text-sm font-black uppercase text-text-muted"
+          className="rounded-xl border border-gray-200 bg-white py-2.5 text-sm font-semibold text-gray-600 shadow-sm transition-transform active:scale-[0.98]"
         >
-          Load More
+          Load more
         </button>
       )}
     </div>

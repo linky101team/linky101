@@ -146,8 +146,8 @@ export default function SignupPage() {
     <main className="auth-gradient-bg flex min-h-screen flex-col items-center justify-center px-5 py-10">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Join Link<span className="text-[#FF6B6B]">Y</span>101
+          <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">
+            Join LinkY<span className="text-[#F5B301]">101</span>
           </h1>
           <p className="mt-1 text-sm text-gray-600">
             Start your entrepreneurship journey
@@ -293,7 +293,7 @@ export default function SignupPage() {
                     type="checkbox"
                     checked={parentalConsent}
                     onChange={(e) => setParentalConsent(e.target.checked)}
-                    className="mt-1 h-5 w-5 shrink-0 accent-[#FF6B6B]"
+                    className="mt-1 h-5 w-5 shrink-0 accent-[#2ECC71]"
                   />
                   A parent or guardian has agreed to me using LinkY101
                 </label>

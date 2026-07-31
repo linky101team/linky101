@@ -1,36 +1,26 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
-import { Lock } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { Crown } from "lucide-react";
 import { createClientSupabase } from "@/lib/supabase/client";
 import { useProfile } from "@/hooks/useProfile";
-import { getXPForLevel, getXPToNextLevel } from "@/lib/levels";
-import { toggleFollow } from "@/lib/actions/follows";
-import SectionTitle from "@/components/ui/SectionTitle";
-import MentorCard, { type Mentor } from "@/components/mentors/MentorCard";
-import MentorProfileModal from "@/components/mentors/MentorProfileModal";
+import { AMBASSADORS } from "@/lib/ambassadors";
+import type { Mentor } from "@/components/mentors/MentorCard";
 import QuestionCard, { type MentorQuestion } from "@/components/mentors/QuestionCard";
 import AskQuestionModal from "@/components/mentors/AskQuestionModal";
-
-const LEVEL_GATE = 15;
 
 export default function MentorsPage() {
   const { profile } = useProfile();
   const supabase = useMemo(() => createClientSupabase(), []);
 
   const [mentors, setMentors] = useState<Mentor[]>([]);
-  const [answerCounts, setAnswerCounts] = useState<Map<string, number>>(new Map());
-  const [following, setFollowing] = useState<Set<string>>(new Set());
   const [questions, setQuestions] = useState<MentorQuestion[]>([]);
   const [ratedQuestionIds, setRatedQuestionIds] = useState<Set<string>>(new Set());
   const [tab, setTab] = useState<"all" | "mine">("all");
   const [loading, setLoading] = useState(true);
   const [showAsk, setShowAsk] = useState(false);
-  const [profileMentor, setProfileMentor] = useState<Mentor | null>(null);
-  const [, startTransition] = useTransition();
-
-  const level = profile?.level ?? 1;
-  const unlocked = level >= LEVEL_GATE;
+  const [expanded, setExpanded] = useState<string | null>(null);
 
   async function loadQuestions() {
     const { data } = await supabase
@@ -45,7 +35,7 @@ export default function MentorsPage() {
   }
 
   useEffect(() => {
-    if (!profile || !unlocked) return;
+    if (!profile) return;
 
     async function load() {
       const { data: mentorRows } = await supabase
@@ -53,27 +43,6 @@ export default function MentorsPage() {
         .select("id, display_name, bio, expertise, is_verified, avatar_url, rating_avg, rating_count")
         .eq("is_active", true);
       setMentors(mentorRows ?? []);
-
-      if (mentorRows && mentorRows.length > 0) {
-        const ids = mentorRows.map((m) => m.id);
-        const { data: answered } = await supabase
-          .from("mentor_questions")
-          .select("answered_by")
-          .in("answered_by", ids);
-
-        const counts = new Map<string, number>();
-        (answered ?? []).forEach((a) => {
-          if (a.answered_by) counts.set(a.answered_by, (counts.get(a.answered_by) ?? 0) + 1);
-        });
-        setAnswerCounts(counts);
-
-        const { data: follows } = await supabase
-          .from("follows")
-          .select("following_id")
-          .eq("follower_id", profile!.id)
-          .in("following_id", ids);
-        setFollowing(new Set((follows ?? []).map((f) => f.following_id)));
-      }
 
       const { data: myRatings } = await supabase
         .from("mentor_ratings")
@@ -86,99 +55,123 @@ export default function MentorsPage() {
     }
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile, unlocked, supabase]);
-
-  function handleToggleFollow(mentorId: string) {
-    const wasFollowing = following.has(mentorId);
-    setFollowing((prev) => {
-      const next = new Set(prev);
-      if (wasFollowing) next.delete(mentorId);
-      else next.add(mentorId);
-      return next;
-    });
-    startTransition(async () => {
-      try {
-        await toggleFollow(mentorId);
-      } catch {
-        setFollowing((prev) => {
-          const next = new Set(prev);
-          if (wasFollowing) next.add(mentorId);
-          else next.delete(mentorId);
-          return next;
-        });
-      }
-    });
-  }
+  }, [profile, supabase]);
 
   if (!profile) {
-    return <p className="text-sm font-bold text-text-muted">Loading...</p>;
-  }
-
-  if (!unlocked) {
-    const xpNeeded = getXPToNextLevel(level, profile.xp) ?? Math.max(0, getXPForLevel(LEVEL_GATE) - profile.xp);
-    return (
-      <div className="relative min-h-[60vh] overflow-hidden">
-        <div className="pointer-events-none select-none space-y-4 opacity-40 blur-sm">
-          <div className="h-20 rounded-[18px] border-3 border-sky bg-card" />
-          <div className="h-32 rounded-[18px] border-3 border-green bg-card" />
-          <div className="h-32 rounded-[18px] border-3 border-border bg-card" />
-        </div>
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center">
-          <Lock className="h-8 w-8 text-sky" strokeWidth={3} />
-          <p className="heading-game text-xl">Mentor Q&amp;A</p>
-          <p className="text-sm font-bold text-text-muted">Unlocks at Level {LEVEL_GATE}</p>
-          <p className="rounded-full border-3 border-sky bg-card px-4 py-2 text-xs font-black uppercase text-sky shadow-glow-sky">
-            You&apos;re Level {level} — {xpNeeded} XP to go!
-          </p>
-        </div>
-      </div>
-    );
+    return <p className="text-sm font-semibold text-gray-400">Loading...</p>;
   }
 
   const visibleQuestions =
     tab === "mine" ? questions.filter((q) => q.asked_by === profile.id) : questions;
 
   return (
-    <div className="flex flex-col gap-6 pb-16">
-      <SectionTitle emoji="🤝" title="Mentors" />
+    <div className="flex flex-col gap-5 pb-16">
+      <div>
+        <h1 className="text-lg font-bold text-gray-900">🌟 Ambassadors</h1>
+        <p className="text-sm text-gray-500">
+          Real people who share their story and want to help young founders grow
+        </p>
+      </div>
 
-      {mentors.length > 0 && (
-        <div className="flex gap-3 overflow-x-auto pb-2">
-          {mentors.map((m) => (
-            <MentorCard
-              key={m.id}
-              mentor={m}
-              answersCount={answerCounts.get(m.id) ?? 0}
-              isFollowing={following.has(m.id)}
-              canFollow={m.id !== profile.id}
-              onToggleFollow={() => handleToggleFollow(m.id)}
-              onOpenProfile={() => setProfileMentor(m)}
-            />
-          ))}
-        </div>
-      )}
+      <div className="flex flex-col gap-3">
+        {AMBASSADORS.map((a) => {
+          const isOpen = expanded === a.id;
+          return (
+            <div key={a.id} className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+              <div className="flex items-center gap-3">
+                <span
+                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-base font-bold text-white"
+                  style={{ backgroundColor: a.color }}
+                >
+                  {a.initials}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="font-bold leading-snug text-gray-900">{a.name}</p>
+                  <p className="truncate text-xs text-gray-500">{a.role}</p>
+                  <div className="mt-1.5 flex flex-wrap gap-1">
+                    {a.tags.map((t) => (
+                      <span
+                        key={t.label}
+                        className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${t.bg} ${t.text}`}
+                      >
+                        {t.label}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setExpanded(isOpen ? null : a.id)}
+                  className="shrink-0 rounded-full bg-[#1A1A2E] px-4 py-2 text-sm font-bold text-white transition-transform active:scale-95"
+                >
+                  {isOpen ? "Close" : "View →"}
+                </button>
+              </div>
 
-      <div className="flex gap-2 rounded-xl border-3 border-border bg-card p-1">
+              {isOpen && (
+                <div className="mt-3 border-t border-gray-100 pt-3">
+                  <p className="text-sm leading-relaxed text-gray-600">{a.bio}</p>
+                  <Link
+                    href="/premium"
+                    className="mt-3 flex items-center justify-center gap-1.5 rounded-full bg-[#FFF7DB] py-2.5 text-sm font-bold text-[#B8860B] transition-transform active:scale-[0.98]"
+                  >
+                    <Crown className="h-4 w-4" strokeWidth={2.5} />
+                    Message 1-on-1 — Pro
+                  </Link>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="rounded-2xl bg-[#FFF8E1] p-4">
+        <p className="font-bold text-gray-900">💡 Become an Ambassador</p>
+        <p className="mt-1 text-sm leading-relaxed text-gray-600">
+          Give 10 minutes of your story and inspire the next generation of founders.
+        </p>
+        <Link
+          href="/feedback"
+          className="mt-3 inline-block rounded-full bg-[#1A1A2E] px-5 py-2 text-sm font-bold text-white transition-transform active:scale-95"
+        >
+          Get in touch →
+        </Link>
+      </div>
+
+      <div className="mt-1">
+        <h2 className="font-bold text-gray-900">❓ Ask them anything</h2>
+        <p className="text-sm text-gray-500">
+          Post a question — the best ones get answered publicly every week
+        </p>
+      </div>
+
+      <div className="flex gap-2 rounded-full border border-gray-200 bg-white p-1 shadow-sm">
         {(["all", "mine"] as const).map((t) => (
           <button
             key={t}
             type="button"
             onClick={() => setTab(t)}
-            className={`flex-1 rounded-lg py-2 text-xs font-black uppercase ${
-              tab === t ? "bg-gradient-sky-purple text-white" : "text-text-muted"
+            className={`flex-1 rounded-full py-2 text-xs font-bold transition-all ${
+              tab === t ? "bg-[#1A1A2E] text-white" : "text-gray-500"
             }`}
           >
-            {t === "all" ? "All Questions" : "My Questions"}
+            {t === "all" ? "All questions" : "My questions"}
           </button>
         ))}
       </div>
 
       {loading ? (
-        <p className="text-sm font-bold text-text-muted">Loading...</p>
+        <p className="text-sm font-semibold text-gray-400">Loading...</p>
       ) : visibleQuestions.length === 0 ? (
-        <p className="text-sm font-bold text-text-muted">
-          {tab === "mine" ? "You haven't asked anything yet." : "No questions yet — be the first!"}
-        </p>
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm">
+          <span className="text-4xl">❓</span>
+          <p className="mt-2 font-bold text-gray-900">
+            {tab === "mine" ? "You haven't asked anything yet" : "No questions yet"}
+          </p>
+          <p className="text-sm text-gray-500">
+            Tap + and ask — what would you love to know from a real founder?
+          </p>
+        </div>
       ) : (
         <div className="flex flex-col gap-3">
           {visibleQuestions.map((q) => (
@@ -192,13 +185,13 @@ export default function MentorsPage() {
         </div>
       )}
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-40 z-30">
-        <div className="mx-auto max-w-[430px] px-4">
+      <div className="pointer-events-none fixed inset-x-0 bottom-24 z-30">
+        <div className="mx-auto max-w-[430px] px-5">
           <button
             type="button"
             onClick={() => setShowAsk(true)}
             aria-label="Ask a question"
-            className="pointer-events-auto ml-auto flex h-14 w-14 items-center justify-center rounded-full border-3 border-sky bg-gradient-sky-purple text-2xl font-black text-white shadow-glow-sky"
+            className="pointer-events-auto ml-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#1A1A2E] text-2xl font-bold text-white shadow-lg transition-transform active:scale-90"
           >
             +
           </button>
@@ -210,12 +203,6 @@ export default function MentorsPage() {
         mentors={mentors}
         onClose={() => setShowAsk(false)}
         onSubmitted={loadQuestions}
-      />
-
-      <MentorProfileModal
-        mentor={profileMentor}
-        answersCount={profileMentor ? answerCounts.get(profileMentor.id) ?? 0 : 0}
-        onClose={() => setProfileMentor(null)}
       />
     </div>
   );

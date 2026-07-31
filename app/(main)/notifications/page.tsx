@@ -86,7 +86,7 @@ export default function NotificationsPage() {
           <button
             type="button"
             onClick={handleMarkAllRead}
-            className="text-xs font-black uppercase tracking-wide text-sky"
+            className="text-xs font-bold text-[#039BE5]"
           >
             Mark all read
           </button>
@@ -94,9 +94,13 @@ export default function NotificationsPage() {
       </div>
 
       {loading ? (
-        <p className="text-sm font-bold text-text-muted">Loading...</p>
+        <p className="text-sm font-semibold text-gray-400">Loading...</p>
       ) : notifications.length === 0 ? (
-        <p className="text-sm font-bold text-text-muted">You&apos;re all caught up — no notifications yet.</p>
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm">
+          <span className="text-4xl">🔔</span>
+          <p className="mt-2 font-bold text-gray-900">All caught up</p>
+          <p className="text-sm text-gray-500">Nothing new right now — go build something.</p>
+        </div>
       ) : (
         <div className="flex flex-col gap-2">
           {notifications.map((n) => (
@@ -104,17 +108,17 @@ export default function NotificationsPage() {
               key={n.id}
               type="button"
               onClick={() => handleTap(n)}
-              className={`flex items-start gap-3 rounded-xl border-3 p-3 text-left ${
-                n.is_read ? "border-border bg-card" : "border-pink bg-pink/5 shadow-glow-pink"
+              className={`flex items-start gap-3 rounded-2xl border p-3.5 text-left shadow-sm transition-transform active:scale-[0.98] ${
+                n.is_read ? "border-gray-200 bg-white" : "border-[#039BE5] bg-[#F0F9FF]"
               }`}
             >
               <span className="text-xl">{TYPE_ICON[n.type] ?? "🔔"}</span>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-black text-ink">{n.title}</p>
-                {n.body && <p className="text-xs font-bold text-text-muted">{n.body}</p>}
-                <p className="mt-1 text-[10px] font-bold uppercase text-text-muted">{timeAgo(n.created_at)}</p>
+                <p className="text-sm font-bold text-gray-900">{n.title}</p>
+                {n.body && <p className="text-xs text-gray-500">{n.body}</p>}
+                <p className="mt-1 text-[11px] text-gray-400">{timeAgo(n.created_at)}</p>
               </div>
-              {!n.is_read && <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-pink" />}
+              {!n.is_read && <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-[#039BE5]" />}
             </button>
           ))}
         </div>

@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
-export type GradientButtonVariant = "pink" | "green" | "yellow" | "ghost-pink" | "ghost-green" | "ghost-yellow" | "sky" | "purple";
+export type GradientButtonVariant = "pink" | "green" | "yellow" | "ghost-pink" | "ghost-green" | "ghost-yellow" | "sky" | "purple" | "dark";
 export type GradientButtonSize = "sm" | "md" | "lg";
 
 const VARIANT_CLASSES: Record<GradientButtonVariant, string> = {
@@ -9,6 +9,7 @@ const VARIANT_CLASSES: Record<GradientButtonVariant, string> = {
   yellow: "bg-[#FFD93D] text-gray-900",
   sky: "bg-[#039BE5] text-white",
   purple: "bg-[#7C3AED] text-white",
+  dark: "bg-[#1A1A2E] text-white",
   "ghost-pink": "bg-transparent text-[#FF6B6B] border border-[#FF6B6B]",
   "ghost-green": "bg-transparent text-[#2ECC71] border border-[#2ECC71]",
   "ghost-yellow": "bg-transparent text-[#FFD93D] border border-[#FFD93D]",

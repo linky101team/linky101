@@ -46,8 +46,8 @@ export default function LoginPage() {
     <main className="auth-gradient-bg flex min-h-screen flex-col items-center justify-center px-5 py-10">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Link<span className="text-[#FF6B6B]">Y</span>101
+          <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">
+            LinkY<span className="text-[#F5B301]">101</span>
           </h1>
           <p className="mt-1 text-sm text-gray-600">
             Your professional network — before LinkedIn
@@ -90,18 +90,18 @@ export default function LoginPage() {
 
             <Button
               type="submit"
-              variant="pink"
+              variant="dark"
               disabled={submitting}
               className="w-full"
             >
-              {submitting ? "Logging in..." : "Log In"}
+              {submitting ? "Signing in..." : "Sign In"}
             </Button>
           </form>
         </Card>
 
         <p className="mt-6 text-center text-sm text-gray-600">
           New to LinkY101?{" "}
-          <Link href="/signup" className="text-[#FF6B6B] hover:underline">
+          <Link href="/signup" className="font-semibold text-[#039BE5] hover:underline">
             Join now
           </Link>
         </p>

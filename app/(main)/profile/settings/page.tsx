@@ -16,7 +16,7 @@ import GradientButton from "@/components/ui/GradientButton";
 import SectionTitle from "@/components/ui/SectionTitle";
 
 const fieldClass =
-  "w-full rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none";
+  "w-full rounded-xl border border-gray-200 bg-white px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#039BE5] focus:outline-none focus:ring-1 focus:ring-[#039BE5]";
 
 interface PrivacySettings {
   hide_activity?: boolean;
@@ -35,13 +35,13 @@ function PrivacyToggle({
 }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <span className="text-sm font-bold text-ink">{label}</span>
+      <span className="text-sm font-medium text-gray-800">{label}</span>
       <button
         type="button"
         onClick={() => onChange(!checked)}
         aria-pressed={checked}
-        className={`h-6 w-11 shrink-0 rounded-full border-3 p-0.5 transition-colors ${
-          checked ? "border-sky bg-sky/40" : "border-border bg-navy/60"
+        className={`h-6 w-11 shrink-0 rounded-full p-0.5 transition-colors ${
+          checked ? "bg-[#2ECC71]" : "bg-gray-300"
         }`}
       >
         <span
@@ -180,7 +180,7 @@ export default function ProfileSettingsPage() {
   }
 
   if (!profile) {
-    return <p className="text-sm font-bold text-text-muted">Loading settings...</p>;
+    return <p className="text-sm font-semibold text-gray-400">Loading settings...</p>;
   }
 
   return (
@@ -193,17 +193,17 @@ export default function ProfileSettingsPage() {
       </div>
 
       <GameCard borderColor="pink" glowColor="pink">
-        <p className="mb-3 text-xs font-black uppercase tracking-wide text-pink">Edit Profile</p>
+        <p className="mb-3 text-sm font-bold text-gray-900">Edit Profile</p>
         <div className="flex flex-col gap-3">
           <div>
-            <label className="mb-1 block text-xs font-black uppercase tracking-wide text-text-muted">
+            <label className="mb-1 block text-xs font-semibold text-gray-500">
               First Name
             </label>
             <input value={firstName} onChange={(e) => setFirstName(e.target.value)} className={fieldClass} />
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-black uppercase tracking-wide text-text-muted">
+            <label className="mb-1 block text-xs font-semibold text-gray-500">
               Headline
             </label>
             <input
@@ -215,7 +215,7 @@ export default function ProfileSettingsPage() {
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-black uppercase tracking-wide text-text-muted">
+            <label className="mb-1 block text-xs font-semibold text-gray-500">
               My Dream
             </label>
             <textarea
@@ -225,11 +225,11 @@ export default function ProfileSettingsPage() {
               placeholder="What do you want to build one day?"
               className={fieldClass}
             />
-            <p className="mt-1 text-right text-xs font-bold text-text-muted">{dream.length}/500</p>
+            <p className="mt-1 text-right text-xs font-semibold text-gray-400">{dream.length}/500</p>
           </div>
 
           <div>
-            <label className="mb-2 block text-xs font-black uppercase tracking-wide text-text-muted">
+            <label className="mb-2 block text-xs font-semibold text-gray-500">
               Interests
             </label>
             <div className="flex flex-wrap gap-2">
@@ -240,10 +240,10 @@ export default function ProfileSettingsPage() {
                     key={tag}
                     type="button"
                     onClick={() => toggleInterest(tag)}
-                    className={`rounded-full border-3 px-3 py-1 text-xs font-black uppercase tracking-wide ${
+                    className={`rounded-full px-3 py-1.5 text-xs font-bold transition-all active:scale-95 ${
                       selected
-                        ? "border-pink bg-gradient-pink-purple text-white shadow-glow-pink"
-                        : "border-border bg-navy/40 text-text-muted"
+                        ? "bg-[#1A1A2E] text-white shadow-sm"
+                        : "border border-gray-200 bg-white text-gray-500"
                     }`}
                   >
                     {tag}
@@ -253,16 +253,16 @@ export default function ProfileSettingsPage() {
             </div>
           </div>
 
-          <GradientButton variant="pink" disabled={saving} onClick={handleSaveProfile}>
+          <GradientButton variant="dark" disabled={saving} onClick={handleSaveProfile}>
             {saving ? "Saving..." : "Save Changes"}
           </GradientButton>
-          {saveError && <p className="text-center text-xs font-bold text-orange">{saveError}</p>}
-          {savedMsg && <p className="text-center text-xs font-bold text-green">{savedMsg}</p>}
+          {saveError && <p className="text-center text-xs font-semibold text-[#FF6B6B]">{saveError}</p>}
+          {savedMsg && <p className="text-center text-xs font-semibold text-[#2ECC71]">{savedMsg}</p>}
         </div>
       </GameCard>
 
       <GameCard borderColor="sky" glowColor="sky">
-        <p className="mb-3 text-xs font-black uppercase tracking-wide text-sky">Privacy</p>
+        <p className="mb-3 text-sm font-bold text-gray-900">Privacy</p>
         <div className="flex flex-col gap-3">
           <PrivacyToggle
             label="Hide my activity from my school"
@@ -280,13 +280,13 @@ export default function ProfileSettingsPage() {
             onChange={(v) => setPrivacy((p) => ({ ...p, hide_dream: v }))}
           />
         </div>
-        <GradientButton variant="sky" size="sm" className="mt-4 w-full" disabled={saving} onClick={handleSaveProfile}>
+        <GradientButton variant="dark" size="sm" className="mt-4 w-full" disabled={saving} onClick={handleSaveProfile}>
           {saving ? "Saving..." : "Save Privacy Settings"}
         </GradientButton>
       </GameCard>
 
       <GameCard borderColor="purple" glowColor="purple">
-        <p className="mb-3 text-xs font-black uppercase tracking-wide text-purple">Notifications</p>
+        <p className="mb-3 text-sm font-bold text-gray-900">Notifications</p>
         <div className="flex flex-col gap-3">
           <PrivacyToggle
             label="Push Notifications"
@@ -318,12 +318,12 @@ export default function ProfileSettingsPage() {
             </>
           )}
         </div>
-        {notifBusy && <p className="mt-2 text-xs font-bold text-text-muted">Updating...</p>}
-        {notifError && <p className="mt-2 text-xs font-bold text-orange">{notifError}</p>}
+        {notifBusy && <p className="mt-2 text-xs font-semibold text-gray-400">Updating...</p>}
+        {notifError && <p className="mt-2 text-xs font-semibold text-[#FF6B6B]">{notifError}</p>}
       </GameCard>
 
       <GameCard borderColor="purple" glowColor="purple">
-        <p className="mb-3 text-xs font-black uppercase tracking-wide text-purple">Password</p>
+        <p className="mb-3 text-sm font-bold text-gray-900">Password</p>
         <div className="flex flex-col gap-2">
           <input
             type="password"
@@ -339,29 +339,29 @@ export default function ProfileSettingsPage() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             className={fieldClass}
           />
-          {passwordError && <p className="text-xs font-bold text-orange">{passwordError}</p>}
-          {passwordMsg && <p className="text-xs font-bold text-green">{passwordMsg}</p>}
-          <GradientButton variant="purple" size="sm" className="mt-1 w-full" onClick={handleChangePassword}>
+          {passwordError && <p className="text-xs font-semibold text-[#FF6B6B]">{passwordError}</p>}
+          {passwordMsg && <p className="text-xs font-semibold text-[#2ECC71]">{passwordMsg}</p>}
+          <GradientButton variant="dark" size="sm" className="mt-1 w-full" onClick={handleChangePassword}>
             Update Password
           </GradientButton>
         </div>
       </GameCard>
 
       <GameCard borderColor="yellow" glowColor="yellow">
-        <p className="mb-2 text-xs font-black uppercase tracking-wide text-yellow">Premium</p>
+        <p className="mb-2 text-sm font-bold text-gray-900">Premium</p>
         {profile.is_premium ? (
-          <p className="text-sm font-bold text-ink">
-            ✨ You&apos;re a Premium member
+          <p className="text-sm font-semibold text-gray-800">
+            👑 You&apos;re a Pro member
             {profile.premium_until ? ` until ${new Date(profile.premium_until).toLocaleDateString()}` : ""}.
           </p>
         ) : (
           <>
             <p className="mb-3 text-sm font-bold text-text-muted">
-              Free plan — Premium unlocks a second daily spin, exclusive events, and more.
+              Free plan — Pro unlocks 1-on-1 mentors, the AI coach, pitch reviews and more.
             </p>
             <Link href="/premium">
               <GradientButton variant="yellow" size="sm" className="w-full">
-                Upgrade to Premium ✨
+                See LinkY101 Pro 👑
               </GradientButton>
             </Link>
           </>
@@ -369,26 +369,26 @@ export default function ProfileSettingsPage() {
       </GameCard>
 
       <GameCard borderColor="sky" glowColor="sky">
-        <p className="mb-3 text-xs font-black uppercase tracking-wide text-sky">Replay Tutorials</p>
+        <p className="mb-3 text-sm font-bold text-gray-900">Replay Tutorials</p>
         <div className="flex flex-col gap-2">
           {TOURS.map((tour) => (
             <button
               key={tour.id}
               type="button"
               onClick={() => router.push(`${TOUR_PAGE[tour.id]}?tour=${tour.id}`)}
-              className="flex items-center justify-between rounded-xl border-3 border-border bg-navy/40 px-3 py-2 text-left"
+              className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-3.5 py-2.5 text-left shadow-sm transition-transform active:scale-[0.98]"
             >
-              <span className="text-sm font-bold text-ink">
+              <span className="text-sm font-medium text-gray-800">
                 {tour.emoji} {tour.label} Tour
               </span>
-              <span className="text-[10px] font-black uppercase text-sky">Replay</span>
+              <span className="text-xs font-bold text-[#039BE5]">Replay</span>
             </button>
           ))}
         </div>
       </GameCard>
 
       <GameCard borderColor="green" glowColor="green">
-        <p className="mb-3 text-xs font-black uppercase tracking-wide text-green">Help & Feedback</p>
+        <p className="mb-3 text-sm font-bold text-gray-900">Help & Feedback</p>
         <div className="flex gap-2">
           <Link href="/help" className="flex-1">
             <GradientButton variant="green" size="sm" className="w-full">
@@ -404,8 +404,8 @@ export default function ProfileSettingsPage() {
       </GameCard>
 
       <GameCard borderColor="border">
-        <p className="mb-2 text-xs font-black uppercase tracking-wide text-text-muted">About LinkY101</p>
-        <p className="text-sm font-bold text-text-muted">
+        <p className="mb-2 text-xs font-semibold text-gray-500">About LinkY101</p>
+        <p className="text-sm leading-relaxed text-gray-600">
           LinkY101 is a networking and entrepreneurship platform built for young people aged 13–18 to
           connect, learn, and launch their ideas.
         </p>
@@ -413,22 +413,22 @@ export default function ProfileSettingsPage() {
           <button
             type="button"
             onClick={() => setShowTerms((v) => !v)}
-            className="text-left text-xs font-black uppercase text-sky"
+            className="text-left text-xs font-bold text-[#039BE5]"
           >
             Terms of Service {showTerms ? "▲" : "▼"}
           </button>
           {showTerms && (
-            <p className="text-xs font-bold text-text-muted">Full terms of service coming soon.</p>
+            <p className="text-xs text-gray-500">Full terms of service coming soon.</p>
           )}
           <button
             type="button"
             onClick={() => setShowPrivacy((v) => !v)}
-            className="text-left text-xs font-black uppercase text-sky"
+            className="text-left text-xs font-bold text-[#039BE5]"
           >
             Privacy Policy {showPrivacy ? "▲" : "▼"}
           </button>
           {showPrivacy && (
-            <p className="text-xs font-bold text-text-muted">Full privacy policy coming soon.</p>
+            <p className="text-xs text-gray-500">Full privacy policy coming soon.</p>
           )}
         </div>
       </GameCard>

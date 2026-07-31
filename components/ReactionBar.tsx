@@ -58,8 +58,10 @@ export default function ReactionBar({ postId, counts: initialCounts, active: ini
             key={type}
             type="button"
             onClick={() => handleTap(type)}
-            className={`flex items-center gap-1 rounded-full border-3 px-2 py-1 text-xs font-black transition-colors ${
-              isActive ? "border-pink bg-pink/20 text-pink" : "border-border bg-navy/40 text-text-muted"
+            className={`flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold transition-all active:scale-90 ${
+              isActive
+                ? "bg-[#FFF0F0] text-[#FF6B6B]"
+                : "border border-gray-200 bg-white text-gray-500"
             }`}
           >
             <span>{emoji}</span>

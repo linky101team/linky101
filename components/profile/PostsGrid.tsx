@@ -11,12 +11,12 @@ interface Post {
 }
 
 const CATEGORY_STYLE: Record<string, { emoji: string; gradient: string }> = {
-  win: { emoji: "🏆", gradient: "bg-gradient-green-sky" },
-  question: { emoji: "❓", gradient: "bg-gradient-pink-purple" },
-  idea: { emoji: "💡", gradient: "bg-gradient-yellow-orange" },
-  tip: { emoji: "🛠️", gradient: "bg-gradient-yellow-orange" },
-  motivation: { emoji: "🚀", gradient: "bg-gradient-purple-pink" },
-  tool_review: { emoji: "🧰", gradient: "bg-gradient-sky-purple" },
+  win: { emoji: "🏆", gradient: "bg-[#E8F5E9]" },
+  question: { emoji: "❓", gradient: "bg-[#E3F2FD]" },
+  idea: { emoji: "💡", gradient: "bg-[#FFF8E1]" },
+  tip: { emoji: "🛠️", gradient: "bg-[#FFF0F0]" },
+  motivation: { emoji: "🚀", gradient: "bg-[#F3E8FF]" },
+  tool_review: { emoji: "🧰", gradient: "bg-gray-100" },
 };
 
 interface PostsGridProps {
@@ -46,9 +46,9 @@ export default function PostsGrid({ userId }: PostsGridProps) {
 
   return (
     <div>
-      <p className="mb-3 font-black uppercase tracking-wide text-ink">🗂️ Posts</p>
+      <p className="mb-3 font-bold text-gray-900">Posts</p>
       {posts.length === 0 ? (
-        <p className="text-sm font-bold text-text-muted">No posts yet.</p>
+        <p className="text-sm text-gray-500">No posts yet.</p>
       ) : (
         <div className="grid grid-cols-3 gap-2">
           {posts.map((p) => {
@@ -56,10 +56,10 @@ export default function PostsGrid({ userId }: PostsGridProps) {
             return (
               <div
                 key={p.id}
-                className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-xl border-3 border-border p-2 text-center ${style.gradient}`}
+                className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-xl p-2 text-center shadow-sm ${style.gradient}`}
               >
                 <span className="text-xl">{style.emoji}</span>
-                <span className="line-clamp-2 text-[10px] font-black text-ink">
+                <span className="line-clamp-2 text-[10px] font-semibold text-gray-700">
                   {p.title ?? p.body?.slice(0, 40) ?? "Post"}
                 </span>
               </div>

@@ -14,13 +14,13 @@ export interface Opportunity {
   location: string | null;
 }
 
-const CATEGORY_STYLE: Record<string, { border: string; glow: string; emoji: string; label: string }> = {
-  competition: { border: "border-yellow", glow: "shadow-glow-yellow", emoji: "🏆", label: "Competition" },
-  grant: { border: "border-green", glow: "shadow-glow-green", emoji: "💰", label: "Grant" },
-  work_experience: { border: "border-sky", glow: "shadow-glow-sky", emoji: "💼", label: "Work Experience" },
-  mentorship: { border: "border-purple", glow: "shadow-glow-purple", emoji: "🤝", label: "Mentorship" },
-  event: { border: "border-pink", glow: "shadow-glow-pink", emoji: "📅", label: "Event" },
-  resource: { border: "border-orange", glow: "shadow-glow-yellow", emoji: "📚", label: "Resource" },
+const CATEGORY_STYLE: Record<string, { tile: string; chipBg: string; chipText: string; emoji: string; label: string }> = {
+  competition: { tile: "bg-[#FFF8E1]", chipBg: "bg-[#FFF8E1]", chipText: "text-[#B8860B]", emoji: "🏆", label: "Competition" },
+  grant: { tile: "bg-[#E8F5E9]", chipBg: "bg-[#E8F5E9]", chipText: "text-[#2ECC71]", emoji: "💰", label: "Grant" },
+  work_experience: { tile: "bg-[#E3F2FD]", chipBg: "bg-[#E3F2FD]", chipText: "text-[#039BE5]", emoji: "💼", label: "Work Experience" },
+  mentorship: { tile: "bg-[#F3E8FF]", chipBg: "bg-[#F3E8FF]", chipText: "text-[#7C3AED]", emoji: "🤝", label: "Mentorship" },
+  event: { tile: "bg-[#FFF0F0]", chipBg: "bg-[#FFF0F0]", chipText: "text-[#FF6B6B]", emoji: "📅", label: "Event" },
+  resource: { tile: "bg-gray-100", chipBg: "bg-gray-100", chipText: "text-gray-600", emoji: "📚", label: "Resource" },
 };
 
 function daysUntil(dateStr: string): number {
@@ -48,55 +48,58 @@ export default function OpportunityCard({
   const closingSoon = days !== null && days >= 0 && days < 7;
 
   return (
-    <div className={`rounded-[18px] border-3 bg-card p-4 ${style.border} ${style.glow}`}>
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <span
-          className={`rounded-full border-2 ${style.border} px-2 py-0.5 text-[10px] font-black uppercase text-ink`}
-        >
-          {style.emoji} {style.label}
-        </span>
-        {closingSoon && (
-          <span className="rounded-full bg-orange px-2 py-0.5 text-[10px] font-black uppercase text-ink">
-            ⚡ Closing Soon
-          </span>
-        )}
-        {hasApplied && (
-          <span className="flex items-center gap-1 rounded-full border-2 border-green px-2 py-0.5 text-[10px] font-black uppercase text-green">
-            <Check className="h-3 w-3" strokeWidth={4} /> Applied
-          </span>
-        )}
+    <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+      <div className="flex gap-3">
+        <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-2xl ${style.tile}`}>
+          {style.emoji}
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-bold leading-snug text-gray-900">{opportunity.title}</h3>
+            {closingSoon && (
+              <span className="shrink-0 rounded-full bg-[#FFF0F0] px-2 py-0.5 text-[10px] font-bold text-[#FF6B6B]">
+                ⚡ {days === 0 ? "Closes today" : `${days}d left`}
+              </span>
+            )}
+          </div>
+          <div className="mt-1 flex flex-wrap items-center gap-1.5">
+            <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${style.chipBg} ${style.chipText}`}>
+              {style.label}
+            </span>
+            {(opportunity.age_min || opportunity.age_max) && (
+              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-500">
+                Ages {opportunity.age_min ?? "13"}–{opportunity.age_max ?? "18"}
+              </span>
+            )}
+            {opportunity.location && (
+              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-500">
+                📍 {opportunity.location}
+              </span>
+            )}
+          </div>
+        </div>
       </div>
 
-      <h3 className="heading-game mb-1 text-base">{opportunity.title}</h3>
       {opportunity.description && (
-        <p className="mb-2 line-clamp-2 text-sm font-bold text-text-muted">{opportunity.description}</p>
+        <p className="mt-2.5 line-clamp-2 text-sm leading-relaxed text-gray-600">{opportunity.description}</p>
       )}
 
-      <div className="mb-3 flex flex-wrap gap-x-3 gap-y-1 text-xs font-bold text-text-muted">
-        {(opportunity.age_min || opportunity.age_max) && (
-          <span>
-            Ages {opportunity.age_min ?? "13"}–{opportunity.age_max ?? "18"}
-          </span>
-        )}
-        {opportunity.deadline && (
-          <span className={closingSoon ? "text-orange" : ""}>
-            📆 {new Date(opportunity.deadline).toLocaleDateString()}
-            {days !== null && days >= 0 && ` (${days}d left)`}
-          </span>
-        )}
-        {opportunity.location && <span>📍 {opportunity.location}</span>}
-      </div>
+      {opportunity.deadline && !closingSoon && (
+        <p className="mt-1.5 text-xs font-semibold text-gray-400">
+          📆 Closes {new Date(opportunity.deadline).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+        </p>
+      )}
 
-      <div className="flex items-center gap-2">
+      <div className="mt-3 flex items-center gap-2">
         <button
           type="button"
           onClick={onToggleSave}
-          className={`flex items-center gap-1 rounded-xl border-3 px-3 py-2 text-xs font-black uppercase ${
-            isSaved ? "border-pink bg-pink/10 text-pink" : "border-border text-text-muted"
+          aria-label={isSaved ? "Unsave" : "Save"}
+          className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all active:scale-90 ${
+            isSaved ? "border-[#FF6B6B] bg-[#FFF0F0] text-[#FF6B6B]" : "border-gray-200 bg-white text-gray-400"
           }`}
         >
-          <Bookmark className="h-3.5 w-3.5" fill={isSaved ? "currentColor" : "none"} strokeWidth={2.5} />
-          Save
+          <Bookmark className="h-4 w-4" fill={isSaved ? "currentColor" : "none"} strokeWidth={2} />
         </button>
 
         {opportunity.link && (
@@ -104,9 +107,9 @@ export default function OpportunityCard({
             href={opportunity.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 rounded-xl border-3 border-sky bg-gradient-sky-purple py-2 text-center text-xs font-black uppercase text-white"
+            className="flex-1 rounded-full bg-[#1A1A2E] py-2 text-center text-sm font-bold text-white transition-transform active:scale-[0.98]"
           >
-            Learn More →
+            View →
           </a>
         )}
 
@@ -114,11 +117,19 @@ export default function OpportunityCard({
           <button
             type="button"
             onClick={onToggleApplied}
-            className={`rounded-xl border-3 px-3 py-2 text-xs font-black uppercase ${
-              hasApplied ? "border-green bg-green/10 text-green" : "border-border text-text-muted"
+            className={`rounded-full border px-3 py-2 text-xs font-bold transition-all active:scale-95 ${
+              hasApplied
+                ? "border-[#2ECC71] bg-[#E8F5E9] text-[#2ECC71]"
+                : "border-gray-200 bg-white text-gray-500"
             }`}
           >
-            {hasApplied ? "✓ Applied" : "I Applied!"}
+            {hasApplied ? (
+              <span className="flex items-center gap-1">
+                <Check className="h-3 w-3" strokeWidth={3} /> Applied
+              </span>
+            ) : (
+              "I applied!"
+            )}
           </button>
         )}
       </div>

@@ -1,22 +1,54 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Check, X } from "lucide-react";
+import { Check, Crown } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
 import { isPremium } from "@/lib/premium";
 import { startCheckout } from "@/lib/actions/premium";
-import GameCard from "@/components/ui/GameCard";
-import GradientButton from "@/components/ui/GradientButton";
-import SectionTitle from "@/components/ui/SectionTitle";
 
 const FEATURES = [
-  { emoji: "🧠", label: "Exclusive quizzes" },
-  { emoji: "✨", label: "Premium flair" },
-  { emoji: "🤝", label: "Priority mentor access" },
-  { emoji: "📊", label: "Post analytics" },
-  { emoji: "🎡", label: "2 daily spins" },
-  { emoji: "🚀", label: "Early access to new features" },
-  { emoji: "🎓", label: "Monthly live masterclass" },
+  {
+    emoji: "🤝",
+    tile: "bg-[#E3F2FD]",
+    title: "1-on-1 mentor messaging",
+    desc: "Message real founders and industry experts directly",
+  },
+  {
+    emoji: "🤖",
+    tile: "bg-[#F3E8FF]",
+    title: "AI business coach",
+    desc: "Instant answers on pricing, marketing and your next move",
+  },
+  {
+    emoji: "🎤",
+    tile: "bg-[#FFF0F0]",
+    title: "Pitch deck reviews",
+    desc: "Get real feedback on your pitch before the big moment",
+  },
+  {
+    emoji: "📄",
+    tile: "bg-[#E8F5E9]",
+    title: "CV & portfolio builder",
+    desc: "Turn everything you do on LinkY101 into a CV that stands out",
+  },
+  {
+    emoji: "🎓",
+    tile: "bg-[#FFF8E1]",
+    title: "Exclusive workshops",
+    desc: "Live masterclasses with founders who've actually done it",
+  },
+  {
+    emoji: "⚡",
+    tile: "bg-[#E1F5FE]",
+    title: "Early access to opportunities",
+    desc: "See new competitions and placements before anyone else",
+  },
+  {
+    emoji: "👑",
+    tile: "bg-[#FFF7DB]",
+    title: "Pro badge",
+    desc: "Stand out across the Feed and your profile",
+  },
 ];
 
 export default function PremiumPage() {
@@ -43,93 +75,96 @@ export default function PremiumPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="rounded-[18px] border-3 border-pink bg-gradient-pink-purple p-6 text-center shadow-glow-pink">
-        <p className="text-3xl">✨</p>
-        <h1 className="heading-game mt-2 text-2xl text-ink">Go Premium</h1>
-        <p className="mt-1 text-sm font-bold text-ink/90">
-          Level up faster with exclusive tools built for young founders.
+    <div className="flex flex-col gap-5 pb-16">
+      <div className="rounded-2xl bg-[#1A1A2E] p-6 text-center">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FFD93D]">
+          <Crown className="h-7 w-7 text-[#1A1A2E]" strokeWidth={2.5} />
+        </div>
+        <h1 className="mt-3 text-2xl font-extrabold text-white">
+          LinkY101 <span className="text-[#FFD93D]">Pro</span>
+        </h1>
+        <p className="mx-auto mt-1.5 max-w-[280px] text-sm leading-relaxed text-white/70">
+          Everything you need to go from idea to income.
         </p>
       </div>
 
       {alreadyPremium && (
-        <GameCard borderColor="yellow" glowColor="yellow" className="text-center">
-          <p className="font-black uppercase text-yellow">✨ You&apos;re already Premium!</p>
+        <div className="rounded-2xl border border-[#FFD93D] bg-[#FFF7DB] p-4 text-center">
+          <p className="font-bold text-[#B8860B]">👑 You&apos;re already Pro!</p>
           {profile?.premium_until && (
-            <p className="mt-1 text-xs font-bold text-text-muted">
-              Renews {new Date(profile.premium_until).toLocaleDateString()}
+            <p className="mt-1 text-xs font-semibold text-gray-500">
+              Renews {new Date(profile.premium_until).toLocaleDateString("en-GB")}
             </p>
           )}
-        </GameCard>
+        </div>
       )}
 
-      <div>
-        <SectionTitle emoji="⚔️" title="Free vs Premium" className="mb-3" />
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-[18px] border-3 border-border bg-card p-4">
-            <p className="mb-3 text-center text-xs font-black uppercase text-text-muted">Free</p>
-            <div className="flex flex-col gap-2">
-              {FEATURES.map((f) => (
-                <div key={f.label} className="flex items-center gap-2 text-xs font-bold text-text-muted">
-                  <X className="h-3.5 w-3.5 shrink-0 text-orange" strokeWidth={3} />
-                  <span className="line-through opacity-60">{f.label}</span>
-                </div>
-              ))}
+      <div className="flex flex-col gap-2.5">
+        {FEATURES.map((f) => (
+          <div key={f.title} className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-3.5 shadow-sm">
+            <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-xl ${f.tile}`}>
+              {f.emoji}
             </div>
-          </div>
-
-          <div className="rounded-[18px] border-3 border-yellow bg-card p-4 shadow-glow-yellow">
-            <p className="mb-3 text-center text-xs font-black uppercase text-yellow">✨ Premium</p>
-            <div className="flex flex-col gap-2">
-              {FEATURES.map((f) => (
-                <div key={f.label} className="flex items-center gap-2 text-xs font-bold text-ink">
-                  <Check className="h-3.5 w-3.5 shrink-0 text-green" strokeWidth={3} />
-                  <span>
-                    {f.emoji} {f.label}
-                  </span>
-                </div>
-              ))}
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-bold text-gray-900">{f.title}</p>
+              <p className="text-xs leading-snug text-gray-500">{f.desc}</p>
             </div>
+            <Check className="h-4 w-4 shrink-0 text-[#2ECC71]" strokeWidth={3} />
           </div>
-        </div>
+        ))}
       </div>
 
       {!alreadyPremium && (
         <>
-          <div className="flex gap-2 rounded-xl border-3 border-border bg-card p-1">
+          <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               onClick={() => setPlan("monthly")}
-              className={`flex-1 rounded-lg py-3 text-center text-xs font-black uppercase ${
-                plan === "monthly" ? "bg-gradient-pink-purple text-white" : "text-text-muted"
+              className={`rounded-2xl border-2 p-4 text-left transition-all active:scale-[0.98] ${
+                plan === "monthly" ? "border-[#1A1A2E] bg-white shadow-sm" : "border-gray-200 bg-white"
               }`}
             >
-              Monthly
-              <span className="block text-sm font-black">£3.99/mo</span>
+              <p className="text-xs font-bold text-gray-500">Monthly</p>
+              <p className="mt-1 text-xl font-extrabold text-gray-900">£4.99</p>
+              <p className="text-xs text-gray-400">per month</p>
             </button>
+
             <button
               type="button"
               onClick={() => setPlan("yearly")}
-              className={`flex-1 rounded-lg py-3 text-center text-xs font-black uppercase ${
-                plan === "yearly" ? "bg-gradient-pink-purple text-white" : "text-text-muted"
+              className={`relative rounded-2xl border-2 p-4 text-left transition-all active:scale-[0.98] ${
+                plan === "yearly" ? "border-[#1A1A2E] bg-white shadow-sm" : "border-gray-200 bg-white"
               }`}
             >
-              Yearly <span className="text-green">save 37%</span>
-              <span className="block text-sm font-black">£29.99/yr</span>
+              <span className="absolute -top-2.5 right-3 rounded-full bg-[#2ECC71] px-2 py-0.5 text-[10px] font-bold text-white">
+                SAVE 50%
+              </span>
+              <p className="text-xs font-bold text-gray-500">Yearly</p>
+              <p className="mt-1 text-xl font-extrabold text-gray-900">£29.99</p>
+              <p className="text-xs text-gray-400">£2.50/month · best value</p>
             </button>
           </div>
 
-          {errorMsg && <p className="text-center text-sm font-bold text-orange">{errorMsg}</p>}
+          {errorMsg && <p className="text-center text-sm font-semibold text-[#FF6B6B]">{errorMsg}</p>}
 
-          <GradientButton variant="pink" size="lg" className="w-full" disabled={loading} onClick={handleUpgrade}>
-            {loading ? "Redirecting..." : "Upgrade Now ✨"}
-          </GradientButton>
+          <button
+            type="button"
+            disabled={loading}
+            onClick={handleUpgrade}
+            className="w-full rounded-full bg-[#1A1A2E] py-4 text-base font-bold text-white shadow-sm transition-transform active:scale-[0.98] disabled:opacity-40"
+          >
+            {loading ? "Redirecting..." : "Unlock Pro ✨"}
+          </button>
+
+          <p className="-mt-2 text-center text-xs font-semibold text-gray-400">
+            Cancel anytime · No hidden fees
+          </p>
         </>
       )}
 
-      <p className="text-center text-xs font-bold text-text-muted">
-        👨‍👩‍👧 A parent or guardian should be involved in any purchase. Subscriptions can be cancelled
-        anytime from Settings.
+      <p className="text-center text-xs leading-relaxed text-gray-400">
+        👨‍👩‍👧 A parent or guardian should be involved in any purchase. Subscriptions can be
+        cancelled anytime from Settings.
       </p>
     </div>
   );

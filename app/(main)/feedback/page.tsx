@@ -98,8 +98,8 @@ export default function FeedbackPage() {
               key={c.value}
               type="button"
               onClick={() => setCategory(c.value)}
-              className={`rounded-full border-3 px-3 py-1.5 text-xs font-black uppercase tracking-wide ${
-                category === c.value ? "border-pink bg-pink text-white shadow-glow-pink" : "border-border text-text-muted"
+              className={`rounded-full px-3.5 py-1.5 text-xs font-bold transition-all active:scale-95 ${
+                category === c.value ? "bg-[#1A1A2E] text-white shadow-sm" : "border border-gray-200 bg-white text-gray-500"
               }`}
             >
               {c.label}
@@ -111,7 +111,7 @@ export default function FeedbackPage() {
           value={subject}
           onChange={(e) => setSubject(e.target.value.slice(0, SUBJECT_MAX))}
           placeholder="Subject"
-          className="w-full rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none"
+          className="w-full rounded-xl border border-gray-200 bg-white px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#039BE5] focus:outline-none"
         />
 
         <textarea
@@ -119,7 +119,7 @@ export default function FeedbackPage() {
           onChange={(e) => setMessage(e.target.value.slice(0, MESSAGE_MAX))}
           rows={5}
           placeholder="Tell us what's going on..."
-          className="w-full rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none"
+          className="w-full rounded-xl border border-gray-200 bg-white px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#039BE5] focus:outline-none"
         />
         <p className="text-right text-[10px] font-bold text-text-muted">{message.length}/{MESSAGE_MAX}</p>
 
@@ -133,14 +133,14 @@ export default function FeedbackPage() {
 
       {history.length > 0 && (
         <div>
-          <p className="mb-3 font-black uppercase tracking-wide text-ink">Your Messages</p>
+          <p className="mb-3 font-bold text-gray-900">Your messages</p>
           <div className="flex flex-col gap-2">
             {history.map((f) => (
               <GameCard key={f.id} borderColor="border">
                 <div className="mb-1 flex items-center justify-between gap-2">
-                  <span className="text-sm font-black text-ink">{f.subject}</span>
+                  <span className="text-sm font-bold text-gray-900">{f.subject}</span>
                   <span
-                    className={`shrink-0 rounded-full border-2 px-2 py-0.5 text-[9px] font-black uppercase ${
+                    className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${
                       STATUS_STYLE[f.status] ?? STATUS_STYLE.pending
                     }`}
                   >
@@ -149,8 +149,8 @@ export default function FeedbackPage() {
                 </div>
                 <p className="mb-1 text-xs font-bold text-text-muted">{f.message}</p>
                 {f.admin_response && (
-                  <div className="mt-2 rounded-xl border-3 border-green bg-green/10 p-2">
-                    <p className="text-[10px] font-black uppercase text-green">LinkY101 Team:</p>
+                  <div className="mt-2 rounded-xl bg-[#E8F5E9] p-2.5">
+                    <p className="text-[11px] font-bold text-[#1E8E5A]">LinkY101 Team</p>
                     <p className="text-xs font-bold text-text-muted">{f.admin_response}</p>
                   </div>
                 )}

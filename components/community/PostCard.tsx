@@ -4,14 +4,22 @@ import ReactionBar from "@/components/ReactionBar";
 import ReportButton from "@/components/ReportButton";
 import type { CommunityPost, ReactionState } from "./types";
 
-const CATEGORY_STYLE: Record<string, { border: string; glow: string; emoji: string }> = {
-  win: { border: "border-green", glow: "shadow-glow-green", emoji: "🏆" },
-  question: { border: "border-pink", glow: "shadow-glow-pink", emoji: "❓" },
-  idea: { border: "border-orange", glow: "shadow-glow-yellow", emoji: "💡" },
-  tip: { border: "border-yellow", glow: "shadow-glow-yellow", emoji: "🛠️" },
-  motivation: { border: "border-purple", glow: "shadow-glow-purple", emoji: "🚀" },
-  tool_review: { border: "border-sky", glow: "shadow-glow-sky", emoji: "🧰" },
+const CATEGORY_STYLE: Record<string, { chipBg: string; chipText: string; emoji: string; label: string }> = {
+  win: { chipBg: "bg-[#E8F5E9]", chipText: "text-[#2ECC71]", emoji: "🏆", label: "Win" },
+  question: { chipBg: "bg-[#E3F2FD]", chipText: "text-[#039BE5]", emoji: "❓", label: "Question" },
+  idea: { chipBg: "bg-[#FFF8E1]", chipText: "text-[#B8860B]", emoji: "💡", label: "Idea" },
+  tip: { chipBg: "bg-[#FFF0F0]", chipText: "text-[#FF6B6B]", emoji: "🛠️", label: "Tip" },
+  motivation: { chipBg: "bg-[#F3E8FF]", chipText: "text-[#7C3AED]", emoji: "🚀", label: "Motivation" },
+  tool_review: { chipBg: "bg-gray-100", chipText: "text-gray-600", emoji: "🧰", label: "Tool Review" },
 };
+
+const AVATAR_COLORS = ["#FF6B6B", "#FFC107", "#2ECC71", "#039BE5", "#A78BFA", "#F5A623"];
+
+export function avatarColor(name: string): string {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) | 0;
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
 
 interface PostCardProps {
   post: CommunityPost;
@@ -19,8 +27,6 @@ interface PostCardProps {
   commentCount: number;
   commentsOpen: boolean;
   onToggleComments: () => void;
-  onBumpGold?: () => void;
-  canBumpGold: boolean;
   children?: React.ReactNode;
 }
 
@@ -30,63 +36,47 @@ export default function PostCard({
   commentCount,
   commentsOpen,
   onToggleComments,
-  onBumpGold,
-  canBumpGold,
   children,
 }: PostCardProps) {
   const style = CATEGORY_STYLE[post.category] ?? CATEGORY_STYLE.tip;
-  const isGold = post.is_gold;
+  const name = post.author?.first_name ?? "Member";
 
   return (
-    <div
-      className={`rounded-[18px] border-3 bg-card p-4 ${
-        isGold ? "border-yellow shadow-glow-yellow" : `${style.border} ${style.glow}`
-      }`}
-    >
-      <div className="mb-2 flex items-center gap-2">
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-3 border-pink bg-gradient-pink-purple text-xs font-black text-white">
-          {post.author?.first_name?.charAt(0).toUpperCase() ?? "?"}
+    <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+      <div className="mb-2.5 flex items-center gap-2.5">
+        <span
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
+          style={{ backgroundColor: avatarColor(name) }}
+        >
+          {name.charAt(0).toUpperCase()}
         </span>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-black text-ink">{post.author?.first_name ?? "Member"}</p>
+          <p className="truncate text-sm font-bold text-gray-900">{name}</p>
         </div>
-        {isGold ? (
-          <span className="shrink-0 rounded-full bg-gradient-yellow-orange px-2 py-0.5 text-[10px] font-black uppercase text-ink">
-            ⭐ Gold Post
-          </span>
-        ) : (
-          <span
-            className={`shrink-0 rounded-full border-2 ${style.border} px-2 py-0.5 text-[10px] font-black uppercase text-text-muted`}
-          >
-            {style.emoji} {post.category.replace("_", " ")}
+        {post.is_gold && (
+          <span className="shrink-0 rounded-full bg-[#FFF8E1] px-2 py-0.5 text-[10px] font-bold text-[#B8860B]">
+            ⭐ Featured
           </span>
         )}
+        <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${style.chipBg} ${style.chipText}`}>
+          {style.emoji} {style.label}
+        </span>
         <ReportButton reportedType="post" reportedId={post.id} className="shrink-0" />
       </div>
 
-      {post.title && <h3 className="heading-game mb-1 text-base">{post.title}</h3>}
-      {post.body && <p className="mb-3 line-clamp-3 text-sm font-bold text-text-muted">{post.body}</p>}
+      {post.title && <h3 className="mb-1 font-bold leading-snug text-gray-900">{post.title}</h3>}
+      {post.body && <p className="mb-3 line-clamp-4 text-sm leading-relaxed text-gray-600">{post.body}</p>}
 
       <div className="flex items-center justify-between gap-2">
         <ReactionBar postId={post.id} counts={reaction.counts} active={reaction.active} />
         <button
           type="button"
           onClick={onToggleComments}
-          className="flex items-center gap-1 text-xs font-black text-text-muted"
+          className="flex items-center gap-1 text-xs font-semibold text-gray-500 transition-transform active:scale-95"
         >
           💬 {commentCount}
         </button>
       </div>
-
-      {!isGold && canBumpGold && (
-        <button
-          type="button"
-          onClick={onBumpGold}
-          className="mt-3 w-full rounded-xl border-3 border-yellow bg-navy/40 py-1.5 text-xs font-black uppercase text-yellow"
-        >
-          ⬆️ Bump to Gold
-        </button>
-      )}
 
       {commentsOpen && children}
     </div>

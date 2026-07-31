@@ -20,6 +20,8 @@ interface SchoolResult {
   name: string;
 }
 
+const AVATAR_COLORS = ["#FF6B6B", "#FFC107", "#2ECC71", "#039BE5", "#A78BFA"];
+
 export default function SearchBar() {
   const supabase = useMemo(() => createClientSupabase(), []);
   const [query, setQuery] = useState("");
@@ -65,18 +67,19 @@ export default function SearchBar() {
   return (
     <div className="relative">
       <div className="relative">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
+        <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search founders, posts, schools..."
-          className="w-full rounded-xl border-3 border-border bg-card py-3 pl-9 pr-9 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none"
+          className="w-full rounded-full border border-gray-200 bg-white py-3 pl-10 pr-10 text-sm font-medium text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-[#039BE5] focus:outline-none focus:ring-1 focus:ring-[#039BE5]"
         />
         {query && (
           <button
             type="button"
             onClick={() => setQuery("")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted"
+            aria-label="Clear search"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
           >
             <X className="h-4 w-4" />
           </button>
@@ -84,22 +87,24 @@ export default function SearchBar() {
       </div>
 
       {showPanel && (
-        <div className="absolute z-20 mt-2 w-full rounded-xl border-3 border-pink bg-card p-3 shadow-glow-pink">
-          {loading && <p className="text-xs font-bold text-text-muted">Searching...</p>}
+        <div className="absolute z-20 mt-2 w-full rounded-2xl border border-gray-200 bg-white p-3 shadow-lg">
+          {loading && <p className="text-xs font-semibold text-gray-400">Searching...</p>}
           {!loading && !hasResults && (
-            <p className="text-xs font-bold text-text-muted">No results for &quot;{query}&quot;</p>
+            <p className="text-xs font-semibold text-gray-400">No results for &quot;{query}&quot;</p>
           )}
 
           {profiles.length > 0 && (
             <div className="mb-2">
-              <p className="mb-1 text-[10px] font-black uppercase tracking-wide text-pink">Founders</p>
-              {profiles.map((p) => (
-                <div key={p.id} className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-navy/40">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-pink-purple text-[10px] font-black text-white">
+              <p className="mb-1 text-[10px] font-bold uppercase tracking-wide text-gray-400">Founders</p>
+              {profiles.map((p, i) => (
+                <div key={p.id} className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-gray-50">
+                  <span
+                    className="flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold text-white"
+                    style={{ backgroundColor: AVATAR_COLORS[i % AVATAR_COLORS.length] }}
+                  >
                     {p.first_name.charAt(0).toUpperCase()}
                   </span>
-                  <span className="text-sm font-bold text-ink">{p.first_name}</span>
-                  <span className="ml-auto text-xs font-bold text-text-muted">Lv {p.level}</span>
+                  <span className="text-sm font-semibold text-gray-900">{p.first_name}</span>
                 </div>
               ))}
             </div>
@@ -107,10 +112,10 @@ export default function SearchBar() {
 
           {posts.length > 0 && (
             <div className="mb-2">
-              <p className="mb-1 text-[10px] font-black uppercase tracking-wide text-sky">Posts</p>
+              <p className="mb-1 text-[10px] font-bold uppercase tracking-wide text-gray-400">Posts</p>
               {posts.map((p) => (
-                <div key={p.id} className="rounded-lg px-2 py-1.5 hover:bg-navy/40">
-                  <p className="truncate text-sm font-bold text-ink">{p.title ?? p.body}</p>
+                <div key={p.id} className="rounded-lg px-2 py-1.5 hover:bg-gray-50">
+                  <p className="truncate text-sm font-semibold text-gray-900">{p.title ?? p.body}</p>
                 </div>
               ))}
             </div>
@@ -118,10 +123,10 @@ export default function SearchBar() {
 
           {schools.length > 0 && (
             <div>
-              <p className="mb-1 text-[10px] font-black uppercase tracking-wide text-purple">Schools</p>
+              <p className="mb-1 text-[10px] font-bold uppercase tracking-wide text-gray-400">Schools</p>
               {schools.map((s) => (
-                <div key={s.id} className="rounded-lg px-2 py-1.5 hover:bg-navy/40">
-                  <p className="text-sm font-bold text-ink">{s.name}</p>
+                <div key={s.id} className="rounded-lg px-2 py-1.5 hover:bg-gray-50">
+                  <p className="text-sm font-semibold text-gray-900">{s.name}</p>
                 </div>
               ))}
             </div>

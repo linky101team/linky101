@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from "react";
 import { askQuestion } from "@/lib/actions/mentors";
-import GradientButton from "@/components/ui/GradientButton";
 import type { Mentor } from "./MentorCard";
 
 const QUESTION_MAX = 500;
@@ -51,47 +50,61 @@ export default function AskQuestionModal({ isOpen, mentors, onClose, onSubmitted
   }
 
   return (
-    <div className="fixed inset-0 z-[90] flex items-end justify-center bg-black/80 sm:items-center">
-      <div className="max-h-[85vh] w-full max-w-[430px] overflow-y-auto rounded-t-[24px] border-3 border-sky bg-card p-5 shadow-glow-sky sm:rounded-[24px]">
+    <div className="fixed inset-0 z-[90] flex items-end justify-center bg-black/50 sm:items-center">
+      <div className="max-h-[85vh] w-full max-w-[430px] overflow-y-auto rounded-t-3xl bg-white p-5 shadow-xl sm:rounded-3xl">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="heading-game text-lg">Ask a Question</h2>
-          <button type="button" onClick={reset} className="text-text-muted">
+          <h2 className="text-lg font-bold text-gray-900">❓ Ask a question</h2>
+          <button
+            type="button"
+            onClick={reset}
+            aria-label="Close"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-500 transition-transform active:scale-90"
+          >
             ✕
           </button>
         </div>
 
-        <label className="mb-1 block text-xs font-black uppercase tracking-wide text-text-muted">
-          Tag a specific mentor (optional)
-        </label>
-        <select
-          value={mentorId ?? ""}
-          onChange={(e) => setMentorId(e.target.value || null)}
-          className="mb-3 w-full rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink focus:border-sky focus:outline-none"
-        >
-          <option value="">Open to any mentor</option>
-          {mentors.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.display_name}
-            </option>
-          ))}
-        </select>
+        {mentors.length > 0 && (
+          <>
+            <label className="mb-1 block text-xs font-semibold text-gray-500">
+              Tag a specific mentor (optional)
+            </label>
+            <select
+              value={mentorId ?? ""}
+              onChange={(e) => setMentorId(e.target.value || null)}
+              className="mb-3 w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-[#039BE5] focus:outline-none"
+            >
+              <option value="">Open to any mentor</option>
+              {mentors.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.display_name}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
 
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value.slice(0, QUESTION_MAX))}
-          placeholder="What do you want to ask?"
+          placeholder="What would you love to know from a real founder?"
           rows={4}
-          className="w-full rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none"
+          className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#039BE5] focus:outline-none focus:ring-1 focus:ring-[#039BE5]"
         />
-        <p className="mb-3 text-right text-xs font-bold text-text-muted">
+        <p className="mb-3 text-right text-xs font-semibold text-gray-400">
           {text.length}/{QUESTION_MAX}
         </p>
 
-        {errorMsg && <p className="mb-3 text-sm font-bold text-orange">{errorMsg}</p>}
+        {errorMsg && <p className="mb-3 text-sm font-semibold text-[#FF6B6B]">{errorMsg}</p>}
 
-        <GradientButton variant="sky" className="w-full" disabled={submitting} onClick={handleSubmit}>
-          {submitting ? "Sending..." : "Send Question"}
-        </GradientButton>
+        <button
+          type="button"
+          disabled={submitting}
+          onClick={handleSubmit}
+          className="w-full rounded-full bg-[#1A1A2E] py-3 text-sm font-bold text-white transition-transform active:scale-[0.98] disabled:opacity-40"
+        >
+          {submitting ? "Sending..." : "Send question"}
+        </button>
       </div>
     </div>
   );

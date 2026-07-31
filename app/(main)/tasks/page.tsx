@@ -1,17 +1,7 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import SectionTitle from "@/components/ui/SectionTitle";
-import DailyChallengeSection from "@/components/tasks/DailyChallengeSection";
-import WeeklyQuizCard from "@/components/tasks/WeeklyQuizCard";
-import EventsSection from "@/components/tasks/EventsSection";
-
+// Daily tasks are now tracked automatically from real activity —
+// the "Today's Activity" card on Home replaces this page.
 export default function TasksPage() {
-  return (
-    <div className="flex flex-col gap-6">
-      <SectionTitle emoji="🔥" title="Today's Tasks" />
-      <DailyChallengeSection />
-      <WeeklyQuizCard />
-      <EventsSection />
-    </div>
-  );
+  redirect("/home");
 }

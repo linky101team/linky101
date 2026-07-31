@@ -66,7 +66,7 @@ export default function HelpPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search for help..."
-          className="w-full rounded-xl border-3 border-border bg-card py-2.5 pl-9 pr-3 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none"
+          className="w-full rounded-full border border-gray-200 bg-white py-2.5 pl-9 pr-3 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-[#039BE5] focus:outline-none"
         />
       </div>
 
@@ -74,8 +74,8 @@ export default function HelpPage() {
         <button
           type="button"
           onClick={() => setActiveCategory("all")}
-          className={`shrink-0 rounded-full border-3 px-3 py-1.5 text-xs font-black uppercase tracking-wide ${
-            activeCategory === "all" ? "border-pink bg-pink text-white shadow-glow-pink" : "border-border text-text-muted"
+          className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold transition-all active:scale-95 ${
+            activeCategory === "all" ? "bg-[#1A1A2E] text-white shadow-sm" : "border border-gray-200 bg-white text-gray-500"
           }`}
         >
           All
@@ -85,8 +85,8 @@ export default function HelpPage() {
             key={cat}
             type="button"
             onClick={() => setActiveCategory(cat)}
-            className={`shrink-0 rounded-full border-3 px-3 py-1.5 text-xs font-black uppercase tracking-wide ${
-              activeCategory === cat ? "border-pink bg-pink text-white shadow-glow-pink" : "border-border text-text-muted"
+            className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold transition-all active:scale-95 ${
+              activeCategory === cat ? "bg-[#1A1A2E] text-white shadow-sm" : "border border-gray-200 bg-white text-gray-500"
             }`}
           >
             {CATEGORY_LABELS[cat] ?? cat}
@@ -100,19 +100,19 @@ export default function HelpPage() {
         {filtered.map((faq) => {
           const isOpen = openId === faq.id;
           return (
-            <div key={faq.id} className="rounded-xl border-3 border-border bg-card overflow-hidden">
+            <div key={faq.id} className="rounded-2xl border border-gray-200 bg-white overflow-hidden shadow-sm">
               <button
                 type="button"
                 onClick={() => setOpenId(isOpen ? null : faq.id)}
                 className="flex w-full items-center justify-between gap-3 p-3 text-left"
               >
-                <span className="text-sm font-black text-ink">{faq.question}</span>
+                <span className="text-sm font-bold text-gray-900">{faq.question}</span>
                 <ChevronDown
                   className={`h-4 w-4 shrink-0 text-text-muted transition-transform ${isOpen ? "rotate-180" : ""}`}
                 />
               </button>
               {isOpen && (
-                <p className="border-t-3 border-border bg-navy/40 p-3 text-sm font-bold text-text-muted">
+                <p className="border-t border-gray-100 bg-gray-50 p-3 text-sm leading-relaxed text-gray-600">
                   {faq.answer}
                 </p>
               )}
@@ -127,7 +127,7 @@ export default function HelpPage() {
         </p>
       )}
 
-      <div className="mt-2 rounded-[18px] border-3 border-sky bg-card p-4 text-center shadow-glow-sky">
+      <div className="mt-2 rounded-2xl border border-gray-200 bg-white p-4 text-center shadow-sm">
         <p className="mb-2 text-sm font-bold text-text-muted">Still need help?</p>
         <Link href="/feedback">
           <GradientButton variant="sky" className="w-full">

@@ -9,10 +9,10 @@ import QuizzesTab from "@/components/learn/QuizzesTab";
 
 type Tab = "lessons" | "podcasts" | "quizzes";
 
-const TABS: { key: Tab; label: string }[] = [
-  { key: "lessons", label: "Lessons" },
-  { key: "podcasts", label: "Podcasts" },
-  { key: "quizzes", label: "Quizzes" },
+const TABS: { key: Tab; label: string; active: string }[] = [
+  { key: "lessons", label: "Lessons", active: "bg-[#2ECC71] text-white" },
+  { key: "podcasts", label: "Podcasts", active: "bg-[#7C3AED] text-white" },
+  { key: "quizzes", label: "Quizzes", active: "bg-[#FFD93D] text-gray-900" },
 ];
 
 function LearnContent() {
@@ -31,10 +31,8 @@ function LearnContent() {
             key={t.key}
             type="button"
             onClick={() => router.push(t.key === "lessons" ? "/learn" : `/learn?tab=${t.key}`)}
-            className={`flex-1 rounded-full py-2 text-sm font-semibold transition-colors ${
-              tab === t.key
-                ? "bg-[#FF6B6B] text-white"
-                : "bg-white text-gray-500 border border-gray-200"
+            className={`flex-1 rounded-full py-2 text-sm font-bold transition-all active:scale-95 ${
+              tab === t.key ? `${t.active} shadow-sm` : "bg-white text-gray-500 border border-gray-200"
             }`}
           >
             {t.label}

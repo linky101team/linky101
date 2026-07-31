@@ -56,8 +56,8 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-bg font-sans antialiased lg:flex lg:min-h-screen lg:items-center lg:justify-center lg:gap-12 lg:p-8" style={{ background: "linear-gradient(160deg, #64B5F6, #E1F5FE)" }}>
         <div className="hidden text-center lg:block">
-          <h1 className="text-5xl font-bold text-white drop-shadow-lg">
-            Link<span className="text-[#0D1B2A]">Y</span>101
+          <h1 className="text-5xl font-extrabold tracking-tight text-[#0D1B2A] drop-shadow-lg">
+            LinkY<span className="text-[#FFD93D]">101</span>
           </h1>
           <p className="mt-2 max-w-xs text-sm font-semibold text-white/90">
             Your professional network, before LinkedIn.

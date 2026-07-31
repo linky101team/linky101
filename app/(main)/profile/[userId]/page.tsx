@@ -2,15 +2,12 @@
 
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { MapPin } from "lucide-react";
 import { createClientSupabase } from "@/lib/supabase/client";
 import { useProfile } from "@/hooks/useProfile";
 import { toggleFollow } from "@/lib/actions/follows";
-import { getLevelTitle } from "@/lib/levels";
-import GameCard from "@/components/ui/GameCard";
-import LevelBadge from "@/components/ui/LevelBadge";
-import XPBar from "@/components/ui/XPBar";
+import Card from "@/components/ui/GameCard";
 import GradientButton from "@/components/ui/GradientButton";
-import AchievementsGrid from "@/components/profile/AchievementsGrid";
 import ActivityTimeline from "@/components/profile/ActivityTimeline";
 import PostsGrid from "@/components/profile/PostsGrid";
 import ReportButton from "@/components/ReportButton";
@@ -36,9 +33,9 @@ const SCHOOL_TYPE_LABEL: Record<string, string> = {
 
 function StatBox({ label, value }: { label: string; value: number }) {
   return (
-    <div>
-      <p className="text-base font-black text-ink">{value}</p>
-      <p className="text-[9px] font-bold uppercase tracking-wide text-text-muted">{label}</p>
+    <div className="text-center">
+      <p className="text-lg font-bold text-gray-900">{value}</p>
+      <p className="text-[10px] text-gray-500">{label}</p>
     </div>
   );
 }
@@ -124,48 +121,45 @@ export default function PublicProfilePage() {
     });
   }
 
-  if (loading) return <p className="text-sm font-bold text-text-muted">Loading profile...</p>;
-  if (!target) return <p className="text-sm font-bold text-text-muted">This member couldn&apos;t be found.</p>;
+  if (loading) return <p className="text-sm font-semibold text-gray-400">Loading profile...</p>;
+  if (!target)
+    return <p className="text-sm font-semibold text-gray-400">This member couldn&apos;t be found.</p>;
 
   const privacy = target.privacy_settings ?? {};
   const schoolLabel =
     target.school_type === "school" ? schoolName : SCHOOL_TYPE_LABEL[target.school_type ?? ""] ?? null;
 
   return (
-    <div className="flex flex-col gap-6">
-      <div
-        className="relative h-24 overflow-hidden rounded-[18px] border-4 border-pink"
-        style={{ background: "linear-gradient(135deg, #ff6b9d, #a78bfa, #38bdf8)" }}
-      >
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{ backgroundImage: "repeating-linear-gradient(45deg, #fff 0 2px, transparent 2px 14px)" }}
-        />
-      </div>
-
-      <GameCard borderColor="purple" glowColor="purple" className="-mt-16 flex flex-col items-center gap-2 text-center">
-        <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-pink bg-gradient-pink-purple text-4xl font-black text-white shadow-glow-pink">
+    <div className="flex flex-col gap-5 pb-16">
+      <Card className="flex flex-col items-center gap-3 text-center">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#1A1A2E] text-3xl font-bold text-white">
           {target.first_name.charAt(0).toUpperCase()}
         </div>
-        <h1 className="heading-game text-2xl">{target.first_name}</h1>
-        <LevelBadge level={target.level} size="md" />
-        {target.headline && <p className="text-sm font-bold text-text-muted">{target.headline}</p>}
-        {schoolLabel && <p className="text-xs font-bold text-sky">🏫 {schoolLabel}</p>}
-        {target.current_streak > 0 && (
-          <p className="text-xs font-black text-orange">🔥 {target.current_streak}-day streak</p>
-        )}
+        <div>
+          <h1 className="text-xl font-bold text-gray-900">{target.first_name}</h1>
+          {target.headline && <p className="mt-0.5 text-sm text-gray-500">{target.headline}</p>}
+          {schoolLabel && (
+            <p className="mt-1 flex items-center justify-center gap-1 text-xs text-gray-400">
+              <MapPin className="h-3 w-3" /> {schoolLabel}
+            </p>
+          )}
+          {target.current_streak > 0 && (
+            <p className="mt-1 text-xs font-semibold text-[#F5A623]">
+              🔥 {target.current_streak}-day streak
+            </p>
+          )}
+        </div>
 
-        <div className="mt-3 grid w-full grid-cols-4 gap-2 border-t-3 border-border pt-3">
+        <div className="mt-2 grid w-full grid-cols-3 gap-2 border-t border-gray-100 pt-3">
           <StatBox label="Posts" value={stats.posts} />
-          <StatBox label="Following" value={stats.following} />
           <StatBox label="Followers" value={stats.followers} />
-          <StatBox label="XP" value={target.xp} />
+          <StatBox label="Following" value={stats.following} />
         </div>
 
         {myProfile && (
-          <div className="mt-3 flex w-full items-center gap-2">
+          <div className="mt-2 flex w-full items-center gap-2">
             <GradientButton
-              variant={isFollowing ? "sky" : "pink"}
+              variant={isFollowing ? "ghost-green" : "dark"}
               size="sm"
               className="flex-1"
               onClick={handleToggleFollow}
@@ -175,30 +169,23 @@ export default function PublicProfilePage() {
             <ReportButton reportedType="profile" reportedId={target.id} />
           </div>
         )}
-      </GameCard>
-
-      <GameCard borderColor="yellow" glowColor="yellow">
-        <p className="mb-2 text-xs font-black uppercase text-text-muted">
-          Level {target.level} · {getLevelTitle(target.level)}
-        </p>
-        <XPBar level={target.level} xp={target.xp} />
-      </GameCard>
+      </Card>
 
       {!privacy.hide_dream && target.dream && (
-        <GameCard borderColor="pink" glowColor="pink">
-          <p className="mb-2 text-xs font-black uppercase tracking-wide text-pink">💭 Dream</p>
-          <p className="text-sm font-bold italic text-ink">&ldquo;{target.dream}&rdquo;</p>
-        </GameCard>
+        <Card>
+          <p className="mb-1 text-xs font-semibold text-gray-400">Their Dream</p>
+          <p className="text-sm italic text-gray-700">&ldquo;{target.dream}&rdquo;</p>
+        </Card>
       )}
 
       {target.interests.length > 0 && (
         <div>
-          <p className="mb-3 font-black uppercase tracking-wide text-ink">✨ Interests</p>
+          <p className="mb-2 text-sm font-semibold text-gray-700">Interests</p>
           <div className="flex flex-wrap gap-2">
             {target.interests.map((tag) => (
               <span
                 key={tag}
-                className="rounded-full border-3 border-sky px-3 py-1 text-xs font-black uppercase text-sky"
+                className="rounded-full bg-[#E3F2FD] px-3 py-1 text-xs font-medium text-[#039BE5]"
               >
                 {tag}
               </span>
@@ -207,7 +194,6 @@ export default function PublicProfilePage() {
         </div>
       )}
 
-      <AchievementsGrid userId={target.id} />
       {!privacy.hide_activity && <ActivityTimeline userId={target.id} />}
       {!privacy.hide_posts && <PostsGrid userId={target.id} />}
     </div>

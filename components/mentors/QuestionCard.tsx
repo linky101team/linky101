@@ -46,30 +46,28 @@ export default function QuestionCard({ question, currentUserId, alreadyRated }: 
   }
 
   return (
-    <div
-      className={`rounded-[18px] border-3 bg-card p-4 ${
-        answered ? "border-green shadow-glow-green" : "border-border"
-      }`}
-    >
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <span className="text-xs font-black text-pink">{question.asker?.first_name ?? "Member"} asked:</span>
+    <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+      <div className="mb-1.5 flex items-center justify-between gap-2">
+        <span className="text-xs font-bold text-gray-500">
+          {question.asker?.first_name ?? "Member"} asked
+        </span>
         <ReportButton reportedType="profile" reportedId={question.asked_by} />
       </div>
-      <p className="mb-3 text-sm font-bold text-ink">{question.question_text}</p>
+      <p className="mb-3 font-semibold leading-snug text-gray-900">{question.question_text}</p>
 
       {answered ? (
-        <div className="rounded-xl border-3 border-green bg-navy/40 p-3">
+        <div className="rounded-xl bg-[#E8F5E9] p-3">
           <div className="mb-1 flex items-center justify-between gap-2">
-            <span className="text-xs font-black uppercase text-green">
-              ✅ {question.answerer?.display_name ?? "A mentor"} answered:
+            <span className="text-xs font-bold text-[#1E8E5A]">
+              ✅ {question.answerer?.display_name ?? "A mentor"} answered
             </span>
             {question.answered_by && <ReportButton reportedType="mentor" reportedId={question.answered_by} />}
           </div>
-          <p className="text-sm font-bold text-text-muted">{question.answer_text}</p>
+          <p className="text-sm leading-relaxed text-gray-700">{question.answer_text}</p>
 
           {(canRate || rated) && (
-            <div className="mt-3 flex items-center gap-2 border-t-3 border-border pt-2">
-              <span className="text-[10px] font-black uppercase text-text-muted">
+            <div className="mt-3 flex items-center gap-2 border-t border-[#CDEBD9] pt-2">
+              <span className="text-[11px] font-semibold text-gray-500">
                 {rated ? "Rated" : "Rate this answer"}
               </span>
               <div className="flex gap-0.5">
@@ -85,7 +83,9 @@ export default function QuestionCard({ question, currentUserId, alreadyRated }: 
                   >
                     <Star
                       className={`h-4 w-4 ${
-                        star <= (hoverStar || submittedRating) ? "fill-yellow text-yellow" : "text-border"
+                        star <= (hoverStar || submittedRating)
+                          ? "fill-[#FFC107] text-[#FFC107]"
+                          : "text-gray-300"
                       }`}
                     />
                   </button>
@@ -95,8 +95,8 @@ export default function QuestionCard({ question, currentUserId, alreadyRated }: 
           )}
         </div>
       ) : (
-        <span className="inline-block rounded-full border-2 border-border px-2 py-0.5 text-[10px] font-black uppercase text-text-muted">
-          ⏳ Waiting for a mentor
+        <span className="inline-block rounded-full bg-gray-100 px-2.5 py-1 text-[11px] font-bold text-gray-500">
+          ⏳ Waiting for an answer
         </span>
       )}
     </div>

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogOut, Settings, MapPin } from "lucide-react";
+import { LogOut, Settings, MapPin, Crown } from "lucide-react";
 import { createClientSupabase } from "@/lib/supabase/client";
 import { useProfile, useProfileStore } from "@/hooks/useProfile";
 import Card from "@/components/ui/GameCard";
@@ -69,7 +69,7 @@ export default function ProfilePage() {
         {profile.avatar_url ? (
           <img src={profile.avatar_url} alt={profile.first_name} className="h-20 w-20 rounded-full object-cover" />
         ) : (
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#FF6B6B] text-3xl font-bold text-white">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#1A1A2E] text-3xl font-bold text-white">
             {profile.first_name.charAt(0).toUpperCase()}
           </div>
         )}
@@ -124,6 +124,25 @@ export default function ProfilePage() {
           </div>
         </div>
       )}
+
+      {/* Go Pro banner */}
+      <Link
+        href="/premium"
+        className="flex items-center gap-3 rounded-2xl bg-[#1A1A2E] p-4 transition-transform active:scale-[0.98]"
+      >
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#FFD93D]">
+          <Crown className="h-5 w-5 text-[#1A1A2E]" strokeWidth={2.5} />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="font-bold text-white">
+            LinkY101 <span className="text-[#FFD93D]">Pro</span>
+          </p>
+          <p className="text-xs text-white/60">1-on-1 mentors, AI coach, pitch reviews & more</p>
+        </div>
+        <span className="shrink-0 rounded-full bg-[#FFD93D] px-3 py-1.5 text-xs font-bold text-[#1A1A2E]">
+          See inside
+        </span>
+      </Link>
 
       {/* Activity */}
       <ActivityTimeline userId={profile.id} />

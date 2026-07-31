@@ -50,13 +50,13 @@ export default function InstallPrompt() {
 
   return (
     <div className="fixed inset-x-0 bottom-40 z-50 mx-auto max-w-[430px] px-4">
-      <div className="flex items-center gap-3 rounded-2xl border-3 border-pink bg-card p-3 shadow-glow-pink">
+      <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-3 shadow-lg">
         <img src="/icon.svg" alt="LinkY101" className="h-10 w-10 shrink-0 rounded-xl" />
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-black text-ink">Install LinkY101</p>
-          <p className="text-[10px] font-bold text-text-muted">Add to your home screen for quick access</p>
+          <p className="text-sm font-bold text-gray-900">Install LinkY101</p>
+          <p className="text-[11px] text-gray-500">Add to your home screen for quick access</p>
         </div>
-        <GradientButton variant="pink" size="sm" onClick={handleInstall}>
+        <GradientButton variant="dark" size="sm" onClick={handleInstall}>
           Install
         </GradientButton>
         <button

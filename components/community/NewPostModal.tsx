@@ -2,21 +2,20 @@
 
 import { useState, useTransition } from "react";
 import { createPost } from "@/lib/actions/posts";
-import GradientButton from "@/components/ui/GradientButton";
 
 type Category = "win" | "question" | "idea" | "tip" | "motivation";
-type Step = "category" | "form" | "preview";
+type Step = "category" | "form";
 
-const CATEGORY_TILES: { value: Category; label: string; emoji: string; color: string }[] = [
-  { value: "win", label: "Win", emoji: "🏆", color: "border-green" },
-  { value: "question", label: "Question", emoji: "❓", color: "border-pink" },
-  { value: "idea", label: "Idea", emoji: "💡", color: "border-orange" },
-  { value: "tip", label: "Tip", emoji: "🛠️", color: "border-yellow" },
-  { value: "motivation", label: "Motivation", emoji: "🚀", color: "border-purple" },
+const CATEGORY_TILES: { value: Category; label: string; emoji: string; bg: string }[] = [
+  { value: "win", label: "Win", emoji: "🏆", bg: "bg-[#E8F5E9]" },
+  { value: "question", label: "Question", emoji: "❓", bg: "bg-[#E3F2FD]" },
+  { value: "idea", label: "Idea", emoji: "💡", bg: "bg-[#FFF8E1]" },
+  { value: "tip", label: "Tip", emoji: "🛠️", bg: "bg-[#FFF0F0]" },
+  { value: "motivation", label: "Motivation", emoji: "🚀", bg: "bg-[#F3E8FF]" },
 ];
 
 const fieldClass =
-  "w-full rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none";
+  "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#039BE5] focus:outline-none focus:ring-1 focus:ring-[#039BE5]";
 
 interface NewPostModalProps {
   isOpen: boolean;
@@ -77,11 +76,18 @@ export default function NewPostModal({ isOpen, onClose, onSubmitted }: NewPostMo
   const tile = CATEGORY_TILES.find((t) => t.value === category);
 
   return (
-    <div className="fixed inset-0 z-[90] flex items-end justify-center bg-black/80 sm:items-center">
-      <div className="max-h-[85vh] w-full max-w-[430px] overflow-y-auto rounded-t-[24px] border-3 border-pink bg-card p-5 shadow-glow-pink sm:rounded-[24px]">
+    <div className="fixed inset-0 z-[90] flex items-end justify-center bg-black/50 sm:items-center">
+      <div className="max-h-[85vh] w-full max-w-[430px] overflow-y-auto rounded-t-3xl bg-white p-5 shadow-xl sm:rounded-3xl">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="heading-game text-lg">New Post</h2>
-          <button type="button" onClick={handleClose} className="text-text-muted">
+          <h2 className="text-lg font-bold text-gray-900">
+            {step === "category" ? "What are you sharing?" : `${tile?.emoji} New ${tile?.label}`}
+          </h2>
+          <button
+            type="button"
+            onClick={handleClose}
+            aria-label="Close"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-500 transition-transform active:scale-90"
+          >
             ✕
           </button>
         </div>
@@ -96,10 +102,10 @@ export default function NewPostModal({ isOpen, onClose, onSubmitted }: NewPostMo
                   setCategory(t.value);
                   setStep("form");
                 }}
-                className={`flex flex-col items-center gap-2 rounded-2xl border-3 ${t.color} bg-navy/40 p-4`}
+                className={`flex flex-col items-center gap-2 rounded-2xl p-4 transition-transform active:scale-95 ${t.bg}`}
               >
                 <span className="text-3xl">{t.emoji}</span>
-                <span className="text-xs font-black uppercase text-ink">{t.label}</span>
+                <span className="text-sm font-bold text-gray-900">{t.label}</span>
               </button>
             ))}
           </div>
@@ -110,63 +116,33 @@ export default function NewPostModal({ isOpen, onClose, onSubmitted }: NewPostMo
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Title"
+              placeholder="Give it a title..."
               className={fieldClass}
             />
             <textarea
               value={body}
               onChange={(e) => setBody(e.target.value)}
-              placeholder="Share the details..."
+              placeholder="Share the details — what happened, what do you need?"
               rows={5}
               className={fieldClass}
             />
-            {errorMsg && <p className="text-sm font-bold text-orange">{errorMsg}</p>}
-            <div className="mt-2 flex gap-2">
+            {errorMsg && <p className="text-sm font-semibold text-[#FF6B6B]">{errorMsg}</p>}
+            <div className="mt-1 flex gap-2">
               <button
                 type="button"
                 onClick={() => setStep("category")}
-                className="flex-1 rounded-xl border-3 border-border py-2 text-xs font-black uppercase text-text-muted"
+                className="flex-1 rounded-full border border-gray-200 py-2.5 text-sm font-bold text-gray-500 transition-transform active:scale-[0.98]"
               >
                 Back
               </button>
               <button
                 type="button"
-                onClick={() => setStep("preview")}
-                className="flex-1 rounded-xl border-3 border-sky bg-gradient-sky-purple py-2 text-xs font-black uppercase text-white"
-              >
-                Preview
-              </button>
-            </div>
-          </div>
-        )}
-
-        {step === "preview" && tile && (
-          <div className="flex flex-col gap-3">
-            <div className={`rounded-[18px] border-3 ${tile.color} bg-navy/40 p-4`}>
-              <span className="mb-2 inline-block rounded-full border-2 border-border px-2 py-0.5 text-[10px] font-black uppercase text-text-muted">
-                {tile.emoji} {tile.label}
-              </span>
-              {title && <h3 className="heading-game mb-1 text-base">{title}</h3>}
-              {body && <p className="text-sm font-bold text-text-muted">{body}</p>}
-            </div>
-            {errorMsg && <p className="text-sm font-bold text-orange">{errorMsg}</p>}
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => setStep("form")}
-                className="flex-1 rounded-xl border-3 border-border py-2 text-xs font-black uppercase text-text-muted"
-              >
-                Edit
-              </button>
-              <GradientButton
-                variant="pink"
-                size="sm"
-                className="flex-1"
                 disabled={submitting}
                 onClick={handleSubmit}
+                className="flex-1 rounded-full bg-[#1A1A2E] py-2.5 text-sm font-bold text-white transition-transform active:scale-[0.98] disabled:opacity-40"
               >
-                {submitting ? "Posting..." : "Post (+20 XP)"}
-              </GradientButton>
+                {submitting ? "Posting..." : "Post it 🚀"}
+              </button>
             </div>
           </div>
         )}
