@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Pause, Play, X, ChevronDown } from "lucide-react";
 import { markPodcastListened } from "@/lib/actions/podcasts";
-import { useProfileStore } from "@/hooks/useProfile";
 
 export interface PlayerPodcast {
   id: string;
@@ -33,13 +32,12 @@ function formatTime(seconds: number): string {
 
 export default function PodcastPlayer({ podcast, onClose, onCompleted }: PodcastPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const refreshProfile = useProfileStore((s) => s.refreshProfile);
   const [minimized, setMinimized] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(podcast.duration_seconds ?? 0);
   const [speed, setSpeed] = useState(1);
-  const [rewardToast, setRewardToast] = useState<string | null>(null);
+  const [doneToast, setDoneToast] = useState(false);
   const hasCompletedRef = useRef(false);
 
   const barHeights = useMemo(
@@ -81,15 +79,12 @@ export default function PodcastPlayer({ podcast, onClose, onCompleted }: Podcast
     if (hasCompletedRef.current) return;
     hasCompletedRef.current = true;
     try {
-      const result = await markPodcastListened(podcast.id);
-      if (!result.alreadyCompleted) {
-        setRewardToast(`+${result.xpEarned} XP · +${result.coinsEarned} 🪙`);
-        await refreshProfile();
-        setTimeout(() => setRewardToast(null), 2500);
-      }
+      await markPodcastListened(podcast.id);
+      setDoneToast(true);
+      setTimeout(() => setDoneToast(false), 2500);
       onCompleted?.(podcast.id);
     } catch {
-      // reward grant failure shouldn't block playback UX
+      // tracking failure shouldn't block playback UX
     }
   }
 
@@ -114,19 +109,19 @@ export default function PodcastPlayer({ podcast, onClose, onCompleted }: Podcast
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 30, opacity: 0 }}
             onClick={() => setMinimized(false)}
-            className="flex w-full items-center gap-3 rounded-full border-3 border-pink bg-card px-3 py-2 shadow-glow-pink"
+            className="flex w-full items-center gap-3 rounded-full border border-gray-200 bg-white px-3 py-2 shadow-lg"
           >
             <span
               onClick={(e) => {
                 e.stopPropagation();
                 togglePlay();
               }}
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-pink-purple text-white"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#1A1A2E] text-white"
             >
-              {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+              {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 fill-white" />}
             </span>
-            <span className="flex-1 truncate text-left text-xs font-black text-ink">{podcast.title}</span>
-            <span className="text-[10px] font-bold text-text-muted">{formatTime(currentTime)}</span>
+            <span className="flex-1 truncate text-left text-sm font-bold text-gray-900">{podcast.title}</span>
+            <span className="text-xs font-semibold text-gray-400">{formatTime(currentTime)}</span>
           </motion.button>
         ) : (
           <motion.div
@@ -135,26 +130,26 @@ export default function PodcastPlayer({ podcast, onClose, onCompleted }: Podcast
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 200, opacity: 0 }}
             transition={{ type: "spring", damping: 24, stiffness: 260 }}
-            className="rounded-[22px] border-3 border-pink bg-card p-4 shadow-glow-pink"
+            className="rounded-2xl border border-gray-200 bg-white p-4 shadow-xl"
           >
             <div className="mb-2 flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => setMinimized(true)}
-                className="text-text-muted"
+                className="text-gray-400"
                 aria-label="Minimize player"
               >
-                <ChevronDown className="h-5 w-5" strokeWidth={3} />
+                <ChevronDown className="h-5 w-5" strokeWidth={2.5} />
               </button>
-              <span className="rounded-full border-2 border-pink px-2 py-0.5 text-[9px] font-black uppercase text-pink">
+              <span className="rounded-full bg-[#E3F2FD] px-2.5 py-0.5 text-[10px] font-bold capitalize text-[#039BE5]">
                 {podcast.category.replace(/_/g, " ")}
               </span>
-              <button type="button" onClick={onClose} className="text-text-muted" aria-label="Close player">
-                <X className="h-5 w-5" strokeWidth={3} />
+              <button type="button" onClick={onClose} className="text-gray-400" aria-label="Close player">
+                <X className="h-5 w-5" strokeWidth={2.5} />
               </button>
             </div>
 
-            <p className="mb-3 truncate text-sm font-black text-ink">
+            <p className="mb-3 truncate font-bold text-gray-900">
               {podcast.episode_number ? `Ep. ${podcast.episode_number} · ` : ""}
               {podcast.title}
             </p>
@@ -166,16 +161,14 @@ export default function PodcastPlayer({ podcast, onClose, onCompleted }: Podcast
                 return (
                   <span
                     key={i}
-                    className={`flex-1 rounded-full transition-colors ${isPast ? "bg-pink" : "bg-border"} ${
-                      playing && isPast ? "animate-pulse" : ""
-                    }`}
+                    className={`flex-1 rounded-full transition-colors ${isPast ? "bg-[#039BE5]" : "bg-gray-200"}`}
                     style={{ height: `${h}%` }}
                   />
                 );
               })}
             </div>
 
-            <div className="mb-3 flex justify-between text-[10px] font-bold text-text-muted">
+            <div className="mb-3 flex justify-between text-xs font-semibold text-gray-400">
               <span>{formatTime(currentTime)}</span>
               <span>{formatTime(duration)}</span>
             </div>
@@ -187,8 +180,10 @@ export default function PodcastPlayer({ podcast, onClose, onCompleted }: Podcast
                     key={s}
                     type="button"
                     onClick={() => setSpeed(s)}
-                    className={`rounded-full border-2 px-2 py-1 text-[9px] font-black ${
-                      speed === s ? "border-pink bg-pink text-white" : "border-border text-text-muted"
+                    className={`rounded-full px-2.5 py-1 text-[11px] font-bold transition-all active:scale-95 ${
+                      speed === s
+                        ? "bg-[#1A1A2E] text-white"
+                        : "border border-gray-200 bg-white text-gray-500"
                     }`}
                   >
                     {s}x
@@ -199,16 +194,16 @@ export default function PodcastPlayer({ podcast, onClose, onCompleted }: Podcast
               <button
                 type="button"
                 onClick={togglePlay}
-                className="flex h-12 w-12 items-center justify-center rounded-full border-3 border-pink bg-gradient-pink-purple text-white shadow-glow-pink"
+                className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1A1A2E] text-white shadow-sm transition-transform active:scale-90"
                 aria-label={playing ? "Pause" : "Play"}
               >
-                {playing ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+                {playing ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 fill-white" />}
               </button>
             </div>
 
-            {rewardToast && (
-              <div className="mt-3 rounded-xl border-3 border-green bg-green/10 py-1.5 text-center text-xs font-black text-green">
-                🎉 {rewardToast}
+            {doneToast && (
+              <div className="mt-3 rounded-xl bg-[#E8F5E9] py-1.5 text-center text-xs font-bold text-[#1E8E5A]">
+                ✅ Episode complete — nice one
               </div>
             )}
           </motion.div>

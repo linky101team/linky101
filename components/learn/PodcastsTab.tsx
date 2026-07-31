@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Headphones, Play } from "lucide-react";
 import { createClientSupabase } from "@/lib/supabase/client";
 import { useProfile } from "@/hooks/useProfile";
-import type { PlayerPodcast } from "@/components/PodcastPlayer";
+import PodcastPlayer, { type PlayerPodcast } from "@/components/PodcastPlayer";
 
 const CATEGORY_STYLE: Record<string, { label: string; tile: string; chipBg: string; chipText: string }> = {
   starting_a_business: { label: "Starting a Business", tile: "bg-[#FFF0F0]", chipBg: "bg-[#FFF0F0]", chipText: "text-[#FF6B6B]" },
@@ -32,6 +32,7 @@ export default function PodcastsTab() {
   const [podcasts, setPodcasts] = useState<Podcast[]>([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(false);
+  const [nowPlaying, setNowPlaying] = useState<Podcast | null>(null);
 
   useEffect(() => {
     if (!profile) return;
@@ -48,7 +49,11 @@ export default function PodcastsTab() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile?.id]);
 
-  function handlePlay() {
+  function handlePlay(podcast: Podcast) {
+    if (podcast.audio_url) {
+      setNowPlaying(podcast);
+      return;
+    }
     setToast(true);
     setTimeout(() => setToast(false), 2200);
   }
@@ -96,8 +101,10 @@ export default function PodcastsTab() {
             <button
               key={podcast.id}
               type="button"
-              onClick={handlePlay}
-              className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-3.5 text-left shadow-sm transition-transform active:scale-[0.98]"
+              onClick={() => handlePlay(podcast)}
+              className={`flex items-center gap-3 rounded-2xl border bg-white p-3.5 text-left shadow-sm transition-transform active:scale-[0.98] ${
+                nowPlaying?.id === podcast.id ? "border-[#039BE5]" : "border-gray-200"
+              }`}
             >
               <div className={`relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl ${style.tile}`}>
                 <span className="text-2xl">🎙️</span>
@@ -135,6 +142,10 @@ export default function PodcastsTab() {
         <div className="fixed inset-x-0 bottom-24 z-[70] mx-auto w-fit max-w-[90%] rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-lg">
           🎧 Episode dropping soon — check back!
         </div>
+      )}
+
+      {nowPlaying && (
+        <PodcastPlayer podcast={nowPlaying} onClose={() => setNowPlaying(null)} />
       )}
     </div>
   );
