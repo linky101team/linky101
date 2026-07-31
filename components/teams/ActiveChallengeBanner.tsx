@@ -76,16 +76,16 @@ export default function ActiveChallengeBanner() {
   return (
     <div className="rounded-[18px] border-3 border-pink bg-gradient-pink-purple p-4 shadow-glow-pink">
       <div className="mb-2 flex items-center justify-between">
-        <span className="text-xs font-black uppercase tracking-wide text-white/80">
+        <span className="text-xs font-black uppercase tracking-wide text-ink/80">
           ⚔️ Active Challenge
         </span>
-        <span className="text-xs font-black text-white">{timeLeft}</span>
+        <span className="text-xs font-black text-ink">{timeLeft}</span>
       </div>
-      <p className="heading-game mb-2 text-lg text-white">{challenge.title}</p>
+      <p className="heading-game mb-2 text-lg text-ink">{challenge.title}</p>
       <div className="mb-1 h-3 w-full overflow-hidden rounded-full bg-navy/40">
         <div className="h-full rounded-full bg-white" style={{ width: `${pct}%` }} />
       </div>
-      <div className="flex items-center justify-between text-xs font-bold text-white/90">
+      <div className="flex items-center justify-between text-xs font-bold text-ink/90">
         <span>
           {progress} / {challenge.goal_value}
         </span>

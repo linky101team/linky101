@@ -103,7 +103,7 @@ export default function DailyChallengeSection({ onLevelUp, onTasksChanged }: Dai
   return (
     <GameCard borderColor="pink" glowColor="pink">
       <div className="mb-3 flex items-center justify-between">
-        <span className="font-black uppercase tracking-wide text-white">🔥 Daily Challenge</span>
+        <span className="font-black uppercase tracking-wide text-ink">🔥 Daily Challenge</span>
         <span className="text-xs font-black text-text-muted">Resets in {countdown}</span>
       </div>
 
@@ -115,7 +115,7 @@ export default function DailyChallengeSection({ onLevelUp, onTasksChanged }: Dai
             <div key={n} className="flex flex-1 items-center last:flex-none">
               <span
                 className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-3 text-[10px] font-black ${
-                  reached ? "border-green bg-green text-navy" : "border-border bg-navy/60 text-text-muted"
+                  reached ? "border-green bg-green text-ink" : "border-border bg-navy/60 text-text-muted"
                 }`}
               >
                 {n}
@@ -140,7 +140,7 @@ export default function DailyChallengeSection({ onLevelUp, onTasksChanged }: Dai
             >
               <p className="text-[10px] font-black uppercase text-yellow">{tier.label}</p>
               <p className="text-xs font-bold text-text-muted">{tier.count} tasks</p>
-              <p className="text-sm font-black text-white">+{tier.xp} XP</p>
+              <p className="text-sm font-black text-ink">+{tier.xp} XP</p>
             </div>
           );
         })}
@@ -163,11 +163,11 @@ export default function DailyChallengeSection({ onLevelUp, onTasksChanged }: Dai
                   task.is_completed ? "border-green bg-green" : "border-border"
                 }`}
               >
-                {task.is_completed && <Check className="h-3.5 w-3.5 text-navy" strokeWidth={4} />}
+                {task.is_completed && <Check className="h-3.5 w-3.5 text-ink" strokeWidth={4} />}
               </span>
               <span
                 className={`flex-1 text-sm font-bold ${
-                  task.is_completed ? "text-text-muted line-through" : "text-white"
+                  task.is_completed ? "text-text-muted line-through" : "text-ink"
                 }`}
               >
                 {task.description}

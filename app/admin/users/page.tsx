@@ -96,7 +96,7 @@ export default function AdminUsersPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by first name..."
-          className="w-full rounded-xl border-3 border-border bg-card py-2.5 pl-9 pr-3 text-sm font-bold text-white placeholder:text-text-muted focus:border-pink focus:outline-none"
+          className="w-full rounded-xl border-3 border-border bg-card py-2.5 pl-9 pr-3 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none"
         />
       </div>
 
@@ -118,7 +118,7 @@ export default function AdminUsersPage() {
                 {user.first_name.charAt(0).toUpperCase()}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-black text-white">{user.first_name}</p>
+                <p className="truncate text-sm font-black text-ink">{user.first_name}</p>
                 <p className="text-[10px] font-bold text-text-muted">
                   LV {user.level} · {user.xp} XP · 🔥{user.current_streak}
                 </p>

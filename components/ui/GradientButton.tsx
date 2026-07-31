@@ -7,7 +7,7 @@ const VARIANT_CLASSES: Record<GradientButtonVariant, string> = {
   pink: "bg-gradient-pink-purple border-pink shadow-glow-pink",
   purple: "bg-gradient-purple-pink border-purple shadow-glow-purple",
   sky: "bg-gradient-sky-purple border-sky shadow-glow-sky",
-  yellow: "bg-gradient-yellow-orange border-yellow shadow-glow-yellow text-navy",
+  yellow: "bg-gradient-yellow-orange border-yellow shadow-glow-yellow text-ink",
   green: "bg-gradient-green-sky border-green shadow-glow-green",
 };
 
@@ -38,7 +38,7 @@ export default function GradientButton({
     <button
       type={type}
       disabled={disabled}
-      className={`border-3 font-black uppercase tracking-wide text-white transition-transform active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100 ${VARIANT_CLASSES[variant]} ${SIZE_CLASSES[size]} ${className}`}
+      className={`border-3 font-black uppercase tracking-wide text-ink transition-transform active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100 ${VARIANT_CLASSES[variant]} ${SIZE_CLASSES[size]} ${className}`}
       {...rest}
     >
       {children}

@@ -66,7 +66,7 @@ export default function HelpPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search for help..."
-          className="w-full rounded-xl border-3 border-border bg-card py-2.5 pl-9 pr-3 text-sm font-bold text-white placeholder:text-text-muted focus:border-pink focus:outline-none"
+          className="w-full rounded-xl border-3 border-border bg-card py-2.5 pl-9 pr-3 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none"
         />
       </div>
 
@@ -106,7 +106,7 @@ export default function HelpPage() {
                 onClick={() => setOpenId(isOpen ? null : faq.id)}
                 className="flex w-full items-center justify-between gap-3 p-3 text-left"
               >
-                <span className="text-sm font-black text-white">{faq.question}</span>
+                <span className="text-sm font-black text-ink">{faq.question}</span>
                 <ChevronDown
                   className={`h-4 w-4 shrink-0 text-text-muted transition-transform ${isOpen ? "rotate-180" : ""}`}
                 />

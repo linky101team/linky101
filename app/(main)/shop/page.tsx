@@ -52,7 +52,7 @@ function ItemPreview({ item }: { item: ShopItem }) {
     const color = data.color === "rainbow" ? "#ff6b9d" : (data.color as string) || "#ff6b9d";
     return (
       <div
-        className="flex h-16 w-16 items-center justify-center rounded-full border-4 text-xl font-black text-white"
+        className="flex h-16 w-16 items-center justify-center rounded-full border-4 text-xl font-black text-ink"
         style={{
           borderColor: color,
           background: data.color === "rainbow" ? "linear-gradient(135deg,#ff6b9d,#f5c518,#38bdf8,#a78bfa)" : "#0f172a",
@@ -240,7 +240,7 @@ export default function ShopPage() {
               <div className="flex items-center justify-between">
                 <span className="text-xs font-black uppercase text-text-muted">{CATEGORY_ICON[item.category]}</span>
                 {equipped && (
-                  <span className="flex items-center gap-0.5 rounded-full bg-green px-2 py-0.5 text-[9px] font-black uppercase text-navy">
+                  <span className="flex items-center gap-0.5 rounded-full bg-green px-2 py-0.5 text-[9px] font-black uppercase text-ink">
                     <Check className="h-2.5 w-2.5" strokeWidth={4} /> Equipped
                   </span>
                 )}
@@ -250,7 +250,7 @@ export default function ShopPage() {
                 <ItemPreview item={item} />
               </div>
 
-              <p className="text-xs font-black text-white">{item.name}</p>
+              <p className="text-xs font-black text-ink">{item.name}</p>
               <p className="line-clamp-2 min-h-[2rem] text-[10px] font-bold text-text-muted">{item.description}</p>
 
               {isConsumableOwned ? (
@@ -273,7 +273,7 @@ export default function ShopPage() {
                   type="button"
                   disabled={!affordable || busyId === item.id}
                   onClick={() => setConfirmItem(item)}
-                  className="flex items-center justify-center gap-1 rounded-xl border-3 border-yellow bg-yellow py-2 text-[10px] font-black uppercase text-navy transition-transform active:scale-95 disabled:border-border disabled:bg-transparent disabled:text-text-muted"
+                  className="flex items-center justify-center gap-1 rounded-xl border-3 border-yellow bg-yellow py-2 text-[10px] font-black uppercase text-ink transition-transform active:scale-95 disabled:border-border disabled:bg-transparent disabled:text-text-muted"
                 >
                   {affordable ? (
                     <>🪙 {item.coin_cost}</>
@@ -313,7 +313,7 @@ export default function ShopPage() {
                 <div className="my-3 flex justify-center">
                   <ItemPreview item={confirmItem} />
                 </div>
-                <p className="mb-1 text-sm font-black text-white">{confirmItem.name}</p>
+                <p className="mb-1 text-sm font-black text-ink">{confirmItem.name}</p>
                 <p className="mb-4 text-lg font-black text-yellow">🪙 {confirmItem.coin_cost}</p>
                 <div className="flex gap-2">
                   <button
@@ -351,7 +351,7 @@ export default function ShopPage() {
             <motion.div initial={{ scale: 0.6 }} animate={{ scale: 1 }} className="relative">
               <GameCard borderColor="green" glowColor="green" className="w-64 text-center">
                 <p className="text-2xl">🎉</p>
-                <p className="mt-1 text-sm font-black text-white">{celebrateItem.name}</p>
+                <p className="mt-1 text-sm font-black text-ink">{celebrateItem.name}</p>
                 <p className="text-xs font-bold text-green">Added to your collection!</p>
               </GameCard>
             </motion.div>

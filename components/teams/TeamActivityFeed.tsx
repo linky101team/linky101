@@ -131,7 +131,7 @@ export default function TeamActivityFeed() {
 
   return (
     <div>
-      <p className="mb-3 font-black uppercase tracking-wide text-white">📣 Team Activity</p>
+      <p className="mb-3 font-black uppercase tracking-wide text-ink">📣 Team Activity</p>
       {loading ? (
         <p className="text-sm font-bold text-text-muted">Loading...</p>
       ) : items.length === 0 ? (
@@ -146,7 +146,7 @@ export default function TeamActivityFeed() {
                 className="flex items-center gap-2 rounded-xl border-3 border-border bg-card p-2"
               >
                 <span className={`text-lg ${style.color}`}>{style.icon}</span>
-                <p className="flex-1 text-sm font-bold text-white">
+                <p className="flex-1 text-sm font-bold text-ink">
                   <span className="text-pink">{item.name}</span> {item.description}
                 </p>
               </div>

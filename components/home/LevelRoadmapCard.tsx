@@ -47,7 +47,7 @@ export default function LevelRoadmapCard({ level, xp }: LevelRoadmapCardProps) {
   return (
     <GameCard borderColor="purple" glowColor="purple">
       <div className="mb-4 flex items-center justify-between">
-        <span className="font-black uppercase tracking-wide text-white">🗺️ Level Roadmap</span>
+        <span className="font-black uppercase tracking-wide text-ink">🗺️ Level Roadmap</span>
         <Link href="/roadmap" className="text-xs font-black uppercase tracking-wide text-sky">
           View All →
         </Link>
@@ -63,7 +63,7 @@ export default function LevelRoadmapCard({ level, xp }: LevelRoadmapCardProps) {
             <div key={i} className="flex gap-3">
               <div className="flex flex-col items-center">
                 {node.kind === "completed" && (
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-green to-sky text-lg font-black text-navy shadow-glow-green">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-green to-sky text-lg font-black text-ink shadow-glow-green">
                     ✓
                   </div>
                 )}

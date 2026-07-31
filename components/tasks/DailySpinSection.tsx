@@ -85,7 +85,7 @@ export default function DailySpinSection({ onLevelUp, refreshKey }: DailySpinSec
   return (
     <GameCard borderColor="purple" glowColor="purple">
       <div className="mb-3 flex items-center justify-between">
-        <span className="font-black uppercase tracking-wide text-white">🎡 Daily Spin</span>
+        <span className="font-black uppercase tracking-wide text-ink">🎡 Daily Spin</span>
         {status && (
           <span className="text-xs font-black text-text-muted">
             {status.spinsRemaining} spin{status.spinsRemaining === 1 ? "" : "s"} left
@@ -98,7 +98,7 @@ export default function DailySpinSection({ onLevelUp, refreshKey }: DailySpinSec
       <div className="mt-4 grid grid-cols-4 gap-1.5">
         {PRIZE_TABLE.map((p) => (
           <div key={p.type + p.label} className="rounded-lg border-2 border-border bg-navy/40 p-1.5 text-center">
-            <p className="truncate text-[9px] font-black text-white">{p.label}</p>
+            <p className="truncate text-[9px] font-black text-ink">{p.label}</p>
             <p className="text-[9px] font-bold text-text-muted">{p.weight}%</p>
           </div>
         ))}

@@ -101,20 +101,20 @@ export default function AdminPodcastsPage() {
             value={form.title}
             onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
             placeholder="Episode title"
-            className="rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted"
+            className="rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
           />
           <textarea
             value={form.description}
             onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
             placeholder="Description"
             rows={2}
-            className="rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted"
+            className="rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
           />
           <input
             value={form.audio_url}
             onChange={(e) => setForm((f) => ({ ...f, audio_url: e.target.value }))}
             placeholder="Audio URL (https://...)"
-            className="rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted"
+            className="rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
           />
           <div className="flex gap-2">
             <input
@@ -122,20 +122,20 @@ export default function AdminPodcastsPage() {
               onChange={(e) => setForm((f) => ({ ...f, episode_number: e.target.value }))}
               placeholder="Ep #"
               type="number"
-              className="w-20 rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted"
+              className="w-20 rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
             />
             <input
               value={form.duration_seconds}
               onChange={(e) => setForm((f) => ({ ...f, duration_seconds: e.target.value }))}
               placeholder="Duration (s)"
               type="number"
-              className="flex-1 rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted"
+              className="flex-1 rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
             />
           </div>
           <select
             value={form.category}
             onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
-            className="rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white"
+            className="rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink"
           >
             {CATEGORY_KEYS.map((key) => (
               <option key={key} value={key}>
@@ -157,7 +157,7 @@ export default function AdminPodcastsPage() {
           {podcasts.map((p) => (
             <GameCard key={p.id} borderColor="border" className="flex items-center gap-3">
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-black text-white">
+                <p className="truncate text-sm font-black text-ink">
                   {p.episode_number ? `Ep. ${p.episode_number} · ` : ""}
                   {p.title}
                 </p>

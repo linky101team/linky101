@@ -27,7 +27,7 @@ export default function SpinResult({ result, onClaim }: SpinResultProps) {
     <AnimatePresence>
       {result && visual && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-navy/90 px-6"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 px-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -43,7 +43,7 @@ export default function SpinResult({ result, onClaim }: SpinResultProps) {
           >
             <span className="text-4xl">{visual.confetti ? "🎉" : "🎁"}</span>
             <p className="text-xs font-black uppercase tracking-widest text-text-muted">{visual.label}</p>
-            <h2 className="heading-game text-2xl text-white">{result.label}</h2>
+            <h2 className="heading-game text-2xl text-ink">{result.label}</h2>
             <GradientButton variant="pink" size="lg" className="w-full" onClick={onClaim}>
               Claim!
             </GradientButton>

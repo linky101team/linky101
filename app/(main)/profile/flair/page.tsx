@@ -99,7 +99,7 @@ export default function FlairPage() {
       {!unlocked ? (
         <GameCard borderColor="yellow" glowColor="yellow" className="flex flex-col items-center gap-3 text-center">
           <span className="text-3xl">🔒</span>
-          <p className="font-black uppercase text-white">Flair is a Premium perk</p>
+          <p className="font-black uppercase text-ink">Flair is a Premium perk</p>
           <p className="text-sm font-bold text-text-muted">
             Go Premium (or win a Profile Flair spin prize) to unlock custom borders, colours, and badges.
           </p>

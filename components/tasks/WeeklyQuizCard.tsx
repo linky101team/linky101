@@ -44,7 +44,7 @@ export default function WeeklyQuizCard() {
   return (
     <GameCard borderColor="sky" glowColor="sky">
       <div className="mb-2 flex items-center justify-between">
-        <span className="font-black uppercase tracking-wide text-white">🧠 Weekly Quiz</span>
+        <span className="font-black uppercase tracking-wide text-ink">🧠 Weekly Quiz</span>
         <Link href="/quizzes" className="text-[10px] font-black uppercase tracking-wide text-sky">
           All Quizzes →
         </Link>

@@ -82,10 +82,10 @@ export default function ShareCard({
         className="w-full max-w-xs overflow-hidden rounded-[22px] border-4 border-white/20 p-6 text-center"
         style={{ background: ACCENT_GRADIENT[accent] }}
       >
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">LinkY101</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-ink/80">LinkY101</p>
         <p className="mt-3 text-5xl">{emoji}</p>
-        <h3 className="mt-2 text-xl font-black text-white">{title}</h3>
-        <p className="mt-1 text-sm font-bold text-white/90">{subtitle}</p>
+        <h3 className="mt-2 text-xl font-black text-ink">{title}</h3>
+        <p className="mt-1 text-sm font-bold text-ink/90">{subtitle}</p>
         {stat && (
           <p className="mt-3 rounded-full border-2 border-white/40 bg-black/15 px-4 py-1.5 text-lg font-black text-white">
             {stat}

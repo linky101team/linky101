@@ -143,7 +143,7 @@ export default function QuizPage() {
   if (!quiz || questions.length === 0) {
     return (
       <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-navy p-6 text-center">
-        <p className="font-black uppercase text-white">Quiz not found</p>
+        <p className="font-black uppercase text-ink">Quiz not found</p>
         <GradientButton variant="sky" onClick={() => router.push("/quizzes")}>
           Back to Quizzes
         </GradientButton>
@@ -210,7 +210,7 @@ export default function QuizPage() {
                       type="button"
                       disabled={selected !== null}
                       onClick={() => handleSelect(i)}
-                      className={`flex items-center justify-between rounded-xl border-3 p-3 text-left text-sm font-bold text-white ${stateClass}`}
+                      className={`flex items-center justify-between rounded-xl border-3 p-3 text-left text-sm font-bold text-ink ${stateClass}`}
                     >
                       <span>{opt.text}</span>
                       {selected !== null && isCorrectOption && (

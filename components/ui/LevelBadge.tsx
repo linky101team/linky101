@@ -1,4 +1,7 @@
+"use client";
+
 import { getLevelTitle } from "@/lib/levels";
+import { useLevelModalStore } from "@/lib/levelModalStore";
 
 export type LevelBadgeSize = "sm" | "md" | "lg";
 
@@ -13,6 +16,8 @@ interface LevelBadgeProps {
   size?: LevelBadgeSize;
   showTitle?: boolean;
   className?: string;
+  /** When true, renders as a tappable button that opens the current user's Level Progress modal. */
+  interactive?: boolean;
 }
 
 export default function LevelBadge({
@@ -20,14 +25,14 @@ export default function LevelBadge({
   size = "md",
   showTitle = true,
   className = "",
+  interactive = false,
 }: LevelBadgeProps) {
   const classes = SIZE_CLASSES[size];
   const title = getLevelTitle(level);
+  const showLevelModal = useLevelModalStore((s) => s.show);
 
-  return (
-    <span
-      className={`inline-flex items-center rounded-full border-3 border-pink bg-gradient-pink-purple font-black uppercase text-white shadow-glow-pink ${classes.pill} ${className}`}
-    >
+  const content = (
+    <>
       <span className={classes.level}>LV {level}</span>
       {showTitle && (
         <>
@@ -35,6 +40,25 @@ export default function LevelBadge({
           <span className={classes.title}>{title}</span>
         </>
       )}
-    </span>
+    </>
   );
+
+  const pillClass = `inline-flex items-center rounded-full border-3 border-sky bg-gradient-primary font-black uppercase text-white shadow-glow-sky ${
+    size === "lg" ? "glow-pulse" : ""
+  } ${classes.pill} ${className}`;
+
+  if (interactive) {
+    return (
+      <button
+        type="button"
+        onClick={showLevelModal}
+        aria-label="View level progress"
+        className={`${pillClass} transition-transform active:scale-95`}
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return <span className={pillClass}>{content}</span>;
 }

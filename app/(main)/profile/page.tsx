@@ -24,7 +24,7 @@ const SCHOOL_TYPE_LABEL: Record<string, string> = {
 function StatBox({ label, value }: { label: string; value: number }) {
   return (
     <div>
-      <p className="text-base font-black text-white">{value}</p>
+      <p className="text-base font-black text-ink">{value}</p>
       <p className="text-[9px] font-bold uppercase tracking-wide text-text-muted">{label}</p>
     </div>
   );
@@ -103,7 +103,7 @@ export default function ProfilePage() {
             {profile.first_name.charAt(0).toUpperCase()}
           </div>
           <h1 className="heading-game text-2xl">{profile.first_name}</h1>
-          <LevelBadge level={profile.level} size="md" />
+          <LevelBadge level={profile.level} size="md" interactive />
           {profile.headline && <p className="text-sm font-bold text-text-muted">{profile.headline}</p>}
           {schoolLabel && <p className="text-xs font-bold text-sky">🏫 {schoolLabel}</p>}
           {profile.current_streak > 0 && (
@@ -138,7 +138,7 @@ export default function ProfilePage() {
           </div>
           {profile.dream ? (
             <>
-              <p className="mb-3 text-sm font-bold italic text-white">&ldquo;{profile.dream}&rdquo;</p>
+              <p className="mb-3 text-sm font-bold italic text-ink">&ldquo;{profile.dream}&rdquo;</p>
               <div className="flex gap-3 text-lg">
                 <button type="button" className="transition-transform active:scale-125">
                   🔥
@@ -161,7 +161,7 @@ export default function ProfilePage() {
 
       {profile.interests.length > 0 && (
         <div data-tour="profile-interests">
-          <p className="mb-3 font-black uppercase tracking-wide text-white">✨ Interests</p>
+          <p className="mb-3 font-black uppercase tracking-wide text-ink">✨ Interests</p>
           <div className="flex flex-wrap gap-2">
             {profile.interests.map((tag) => (
               <span
@@ -183,7 +183,7 @@ export default function ProfilePage() {
         <Link href="/shop">
           <GradientButton variant="yellow" className="w-full">
             <span className="flex items-center justify-center gap-2">
-              🛍️ SHOP <span className="text-navy">· 🪙 {profile.link_coins}</span>
+              🛍️ SHOP <span className="text-ink">· 🪙 {profile.link_coins}</span>
             </span>
           </GradientButton>
         </Link>

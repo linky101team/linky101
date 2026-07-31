@@ -68,7 +68,7 @@ export default function TutorialPrompt({ tourId }: TutorialPromptProps) {
           >
             <div className="flex items-center gap-3 rounded-2xl border-3 border-purple bg-card p-3 shadow-glow-purple">
               <span className="text-2xl">{tour.emoji}</span>
-              <p className="flex-1 text-xs font-bold text-white">
+              <p className="flex-1 text-xs font-bold text-ink">
                 Want a quick tour of <span className="text-purple">{tour.label}</span>?
               </p>
               <button

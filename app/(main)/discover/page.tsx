@@ -16,7 +16,7 @@ export default function DiscoverPage() {
       </div>
 
       <div data-tour="discover-topics">
-        <p className="mb-3 font-black uppercase tracking-wide text-white">🧭 Browse Topics</p>
+        <p className="mb-3 font-black uppercase tracking-wide text-ink">🧭 Browse Topics</p>
         <TopicsGrid />
       </div>
 

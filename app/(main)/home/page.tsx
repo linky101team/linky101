@@ -16,14 +16,34 @@ export default function HomePage() {
 
   if (!profile) {
     return (
-      <div className="flex flex-col gap-6">
-        <p className="text-sm font-bold text-text-muted">Loading your dashboard...</p>
+      <div className="flex flex-col gap-4">
+        <div className="skeleton-shimmer h-24 rounded-[20px]" />
+        <div className="skeleton-shimmer h-40 rounded-[20px]" />
+        <div className="skeleton-shimmer h-32 rounded-[20px]" />
       </div>
     );
   }
 
   return (
     <div className="flex flex-col gap-6">
+      <div className="grid grid-cols-3 gap-2">
+        <div className="flex flex-col items-center gap-0.5 rounded-2xl border-3 border-orange bg-white p-3 shadow-card">
+          <span className="text-xl">🔥</span>
+          <span className="text-lg font-black text-ink">{profile.current_streak}</span>
+          <span className="text-[9px] font-bold uppercase tracking-wide text-text-muted">Streak</span>
+        </div>
+        <div className="flex flex-col items-center gap-0.5 rounded-2xl border-3 border-sky bg-white p-3 shadow-card">
+          <span className="text-xl">⭐</span>
+          <span className="text-lg font-black text-ink">{profile.xp}</span>
+          <span className="text-[9px] font-bold uppercase tracking-wide text-text-muted">Total XP</span>
+        </div>
+        <div className="flex flex-col items-center gap-0.5 rounded-2xl border-3 border-yellow bg-white p-3 shadow-card">
+          <span className="text-xl">🪙</span>
+          <span className="text-lg font-black text-ink">{profile.link_coins}</span>
+          <span className="text-[9px] font-bold uppercase tracking-wide text-text-muted">LinkCoins</span>
+        </div>
+      </div>
+
       <div data-tour="home-roadmap">
         <LevelRoadmapCard level={profile.level} xp={profile.xp} />
       </div>

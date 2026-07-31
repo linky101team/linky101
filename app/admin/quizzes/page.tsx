@@ -65,7 +65,7 @@ export default function AdminQuizzesPage() {
             return (
               <GameCard key={quiz.id} borderColor="border" className="flex items-center gap-3">
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-black text-white">{quiz.title}</p>
+                  <p className="truncate text-sm font-black text-ink">{quiz.title}</p>
                   <p className={`text-[10px] font-bold ${style.text}`}>
                     {style.label} · Lv{quiz.min_level}+ · {quiz.question_count}Q · {attemptCounts[quiz.id] ?? 0} attempts
                   </p>

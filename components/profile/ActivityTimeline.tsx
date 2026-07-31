@@ -104,7 +104,7 @@ export default function ActivityTimeline({ userId }: ActivityTimelineProps) {
 
   return (
     <GameCard borderColor="green" glowColor="green">
-      <p className="mb-3 font-black uppercase tracking-wide text-white">📆 Recent Activity</p>
+      <p className="mb-3 font-black uppercase tracking-wide text-ink">📆 Recent Activity</p>
       {loading ? (
         <p className="text-sm font-bold text-text-muted">Loading...</p>
       ) : items.length === 0 ? (

@@ -22,7 +22,7 @@ function StatCard({ label, value, emoji, href }: { label: string; value: number;
   const content = (
     <GameCard borderColor="border" className="text-center">
       <p className="text-2xl">{emoji}</p>
-      <p className="text-2xl font-black text-white">{value.toLocaleString()}</p>
+      <p className="text-2xl font-black text-ink">{value.toLocaleString()}</p>
       <p className="text-[10px] font-bold uppercase text-text-muted">{label}</p>
     </GameCard>
   );

@@ -20,7 +20,7 @@ export default function VerifyPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 px-5 py-10 text-center">
+    <main className="auth-gradient-bg flex min-h-screen flex-col items-center justify-center gap-6 px-5 py-10 text-center">
       <GameCard borderColor="sky" glowColor="sky" className="flex flex-col items-center gap-4">
         <span className="text-5xl">📧</span>
         <h1 className="heading-game text-2xl">Check your email!</h1>
@@ -41,7 +41,7 @@ export default function VerifyPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full rounded-xl border-3 border-border bg-navy/60 py-2 pl-9 pr-3 text-sm font-bold text-white placeholder:text-text-muted focus:border-sky focus:outline-none"
+                className="w-full rounded-xl border-3 border-border bg-white py-2 pl-9 pr-3 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none"
               />
             </div>
           </div>

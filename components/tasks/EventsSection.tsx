@@ -104,7 +104,7 @@ export default function EventsSection() {
 
   return (
     <div>
-      <p className="mb-3 font-black uppercase tracking-wide text-white">🎤 Events</p>
+      <p className="mb-3 font-black uppercase tracking-wide text-ink">🎤 Events</p>
       <div className="flex flex-col gap-3">
         {events.map((e) => {
           const status = getStatus(e);

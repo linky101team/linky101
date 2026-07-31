@@ -51,12 +51,12 @@ export default function OpportunityCard({
     <div className={`rounded-[18px] border-3 bg-card p-4 ${style.border} ${style.glow}`}>
       <div className="mb-2 flex items-center justify-between gap-2">
         <span
-          className={`rounded-full border-2 ${style.border} px-2 py-0.5 text-[10px] font-black uppercase text-white`}
+          className={`rounded-full border-2 ${style.border} px-2 py-0.5 text-[10px] font-black uppercase text-ink`}
         >
           {style.emoji} {style.label}
         </span>
         {closingSoon && (
-          <span className="rounded-full bg-orange px-2 py-0.5 text-[10px] font-black uppercase text-navy">
+          <span className="rounded-full bg-orange px-2 py-0.5 text-[10px] font-black uppercase text-ink">
             ⚡ Closing Soon
           </span>
         )}

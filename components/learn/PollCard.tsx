@@ -38,7 +38,7 @@ export default function PollCard({ post, poll, onVoted }: PollCardProps) {
   return (
     <div className="relative rounded-[18px] border-3 border-orange bg-card p-4 shadow-glow-yellow">
       <ReportButton reportedType="post" reportedId={post.id} className="absolute right-3 top-3" />
-      <p className="mb-3 pr-6 font-black uppercase text-white">📊 {question}</p>
+      <p className="mb-3 pr-6 font-black uppercase text-ink">📊 {question}</p>
       <div className="flex flex-col gap-2">
         {options.map((option, i) => {
           const votes = poll.counts[i] ?? 0;
@@ -53,7 +53,7 @@ export default function PollCard({ post, poll, onVoted }: PollCardProps) {
               disabled={showResults}
               onClick={() => handleVote(i)}
               className={`relative overflow-hidden rounded-xl border-3 p-3 text-left text-sm font-bold ${
-                isMine ? "border-orange text-white" : "border-border text-white"
+                isMine ? "border-orange text-ink" : "border-border text-ink"
               }`}
             >
               {showResults && (

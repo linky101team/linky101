@@ -91,19 +91,19 @@ export default function AdminOpportunitiesPage() {
             value={form.title}
             onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
             placeholder="Title"
-            className="rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted"
+            className="rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
           />
           <textarea
             value={form.description}
             onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
             placeholder="Description"
             rows={2}
-            className="rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted"
+            className="rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
           />
           <select
             value={form.category}
             onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
-            className="rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white"
+            className="rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink"
           >
             {CATEGORIES.map((c) => (
               <option key={c} value={c}>
@@ -115,20 +115,20 @@ export default function AdminOpportunitiesPage() {
             value={form.link}
             onChange={(e) => setForm((f) => ({ ...f, link: e.target.value }))}
             placeholder="Link (https://...)"
-            className="rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted"
+            className="rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
           />
           <div className="flex gap-2">
             <input
               value={form.location}
               onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
               placeholder="Location"
-              className="flex-1 rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted"
+              className="flex-1 rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
             />
             <input
               value={form.deadline}
               onChange={(e) => setForm((f) => ({ ...f, deadline: e.target.value }))}
               type="date"
-              className="rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white"
+              className="rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink"
             />
           </div>
           {errorMsg && <p className="text-xs font-bold text-orange">{errorMsg}</p>}
@@ -145,7 +145,7 @@ export default function AdminOpportunitiesPage() {
           {opportunities.map((opp) => (
             <GameCard key={opp.id} borderColor="border" className="flex items-center gap-3">
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-black text-white">{opp.title}</p>
+                <p className="truncate text-sm font-black text-ink">{opp.title}</p>
                 <p className="text-[10px] font-bold text-text-muted">
                   {opp.category.replace("_", " ")}
                   {opp.deadline ? ` · Deadline ${new Date(opp.deadline).toLocaleDateString()}` : ""}

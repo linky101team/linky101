@@ -55,7 +55,7 @@ export default function QuestionCard({ question, currentUserId, alreadyRated }: 
         <span className="text-xs font-black text-pink">{question.asker?.first_name ?? "Member"} asked:</span>
         <ReportButton reportedType="profile" reportedId={question.asked_by} />
       </div>
-      <p className="mb-3 text-sm font-bold text-white">{question.question_text}</p>
+      <p className="mb-3 text-sm font-bold text-ink">{question.question_text}</p>
 
       {answered ? (
         <div className="rounded-xl border-3 border-green bg-navy/40 p-3">

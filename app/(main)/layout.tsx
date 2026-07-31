@@ -12,6 +12,8 @@ import WelcomeBack from "@/components/WelcomeBack";
 import InstallPrompt from "@/components/InstallPrompt";
 import NotificationPermissionModal from "@/components/NotificationPermissionModal";
 import LinkyChat from "@/components/LinkyChat";
+import LevelProgressModal from "@/components/LevelProgressModal";
+import FloatingRewards from "@/components/FloatingRewards";
 
 const TABS = [
   { href: "/home", label: "Home", emoji: "🏠" },
@@ -83,10 +85,10 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               </div>
             )}
             <div className="min-w-0">
-              <p className="truncate font-black uppercase text-white">
+              <p className="truncate font-black uppercase text-ink">
                 {profile?.first_name ?? "Member"}
               </p>
-              <LevelBadge level={profile?.level ?? 1} size="sm" />
+              <LevelBadge level={profile?.level ?? 1} size="sm" interactive />
             </div>
           </div>
 
@@ -97,7 +99,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             <span className="flex items-center gap-1 rounded-full border-3 border-yellow bg-navy/60 px-2 py-1 text-xs font-black text-yellow">
               ⭐ {profile?.xp ?? 0}
             </span>
-            <Link href="/notifications" aria-label="Notifications" className="relative p-1 text-white">
+            <Link href="/notifications" aria-label="Notifications" className="relative p-1 text-ink">
               <Bell className="h-5 w-5" strokeWidth={2.5} />
               {hasUnread && (
                 <span className="absolute right-0 top-0 h-2.5 w-2.5 rounded-full border border-card bg-orange" />
@@ -121,18 +123,18 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       <main className="flex-1 px-5 py-4">{children}</main>
 
       <nav className="fixed inset-x-0 bottom-0 z-40">
-        <div className="mx-auto flex max-w-[430px] border-t-3 border-border bg-[#1a2744]">
+        <div className="mx-auto flex max-w-[430px] border-t border-[#90CAF9] bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.06)]">
           {TABS.map((tab) => {
             const active = pathname.startsWith(tab.href);
             return (
               <Link
                 key={tab.href}
                 href={tab.href}
-                className={`flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] font-extrabold uppercase tracking-wide ${
-                  active ? "text-pink" : "text-text-muted"
+                className={`flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] font-extrabold uppercase tracking-wide transition-transform active:scale-95 ${
+                  active ? "text-sky" : "text-[#9CA3AF]"
                 }`}
               >
-                <span className="text-lg leading-none">{tab.emoji}</span>
+                <span className="text-[24px] leading-none">{tab.emoji}</span>
                 <span>{tab.label}</span>
               </Link>
             );
@@ -142,6 +144,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
       <InstallPrompt />
       <LinkyChat />
+      <LevelProgressModal />
+      <FloatingRewards />
     </div>
   );
 }

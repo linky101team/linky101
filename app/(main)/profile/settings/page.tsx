@@ -16,7 +16,7 @@ import GradientButton from "@/components/ui/GradientButton";
 import SectionTitle from "@/components/ui/SectionTitle";
 
 const fieldClass =
-  "w-full rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted focus:border-pink focus:outline-none";
+  "w-full rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none";
 
 interface PrivacySettings {
   hide_activity?: boolean;
@@ -35,7 +35,7 @@ function PrivacyToggle({
 }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <span className="text-sm font-bold text-white">{label}</span>
+      <span className="text-sm font-bold text-ink">{label}</span>
       <button
         type="button"
         onClick={() => onChange(!checked)}
@@ -350,7 +350,7 @@ export default function ProfileSettingsPage() {
       <GameCard borderColor="yellow" glowColor="yellow">
         <p className="mb-2 text-xs font-black uppercase tracking-wide text-yellow">Premium</p>
         {profile.is_premium ? (
-          <p className="text-sm font-bold text-white">
+          <p className="text-sm font-bold text-ink">
             ✨ You&apos;re a Premium member
             {profile.premium_until ? ` until ${new Date(profile.premium_until).toLocaleDateString()}` : ""}.
           </p>
@@ -378,7 +378,7 @@ export default function ProfileSettingsPage() {
               onClick={() => router.push(`${TOUR_PAGE[tour.id]}?tour=${tour.id}`)}
               className="flex items-center justify-between rounded-xl border-3 border-border bg-navy/40 px-3 py-2 text-left"
             >
-              <span className="text-sm font-bold text-white">
+              <span className="text-sm font-bold text-ink">
                 {tour.emoji} {tour.label} Tour
               </span>
               <span className="text-[10px] font-black uppercase text-sky">Replay</span>

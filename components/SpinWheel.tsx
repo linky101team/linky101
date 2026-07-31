@@ -45,7 +45,7 @@ export default function SpinWheel({ rotation, spinning }: SpinWheelProps) {
           return (
             <span
               key={s.label}
-              className="absolute left-1/2 top-1/2 text-[10px] font-black uppercase text-navy"
+              className="absolute left-1/2 top-1/2 text-[10px] font-black uppercase text-ink"
               style={{
                 transform: `rotate(${angle}deg) translate(0, -80px) rotate(-${angle}deg) translate(-50%, -50%)`,
                 transformOrigin: "0 0",

@@ -32,7 +32,7 @@ export default function CreatorsRow() {
 
   return (
     <div>
-      <p className="mb-3 font-black uppercase tracking-wide text-white">🎓 Creators &amp; Ambassadors</p>
+      <p className="mb-3 font-black uppercase tracking-wide text-ink">🎓 Creators &amp; Ambassadors</p>
       <div className="flex gap-3 overflow-x-auto pb-2">
         {loading && <p className="text-sm font-bold text-text-muted">Loading...</p>}
         {mentors.map((m) => (
@@ -43,7 +43,7 @@ export default function CreatorsRow() {
             <span className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full border-3 border-sky bg-gradient-sky-purple text-lg font-black text-white">
               {m.display_name.charAt(0).toUpperCase()}
             </span>
-            <p className="truncate text-sm font-black text-white">{m.display_name}</p>
+            <p className="truncate text-sm font-black text-ink">{m.display_name}</p>
             <span className="mt-1 inline-block rounded-full border-2 border-sky px-2 py-0.5 text-[9px] font-black uppercase text-sky">
               {m.is_verified ? "✓ Verified Mentor" : "Mentor"}
             </span>

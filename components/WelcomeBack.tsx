@@ -32,7 +32,7 @@ export default function WelcomeBack({ firstName }: WelcomeBackProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[60] flex items-center justify-center bg-navy/95 p-6"
+        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/95 p-6"
       >
         <Confetti />
         <motion.div

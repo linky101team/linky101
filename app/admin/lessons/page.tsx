@@ -86,20 +86,20 @@ export default function AdminLessonsPage() {
             value={form.title}
             onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
             placeholder="Lesson title"
-            className="rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted"
+            className="rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
           />
           <input
             value={form.category}
             onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
             placeholder="Category (e.g. marketing)"
-            className="rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted"
+            className="rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
           />
           <textarea
             value={form.body}
             onChange={(e) => setForm((f) => ({ ...f, body: e.target.value }))}
             placeholder="Lesson content"
             rows={4}
-            className="rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted"
+            className="rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
           />
           {errorMsg && <p className="text-xs font-bold text-orange">{errorMsg}</p>}
           <GradientButton variant="pink" size="sm" disabled={saving} onClick={handleCreate}>
@@ -115,7 +115,7 @@ export default function AdminLessonsPage() {
           {lessons.map((lesson) => (
             <GameCard key={lesson.id} borderColor="border" className="flex items-center gap-3">
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-black text-white">{lesson.title}</p>
+                <p className="truncate text-sm font-black text-ink">{lesson.title}</p>
                 <p className="text-[10px] font-bold text-text-muted">
                   {lesson.category} · by {lesson.author?.first_name ?? "Member"}
                 </p>

@@ -6,7 +6,7 @@ import { createClientSupabase } from "@/lib/supabase/client";
 import { useProfile } from "@/hooks/useProfile";
 import LockedFeature from "@/components/ui/LockedFeature";
 import GameCard from "@/components/ui/GameCard";
-import PodcastPlayer, { type PlayerPodcast } from "@/components/PodcastPlayer";
+import type { PlayerPodcast } from "@/components/PodcastPlayer";
 
 const PODCAST_LEVEL_GATE = 3;
 
@@ -34,9 +34,8 @@ export default function PodcastsTab() {
   const { profile } = useProfile();
   const supabase = useMemo(() => createClientSupabase(), []);
   const [podcasts, setPodcasts] = useState<Podcast[]>([]);
-  const [listenedIds, setListenedIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
-  const [activePodcast, setActivePodcast] = useState<Podcast | null>(null);
+  const [toast, setToast] = useState(false);
 
   const unlocked = (profile?.level ?? 0) >= PODCAST_LEVEL_GATE;
 
@@ -47,24 +46,25 @@ export default function PodcastsTab() {
     }
 
     async function load() {
-      const [{ data: rows }, { data: listens }] = await Promise.all([
-        supabase
-          .from("podcasts")
-          .select("id, title, description, episode_number, audio_url, duration_seconds, category")
-          .eq("is_published", true)
-          .order("episode_number"),
-        supabase.from("podcast_listens").select("podcast_id").eq("user_id", profile!.id).eq("completed", true),
-      ]);
+      const { data: rows } = await supabase
+        .from("podcasts")
+        .select("id, title, description, episode_number, audio_url, duration_seconds, category")
+        .eq("is_published", true)
+        .order("episode_number");
       setPodcasts((rows as Podcast[]) ?? []);
-      setListenedIds(new Set((listens ?? []).map((l) => l.podcast_id)));
       setLoading(false);
     }
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile?.id, unlocked]);
 
+  function handlePlay() {
+    setToast(true);
+    setTimeout(() => setToast(false), 2200);
+  }
+
   const content = (
-    <div className="flex flex-col gap-4">
+    <div className="relative flex flex-col gap-4">
       <div className="flex items-center gap-2">
         <Headphones className="h-4 w-4 text-pink" strokeWidth={3} />
         <p className="text-xs font-black uppercase tracking-wide text-text-muted">
@@ -72,7 +72,13 @@ export default function PodcastsTab() {
         </p>
       </div>
 
-      {loading && <p className="text-sm font-bold text-text-muted">Loading episodes...</p>}
+      {loading && (
+        <div className="flex flex-col gap-3">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="skeleton-shimmer h-20 rounded-[18px]" />
+          ))}
+        </div>
+      )}
       {!loading && podcasts.length === 0 && (
         <p className="text-sm font-bold text-text-muted">No episodes yet — check back soon!</p>
       )}
@@ -80,38 +86,33 @@ export default function PodcastsTab() {
       <div className="flex flex-col gap-3 pb-24">
         {podcasts.map((podcast) => {
           const style = CATEGORY_STYLE[podcast.category] ?? CATEGORY_STYLE.general;
-          const listened = listenedIds.has(podcast.id);
-          const isActive = activePodcast?.id === podcast.id;
 
           return (
-            <GameCard
-              key={podcast.id}
-              borderColor={isActive ? "pink" : "border"}
-              glowColor={isActive ? "pink" : undefined}
-              className="flex items-center gap-3"
-            >
+            <GameCard key={podcast.id} borderColor="border" className="flex items-center gap-3">
               <button
                 type="button"
-                onClick={() => setActivePodcast(podcast)}
+                onClick={handlePlay}
                 aria-label={`Play ${podcast.title}`}
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-3 border-pink bg-gradient-pink-purple text-white shadow-glow-pink"
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-3 border-sky bg-gradient-primary text-white shadow-glow-sky transition-transform active:scale-95"
               >
                 <Play className="h-5 w-5" fill="currentColor" />
               </button>
 
-              <button type="button" onClick={() => setActivePodcast(podcast)} className="flex-1 text-left">
+              <button type="button" onClick={handlePlay} className="flex-1 text-left">
                 <div className="mb-1 flex items-center gap-2">
                   <span
                     className={`rounded-full border-2 px-2 py-0.5 text-[9px] font-black uppercase ${style.border} ${style.text}`}
                   >
                     {style.label}
                   </span>
-                  {listened && <span className="text-[10px] font-black text-green">✓ Listened</span>}
                 </div>
-                <p className="truncate text-sm font-black text-white">
+                <p className="truncate text-sm font-black text-ink">
                   {podcast.episode_number ? `Ep. ${podcast.episode_number} · ` : ""}
                   {podcast.title}
                 </p>
+                {podcast.description && (
+                  <p className="line-clamp-1 text-[10px] font-bold text-text-muted">{podcast.description}</p>
+                )}
                 <p className="text-[10px] font-bold text-text-muted">{formatDuration(podcast.duration_seconds)}</p>
               </button>
             </GameCard>
@@ -119,12 +120,10 @@ export default function PodcastsTab() {
         })}
       </div>
 
-      {activePodcast && (
-        <PodcastPlayer
-          podcast={activePodcast}
-          onClose={() => setActivePodcast(null)}
-          onCompleted={(id) => setListenedIds((prev) => new Set(prev).add(id))}
-        />
+      {toast && (
+        <div className="fixed inset-x-0 bottom-24 z-[70] mx-auto w-fit max-w-[90%] rounded-full border-3 border-sky bg-card px-4 py-2 text-sm font-black text-ink shadow-glow-sky">
+          🎧 Episode coming soon — check back!
+        </div>
       )}
     </div>
   );

@@ -46,7 +46,7 @@ export default function PostsGrid({ userId }: PostsGridProps) {
 
   return (
     <div>
-      <p className="mb-3 font-black uppercase tracking-wide text-white">🗂️ Posts</p>
+      <p className="mb-3 font-black uppercase tracking-wide text-ink">🗂️ Posts</p>
       {posts.length === 0 ? (
         <p className="text-sm font-bold text-text-muted">No posts yet.</p>
       ) : (
@@ -59,7 +59,7 @@ export default function PostsGrid({ userId }: PostsGridProps) {
                 className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-xl border-3 border-border p-2 text-center ${style.gradient}`}
               >
                 <span className="text-xl">{style.emoji}</span>
-                <span className="line-clamp-2 text-[10px] font-black text-white">
+                <span className="line-clamp-2 text-[10px] font-black text-ink">
                   {p.title ?? p.body?.slice(0, 40) ?? "Post"}
                 </span>
               </div>

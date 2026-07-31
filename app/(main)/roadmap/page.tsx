@@ -27,7 +27,7 @@ export default function RoadmapPage() {
             <div key={entry.level} className="flex gap-3">
               <div className="flex flex-col items-center">
                 {status === "completed" && (
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-green to-sky text-sm font-black text-navy shadow-glow-green">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-green to-sky text-sm font-black text-ink shadow-glow-green">
                     ✓
                   </div>
                 )}

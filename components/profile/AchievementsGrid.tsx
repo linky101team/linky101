@@ -40,7 +40,7 @@ export default function AchievementsGrid({ userId }: AchievementsGridProps) {
   return (
     <div>
       <div className="mb-3 flex items-center justify-between">
-        <p className="font-black uppercase tracking-wide text-white">🏅 Achievements</p>
+        <p className="font-black uppercase tracking-wide text-ink">🏅 Achievements</p>
         <span className="text-xs font-black text-text-muted">
           {earnedIds.size}/{achievements.length} earned
         </span>
@@ -57,7 +57,7 @@ export default function AchievementsGrid({ userId }: AchievementsGridProps) {
               }`}
             >
               <span className="text-2xl">{a.icon ?? "🏅"}</span>
-              <span className="line-clamp-2 text-[9px] font-black uppercase leading-tight text-white">
+              <span className="line-clamp-2 text-[9px] font-black uppercase leading-tight text-ink">
                 {a.name}
               </span>
             </div>

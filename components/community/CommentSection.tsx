@@ -79,7 +79,7 @@ export default function CommentSection({
             <div key={c.id} className="flex items-start gap-2 rounded-xl bg-navy/40 p-2">
               <div className="min-w-0 flex-1">
                 <p className="text-xs font-black text-pink">{c.author?.first_name ?? "Member"}</p>
-                <p className="text-sm font-bold text-white">{c.body}</p>
+                <p className="text-sm font-bold text-ink">{c.body}</p>
               </div>
               <ReportButton reportedType="comment" reportedId={c.id} className="shrink-0" />
             </div>
@@ -107,7 +107,7 @@ export default function CommentSection({
             value={customText}
             onChange={(e) => setCustomText(e.target.value.slice(0, 500))}
             placeholder="Write a comment..."
-            className="flex-1 rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted focus:border-pink focus:outline-none"
+            className="flex-1 rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none"
           />
           <button
             type="button"

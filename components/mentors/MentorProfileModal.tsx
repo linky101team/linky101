@@ -82,7 +82,7 @@ export default function MentorProfileModal({ mentor, answersCount, onClose }: Me
 
             <div className="grid grid-cols-2 gap-2 border-t-3 border-border pt-3">
               <div>
-                <p className="text-lg font-black text-white">{answersCount}</p>
+                <p className="text-lg font-black text-ink">{answersCount}</p>
                 <p className="text-[9px] font-bold uppercase text-text-muted">Answers Given</p>
               </div>
               <div>

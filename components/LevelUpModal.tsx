@@ -21,7 +21,7 @@ export default function LevelUpModal({ isOpen, newLevel, onClose }: LevelUpModal
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-navy/90 px-6"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 px-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -52,7 +52,7 @@ export default function LevelUpModal({ isOpen, newLevel, onClose }: LevelUpModal
                 </h2>
                 <LevelBadge level={newLevel} size="lg" />
                 <p className="text-sm font-bold text-text-muted">
-                  You&apos;re now a <span className="text-white">{getLevelTitle(newLevel)}</span>
+                  You&apos;re now a <span className="text-ink">{getLevelTitle(newLevel)}</span>
                 </p>
               </>
             )}

@@ -13,6 +13,7 @@ const config: Config = {
         // Core brand identity
         pink: "var(--pink)",
         sky: "var(--sky)",
+        "sky-deep": "var(--sky-deep)",
         purple: "var(--purple)",
         // Base
         bg: "var(--bg)",
@@ -20,6 +21,7 @@ const config: Config = {
         card: "var(--card)",
         border: "var(--border)",
         "text-muted": "var(--text-muted)",
+        ink: "var(--ink)",
         // In-app accents (game mechanics only)
         yellow: "var(--yellow)",
         green: "var(--green)",
@@ -34,13 +36,15 @@ const config: Config = {
         "glow-purple": "var(--glow-purple)",
         "glow-yellow": "var(--glow-yellow)",
         "glow-green": "var(--glow-green)",
+        card: "var(--shadow-card)",
       },
       backgroundImage: {
         "gradient-pink-purple": "linear-gradient(135deg, var(--pink), var(--purple))",
-        "gradient-sky-purple": "linear-gradient(135deg, var(--sky), var(--purple))",
+        "gradient-sky-purple": "linear-gradient(135deg, var(--sky), var(--sky-deep))",
         "gradient-purple-pink": "linear-gradient(135deg, var(--purple), var(--pink))",
         "gradient-yellow-orange": "linear-gradient(135deg, var(--yellow), var(--orange))",
         "gradient-green-sky": "linear-gradient(135deg, var(--green), var(--sky))",
+        "gradient-primary": "linear-gradient(135deg, var(--sky), var(--sky-deep))",
       },
       borderWidth: {
         3: "3px",

@@ -70,7 +70,7 @@ export default function SearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search founders, posts, schools..."
-          className="w-full rounded-xl border-3 border-border bg-card py-3 pl-9 pr-9 text-sm font-bold text-white placeholder:text-text-muted focus:border-pink focus:outline-none"
+          className="w-full rounded-xl border-3 border-border bg-card py-3 pl-9 pr-9 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none"
         />
         {query && (
           <button
@@ -98,7 +98,7 @@ export default function SearchBar() {
                   <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-pink-purple text-[10px] font-black text-white">
                     {p.first_name.charAt(0).toUpperCase()}
                   </span>
-                  <span className="text-sm font-bold text-white">{p.first_name}</span>
+                  <span className="text-sm font-bold text-ink">{p.first_name}</span>
                   <span className="ml-auto text-xs font-bold text-text-muted">Lv {p.level}</span>
                 </div>
               ))}
@@ -110,7 +110,7 @@ export default function SearchBar() {
               <p className="mb-1 text-[10px] font-black uppercase tracking-wide text-sky">Posts</p>
               {posts.map((p) => (
                 <div key={p.id} className="rounded-lg px-2 py-1.5 hover:bg-navy/40">
-                  <p className="truncate text-sm font-bold text-white">{p.title ?? p.body}</p>
+                  <p className="truncate text-sm font-bold text-ink">{p.title ?? p.body}</p>
                 </div>
               ))}
             </div>
@@ -121,7 +121,7 @@ export default function SearchBar() {
               <p className="mb-1 text-[10px] font-black uppercase tracking-wide text-purple">Schools</p>
               {schools.map((s) => (
                 <div key={s.id} className="rounded-lg px-2 py-1.5 hover:bg-navy/40">
-                  <p className="text-sm font-bold text-white">{s.name}</p>
+                  <p className="text-sm font-bold text-ink">{s.name}</p>
                 </div>
               ))}
             </div>

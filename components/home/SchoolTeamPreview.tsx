@@ -53,7 +53,7 @@ export default function SchoolTeamPreview() {
   return (
     <GameCard borderColor="sky" glowColor="sky">
       <div className="mb-3 flex items-center justify-between">
-        <span className="font-black uppercase tracking-wide text-white">🏫 Your Team</span>
+        <span className="font-black uppercase tracking-wide text-ink">🏫 Your Team</span>
         <Link href="/teams" className="text-xs font-black uppercase tracking-wide text-sky">
           View Team →
         </Link>
@@ -63,7 +63,7 @@ export default function SchoolTeamPreview() {
         <>
           <div className="mb-2 flex items-center justify-between">
             <div>
-              <p className="font-black uppercase text-white">{school.name}</p>
+              <p className="font-black uppercase text-ink">{school.name}</p>
               <p className="text-xs font-bold text-text-muted">{school.memberCount} members</p>
             </div>
             <span className="rounded-full border-3 border-sky bg-navy/60 px-3 py-1 text-xs font-black text-sky">

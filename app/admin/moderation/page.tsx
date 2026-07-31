@@ -178,7 +178,7 @@ export default function AdminModerationPage() {
                     {p.author?.first_name ?? "Member"} · {p.feed_type} · {p.category}
                   </span>
                 </div>
-                {p.title && <p className="mb-1 text-sm font-black text-white">{p.title}</p>}
+                {p.title && <p className="mb-1 text-sm font-black text-ink">{p.title}</p>}
                 {p.body && <p className="mb-3 text-sm font-bold text-text-muted">{p.body}</p>}
                 <div className="flex gap-2">
                   <button
@@ -210,7 +210,7 @@ export default function AdminModerationPage() {
               return (
                 <GameCard key={r.id} borderColor={urgent ? "orange" : "border"}>
                   <div className="mb-2 flex items-center justify-between">
-                    <span className="text-xs font-black uppercase text-white">
+                    <span className="text-xs font-black uppercase text-ink">
                       {urgent && "🚨 "}
                       {r.category.replace("_", " ")} · {r.reported_type}
                     </span>
@@ -250,7 +250,7 @@ export default function AdminModerationPage() {
             warnings.map((w) => (
               <GameCard key={w.id} borderColor={isActive(w) ? "orange" : "border"}>
                 <div className="mb-1 flex items-center justify-between">
-                  <span className="text-sm font-black text-white">{w.user?.first_name ?? "Member"}</span>
+                  <span className="text-sm font-black text-ink">{w.user?.first_name ?? "Member"}</span>
                   <span className="text-[10px] font-black uppercase text-orange">
                     {w.warning_type.replace("_", " ")}
                   </span>
@@ -275,13 +275,13 @@ export default function AdminModerationPage() {
       )}
 
       {warnTarget && (
-        <div className="fixed inset-0 z-[95] flex items-center justify-center bg-navy/80 px-6">
+        <div className="fixed inset-0 z-[95] flex items-center justify-center bg-black/80 px-6">
           <div className="w-full max-w-[360px] rounded-[18px] border-3 border-orange bg-card p-5">
-            <p className="mb-3 font-black uppercase text-white">Issue Warning</p>
+            <p className="mb-3 font-black uppercase text-ink">Issue Warning</p>
             <select
               value={warnType}
               onChange={(e) => setWarnType(e.target.value as WarningType)}
-              className="mb-2 w-full rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white"
+              className="mb-2 w-full rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink"
             >
               <option value="content_removed">Content Removed</option>
               <option value="posting_restriction">Posting Restriction (24h)</option>
@@ -293,7 +293,7 @@ export default function AdminModerationPage() {
               onChange={(e) => setWarnReason(e.target.value)}
               placeholder="Reason"
               rows={3}
-              className="mb-3 w-full rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted"
+              className="mb-3 w-full rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
             />
             <div className="flex gap-2">
               <button
@@ -307,7 +307,7 @@ export default function AdminModerationPage() {
                 type="button"
                 onClick={handleIssueWarning}
                 disabled={!warnReason.trim()}
-                className="flex-1 rounded-xl border-3 border-orange bg-orange py-2 text-xs font-black uppercase text-navy disabled:opacity-40"
+                className="flex-1 rounded-xl border-3 border-orange bg-orange py-2 text-xs font-black uppercase text-ink disabled:opacity-40"
               >
                 Issue
               </button>

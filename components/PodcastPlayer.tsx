@@ -125,7 +125,7 @@ export default function PodcastPlayer({ podcast, onClose, onCompleted }: Podcast
             >
               {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
             </span>
-            <span className="flex-1 truncate text-left text-xs font-black text-white">{podcast.title}</span>
+            <span className="flex-1 truncate text-left text-xs font-black text-ink">{podcast.title}</span>
             <span className="text-[10px] font-bold text-text-muted">{formatTime(currentTime)}</span>
           </motion.button>
         ) : (
@@ -154,7 +154,7 @@ export default function PodcastPlayer({ podcast, onClose, onCompleted }: Podcast
               </button>
             </div>
 
-            <p className="mb-3 truncate text-sm font-black text-white">
+            <p className="mb-3 truncate text-sm font-black text-ink">
               {podcast.episode_number ? `Ep. ${podcast.episode_number} · ` : ""}
               {podcast.title}
             </p>

@@ -17,7 +17,7 @@ export default function QuoteCard({ post, reaction }: QuoteCardProps) {
     <div className="relative rounded-[18px] border-3 border-yellow bg-card p-5 shadow-glow-yellow">
       <ReportButton reportedType="post" reportedId={post.id} className="absolute right-3 top-3" />
       <p className="text-3xl leading-none text-yellow">&ldquo;</p>
-      <p className="-mt-2 text-base font-bold italic text-white">{post.body}</p>
+      <p className="-mt-2 text-base font-bold italic text-ink">{post.body}</p>
       <p className="mt-3 text-right text-xs font-black uppercase tracking-wide text-yellow">
         — {attribution}
       </p>

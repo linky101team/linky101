@@ -67,7 +67,7 @@ export default function AdminMentorsPage() {
             <GameCard key={mentor.id} borderColor="border">
               <div className="mb-2 flex items-center justify-between gap-2">
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-black text-white">{mentor.display_name}</p>
+                  <p className="truncate text-sm font-black text-ink">{mentor.display_name}</p>
                   {mentor.rating_count > 0 && (
                     <p className="flex items-center gap-1 text-[10px] font-bold text-yellow">
                       <Star className="h-3 w-3 fill-yellow" /> {mentor.rating_avg.toFixed(1)} ({mentor.rating_count})

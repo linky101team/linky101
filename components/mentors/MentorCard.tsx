@@ -54,7 +54,7 @@ export default function MentorCard({
           </span>
         )}
         <div className="min-w-0">
-          <p className="truncate text-sm font-black text-white">{mentor.display_name}</p>
+          <p className="truncate text-sm font-black text-ink">{mentor.display_name}</p>
           <div className="flex items-center gap-1">
             {mentor.is_verified && <span className="text-[10px] font-black uppercase text-sky">✓ Verified</span>}
             {isTopMentor && <span className="text-[10px] font-black uppercase text-yellow">🏆 Top Mentor</span>}

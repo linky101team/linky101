@@ -103,7 +103,7 @@ export default function TeamLeaderboard() {
 
   return (
     <div>
-      <p className="mb-3 font-black uppercase tracking-wide text-white">📈 Team Leaderboard (This Week)</p>
+      <p className="mb-3 font-black uppercase tracking-wide text-ink">📈 Team Leaderboard (This Week)</p>
       {loading ? (
         <p className="text-sm font-bold text-text-muted">Loading...</p>
       ) : (
@@ -119,10 +119,10 @@ export default function TeamLeaderboard() {
                   }`}
                 >
                   <span className="w-5 shrink-0 text-center font-black text-yellow">{i + 1}</span>
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-3 border-green bg-gradient-green-sky text-xs font-black text-navy">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-3 border-green bg-gradient-green-sky text-xs font-black text-ink">
                     {row.first_name?.charAt(0).toUpperCase() ?? "?"}
                   </span>
-                  <span className="flex-1 truncate text-sm font-bold text-white">
+                  <span className="flex-1 truncate text-sm font-bold text-ink">
                     {row.first_name} {isMe && <span className="text-green">(You)</span>}
                   </span>
                   <span className="shrink-0 text-xs font-black text-green">{row.weeklyXp} XP</span>

@@ -33,7 +33,7 @@ export default function InterSchoolLeague() {
 
   return (
     <div>
-      <p className="mb-3 font-black uppercase tracking-wide text-white">🏅 Inter-School League</p>
+      <p className="mb-3 font-black uppercase tracking-wide text-ink">🏅 Inter-School League</p>
       {loading ? (
         <p className="text-sm font-bold text-text-muted">Loading...</p>
       ) : (
@@ -47,7 +47,7 @@ export default function InterSchoolLeague() {
             >
               <div className="flex items-center gap-3">
                 <span className="w-5 shrink-0 text-center font-black text-yellow">{i + 1}</span>
-                <span className="flex-1 truncate text-sm font-black text-white">{s.name}</span>
+                <span className="flex-1 truncate text-sm font-black text-ink">{s.name}</span>
                 <span className="shrink-0 text-xs font-black text-purple">{s.team_xp} XP</span>
               </div>
               {expanded === s.id && (

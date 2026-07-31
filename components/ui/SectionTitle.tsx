@@ -17,7 +17,7 @@ export default function SectionTitle({
 }: SectionTitleProps) {
   return (
     <div className={`flex items-center justify-between ${className}`}>
-      <h2 className="flex items-center gap-2 font-black uppercase tracking-wide text-white">
+      <h2 className="flex items-center gap-2 font-black uppercase tracking-wide text-ink">
         {emoji && <span>{emoji}</span>}
         <span>{title}</span>
       </h2>

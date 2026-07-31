@@ -77,7 +77,7 @@ export default function SpotlightTutorial({ tour, stepIndex, onNext, onSkip }: S
           style={{ boxShadow: "0 0 0 9999px rgba(15,23,42,0.85)" }}
         />
       ) : (
-        <div className="absolute inset-0 bg-navy/85" />
+        <div className="absolute inset-0 bg-black/85" />
       )}
 
       <button
@@ -99,7 +99,7 @@ export default function SpotlightTutorial({ tour, stepIndex, onNext, onSkip }: S
           <p className="mb-1 text-[10px] font-black uppercase tracking-wide text-pink">
             Step {stepIndex + 1}/{tour.steps.length}
           </p>
-          <h3 className="mb-1 text-base font-black text-white">{step.title}</h3>
+          <h3 className="mb-1 text-base font-black text-ink">{step.title}</h3>
           <p className="mb-3 text-sm font-bold text-text-muted">{step.body}</p>
           <div className="flex gap-2">
             <button

@@ -111,7 +111,7 @@ export default function FeedbackPage() {
           value={subject}
           onChange={(e) => setSubject(e.target.value.slice(0, SUBJECT_MAX))}
           placeholder="Subject"
-          className="w-full rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted focus:border-pink focus:outline-none"
+          className="w-full rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none"
         />
 
         <textarea
@@ -119,7 +119,7 @@ export default function FeedbackPage() {
           onChange={(e) => setMessage(e.target.value.slice(0, MESSAGE_MAX))}
           rows={5}
           placeholder="Tell us what's going on..."
-          className="w-full rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted focus:border-pink focus:outline-none"
+          className="w-full rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none"
         />
         <p className="text-right text-[10px] font-bold text-text-muted">{message.length}/{MESSAGE_MAX}</p>
 
@@ -133,12 +133,12 @@ export default function FeedbackPage() {
 
       {history.length > 0 && (
         <div>
-          <p className="mb-3 font-black uppercase tracking-wide text-white">Your Messages</p>
+          <p className="mb-3 font-black uppercase tracking-wide text-ink">Your Messages</p>
           <div className="flex flex-col gap-2">
             {history.map((f) => (
               <GameCard key={f.id} borderColor="border">
                 <div className="mb-1 flex items-center justify-between gap-2">
-                  <span className="text-sm font-black text-white">{f.subject}</span>
+                  <span className="text-sm font-black text-ink">{f.subject}</span>
                   <span
                     className={`shrink-0 rounded-full border-2 px-2 py-0.5 text-[9px] font-black uppercase ${
                       STATUS_STYLE[f.status] ?? STATUS_STYLE.pending

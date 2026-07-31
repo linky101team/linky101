@@ -192,7 +192,7 @@ export default function MentorsPage() {
         </div>
       )}
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-24 z-30">
+      <div className="pointer-events-none fixed inset-x-0 bottom-40 z-30">
         <div className="mx-auto max-w-[430px] px-4">
           <button
             type="button"

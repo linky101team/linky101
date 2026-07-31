@@ -89,28 +89,28 @@ export default function AdminFaqPage() {
             value={form.question}
             onChange={(e) => setForm((f) => ({ ...f, question: e.target.value }))}
             placeholder="Question"
-            className="rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted"
+            className="rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
           />
           <textarea
             value={form.answer}
             onChange={(e) => setForm((f) => ({ ...f, answer: e.target.value }))}
             placeholder="Answer"
             rows={3}
-            className="rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted"
+            className="rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
           />
           <div className="flex gap-2">
             <input
               value={form.category}
               onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
               placeholder="Category"
-              className="flex-1 rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted"
+              className="flex-1 rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
             />
             <input
               value={form.order_index}
               onChange={(e) => setForm((f) => ({ ...f, order_index: e.target.value }))}
               type="number"
               placeholder="Order"
-              className="w-20 rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted"
+              className="w-20 rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
             />
           </div>
           {errorMsg && <p className="text-xs font-bold text-orange">{errorMsg}</p>}
@@ -127,7 +127,7 @@ export default function AdminFaqPage() {
           {items.map((item) => (
             <GameCard key={item.id} borderColor="border" className="flex items-center gap-3">
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-black text-white">{item.question}</p>
+                <p className="truncate text-sm font-black text-ink">{item.question}</p>
                 <p className="text-[10px] font-bold text-text-muted">{item.category}</p>
               </div>
               <button

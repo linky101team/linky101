@@ -16,7 +16,7 @@ const CATEGORY_TILES: { value: Category; label: string; emoji: string; color: st
 ];
 
 const fieldClass =
-  "w-full rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted focus:border-pink focus:outline-none";
+  "w-full rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none";
 
 interface NewPostModalProps {
   isOpen: boolean;
@@ -77,7 +77,7 @@ export default function NewPostModal({ isOpen, onClose, onSubmitted }: NewPostMo
   const tile = CATEGORY_TILES.find((t) => t.value === category);
 
   return (
-    <div className="fixed inset-0 z-[90] flex items-end justify-center bg-navy/80 sm:items-center">
+    <div className="fixed inset-0 z-[90] flex items-end justify-center bg-black/80 sm:items-center">
       <div className="max-h-[85vh] w-full max-w-[430px] overflow-y-auto rounded-t-[24px] border-3 border-pink bg-card p-5 shadow-glow-pink sm:rounded-[24px]">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="heading-game text-lg">New Post</h2>
@@ -99,7 +99,7 @@ export default function NewPostModal({ isOpen, onClose, onSubmitted }: NewPostMo
                 className={`flex flex-col items-center gap-2 rounded-2xl border-3 ${t.color} bg-navy/40 p-4`}
               >
                 <span className="text-3xl">{t.emoji}</span>
-                <span className="text-xs font-black uppercase text-white">{t.label}</span>
+                <span className="text-xs font-black uppercase text-ink">{t.label}</span>
               </button>
             ))}
           </div>

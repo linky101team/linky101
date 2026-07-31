@@ -14,7 +14,7 @@ const MIN_AGE = 13;
 const MAX_AGE = 18;
 
 const inputClass =
-  "w-full rounded-xl border-3 border-border bg-navy/60 px-4 py-3 font-bold text-white placeholder:text-text-muted focus:border-pink focus:outline-none";
+  "w-full rounded-xl border-3 border-border bg-white px-4 py-3 font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none";
 
 interface School {
   id: string;
@@ -143,12 +143,15 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col justify-center gap-6 px-5 py-10">
+    <main className="auth-gradient-bg flex min-h-screen flex-col justify-center gap-6 px-5 py-10">
       <div className="text-center">
+        <span className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-3xl border-3 border-pink bg-gradient-pink-purple text-2xl font-black text-white shadow-glow-pink">
+          🚀
+        </span>
         <h1 className="heading-game text-3xl">
           Join Link<span className="text-pink">Y</span>101
         </h1>
-        <p className="mt-1 text-sm font-bold text-text-muted">
+        <p className="mt-1 text-sm font-bold text-ink">
           Build. Connect. Launch. Let&apos;s go.
         </p>
       </div>
@@ -215,7 +218,7 @@ export default function SignupPage() {
           </div>
 
           {ageBlocked ? (
-            <div className="rounded-xl border-3 border-orange bg-navy/60 p-4 text-center">
+            <div className="rounded-xl border-3 border-orange bg-white p-4 text-center">
               <p className="font-black uppercase text-orange">
                 LinkY101 is for ages 13–18! Come back soon 🚀
               </p>
@@ -245,21 +248,21 @@ export default function SignupPage() {
                         value={schoolQuery}
                         onChange={(e) => setSchoolQuery(e.target.value)}
                         placeholder="Search schools..."
-                        className="w-full rounded-lg border-3 border-border bg-navy/60 py-2 pl-9 pr-3 text-sm font-bold text-white placeholder:text-text-muted focus:border-purple focus:outline-none"
+                        className="w-full rounded-lg border-3 border-border bg-white py-2 pl-9 pr-3 text-sm font-bold text-ink placeholder:text-text-muted focus:border-purple focus:outline-none"
                       />
                     </div>
 
                     <button
                       type="button"
                       onClick={pickHomeschool}
-                      className="w-full rounded-lg px-3 py-2 text-left text-sm font-bold text-white hover:bg-navy/60"
+                      className="w-full rounded-lg px-3 py-2 text-left text-sm font-bold text-ink hover:bg-white"
                     >
                       🏠 I&apos;m homeschooled
                     </button>
                     <button
                       type="button"
                       onClick={pickNoSchoolYet}
-                      className="w-full rounded-lg px-3 py-2 text-left text-sm font-bold text-white hover:bg-navy/60"
+                      className="w-full rounded-lg px-3 py-2 text-left text-sm font-bold text-ink hover:bg-white"
                     >
                       🏫 My school isn&apos;t on LinkY101 yet
                     </button>
@@ -277,7 +280,7 @@ export default function SignupPage() {
                           key={school.id}
                           type="button"
                           onClick={() => pickSchool(school)}
-                          className="w-full rounded-lg px-3 py-2 text-left text-sm font-bold text-white hover:bg-navy/60"
+                          className="w-full rounded-lg px-3 py-2 text-left text-sm font-bold text-ink hover:bg-white"
                         >
                           {school.name}
                         </button>

@@ -54,7 +54,7 @@ export default function AdminShopPage() {
           {items.map((item) => (
             <GameCard key={item.id} borderColor="border" className="flex items-center gap-3">
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-black text-white">{item.name}</p>
+                <p className="truncate text-sm font-black text-ink">{item.name}</p>
                 <p className="text-[10px] font-bold text-text-muted">
                   {item.category.replace("_", " ")} · 🪙{item.coin_cost} · {purchaseCounts[item.id] ?? 0} owned
                 </p>

@@ -59,7 +59,7 @@ export default function TrendingSection() {
 
   return (
     <div>
-      <p className="mb-3 font-black uppercase tracking-wide text-white">🔥 Trending This Week</p>
+      <p className="mb-3 font-black uppercase tracking-wide text-ink">🔥 Trending This Week</p>
       <div className="flex gap-3 overflow-x-auto pb-2">
         {loading && <p className="text-sm font-bold text-text-muted">Loading...</p>}
         {posts.map((p) => (
@@ -68,7 +68,7 @@ export default function TrendingSection() {
             className="w-52 shrink-0 rounded-2xl border-3 border-pink bg-card p-3 shadow-glow-pink"
           >
             <p className="mb-1 text-xs font-black uppercase text-pink">{p.category}</p>
-            {p.title && <p className="mb-1 truncate text-sm font-black text-white">{p.title}</p>}
+            {p.title && <p className="mb-1 truncate text-sm font-black text-ink">{p.title}</p>}
             {p.body && <p className="line-clamp-2 text-xs font-bold text-text-muted">{p.body}</p>}
             <p className="mt-2 text-xs font-bold text-text-muted">
               🔥 {p.reactionCount} · by {p.author?.first_name ?? "Member"}

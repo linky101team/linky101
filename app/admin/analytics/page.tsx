@@ -37,7 +37,7 @@ function Bar({ label, value, max }: { label: string; value: number; max: number 
       <div className="h-4 flex-1 overflow-hidden rounded-full bg-navy/60">
         <div className="h-full rounded-full bg-gradient-pink-purple" style={{ width: `${pct}%` }} />
       </div>
-      <span className="w-6 shrink-0 text-right text-[10px] font-black text-white">{value}</span>
+      <span className="w-6 shrink-0 text-right text-[10px] font-black text-ink">{value}</span>
     </div>
   );
 }

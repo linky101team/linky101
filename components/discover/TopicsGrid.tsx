@@ -39,11 +39,11 @@ export default function TopicsGrid() {
       {TOPICS.map((t) => (
         <Link
           key={t.key}
-          href={`/learn?topic=${encodeURIComponent(t.key)}`}
+          href={`/learn/topic/${encodeURIComponent(t.key)}`}
           className={`flex flex-col items-center gap-1 rounded-2xl border-3 ${t.color} ${t.bg} p-3 text-center`}
         >
           <span className="text-2xl">{t.emoji}</span>
-          <span className="text-[11px] font-black uppercase leading-tight text-white">{t.key}</span>
+          <span className="text-[11px] font-black uppercase leading-tight text-ink">{t.key}</span>
           <span className="text-[10px] font-bold text-text-muted">{counts[t.key] ?? 0} posts</span>
         </Link>
       ))}

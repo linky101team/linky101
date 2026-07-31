@@ -78,18 +78,15 @@ export default function LinkyChat() {
   return (
     <>
       {!open && (
-        <div className="pointer-events-none fixed inset-x-0 bottom-24 z-40">
-          <div className="mx-auto max-w-[430px] px-4">
-            <button
-              type="button"
-              onClick={() => setOpen(true)}
-              aria-label="Chat with Linky AI"
-              className="pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full border-3 border-pink bg-gradient-pink-purple text-white shadow-glow-pink"
-            >
-              <MessageCircle className="h-6 w-6" strokeWidth={2.5} />
-            </button>
-          </div>
-        </div>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label="Chat with Linky AI"
+          style={{ bottom: "80px", right: "16px" }}
+          className="fixed z-40 flex h-12 w-12 items-center justify-center rounded-full border-3 border-sky bg-gradient-primary text-white shadow-glow-sky transition-transform active:scale-95"
+        >
+          <MessageCircle className="h-5 w-5" />
+        </button>
       )}
 
       <AnimatePresence>
@@ -98,7 +95,7 @@ export default function LinkyChat() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-end justify-center bg-black/60"
+            className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 pb-20"
             onClick={() => setOpen(false)}
           >
             <motion.div
@@ -107,24 +104,24 @@ export default function LinkyChat() {
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 26, stiffness: 260 }}
               onClick={(e) => e.stopPropagation()}
-              className="flex h-[80vh] w-full max-w-[430px] flex-col rounded-t-[24px] border-3 border-b-0 border-pink bg-navy shadow-glow-pink"
+              className="flex h-[65vh] w-full max-w-[430px] flex-col overflow-hidden rounded-[24px] border-3 border-sky bg-card shadow-glow-sky"
             >
-              <div className="flex items-center gap-3 border-b-3 border-border p-4">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full border-3 border-pink bg-gradient-pink-purple text-white">
+              <div className="flex items-center gap-3 bg-gradient-primary p-4">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full border-3 border-white/40 bg-white/20 text-white">
                   <MessageCircle className="h-4 w-4" />
                 </span>
                 <div className="flex-1">
                   <p className="text-sm font-black text-white">Linky AI</p>
-                  <p className="text-[10px] font-bold text-text-muted">Your business buddy</p>
+                  <p className="text-[10px] font-bold text-white/80">Your business buddy</p>
                 </div>
-                <button type="button" onClick={() => setOpen(false)} aria-label="Close chat" className="text-text-muted">
+                <button type="button" onClick={() => setOpen(false)} aria-label="Close chat" className="text-white">
                   <X className="h-5 w-5" strokeWidth={3} />
                 </button>
               </div>
 
-              <div ref={scrollRef} className="flex-1 overflow-y-auto p-4">
+              <div ref={scrollRef} className="flex-1 overflow-y-auto bg-navy/40 p-4">
                 <div className="mb-3 max-w-[85%] rounded-2xl rounded-bl-sm border-3 border-purple bg-card p-3">
-                  <p className="text-sm font-bold text-white">
+                  <p className="text-sm font-bold text-ink">
                     Hey {profile.first_name}! I&apos;m Linky 👋 Ask me anything about business or how LinkY101 works.
                   </p>
                 </div>
@@ -137,8 +134,8 @@ export default function LinkyChat() {
                       key={i}
                       className={`mb-3 max-w-[85%] rounded-2xl p-3 text-sm font-bold ${
                         m.role === "user"
-                          ? "ml-auto rounded-br-sm border-3 border-pink bg-gradient-pink-purple text-white"
-                          : "rounded-bl-sm border-3 border-purple bg-card text-white"
+                          ? "ml-auto rounded-br-sm border-3 border-sky bg-gradient-primary text-white"
+                          : "rounded-bl-sm border-3 border-purple bg-card text-ink"
                       }`}
                     >
                       {m.content}
@@ -154,12 +151,12 @@ export default function LinkyChat() {
               </div>
 
               {errorMsg && (
-                <p className="border-t-3 border-border px-4 py-2 text-center text-xs font-bold text-orange">
+                <p className="border-t-3 border-border bg-card px-4 py-2 text-center text-xs font-bold text-orange">
                   {errorMsg}
                 </p>
               )}
 
-              <div className="flex items-center gap-2 border-t-3 border-border p-3">
+              <div className="flex items-center gap-2 border-t-3 border-border bg-card p-3">
                 <input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -167,14 +164,14 @@ export default function LinkyChat() {
                     if (e.key === "Enter") handleSend();
                   }}
                   placeholder="Ask Linky something..."
-                  className="flex-1 rounded-xl border-3 border-border bg-card px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted focus:border-pink focus:outline-none"
+                  className="flex-1 rounded-xl border border-[#90CAF9] bg-white px-4 py-3 text-sm font-bold text-[#1a1a2e] placeholder:text-[#999] focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/30"
                 />
                 <button
                   type="button"
                   onClick={handleSend}
                   disabled={sending || !input.trim()}
                   aria-label="Send message"
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-3 border-pink bg-gradient-pink-purple text-white shadow-glow-pink disabled:opacity-40"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-3 border-sky bg-gradient-primary text-white shadow-glow-sky disabled:opacity-40"
                 >
                   <Send className="h-4 w-4" />
                 </button>

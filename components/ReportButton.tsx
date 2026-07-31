@@ -66,7 +66,7 @@ export default function ReportButton({ reportedType, reportedId, className = "" 
 
       {open && (
         <div
-          className="fixed inset-0 z-[95] flex items-center justify-center bg-navy/80 px-6"
+          className="fixed inset-0 z-[95] flex items-center justify-center bg-black/80 px-6"
           onClick={reset}
         >
           <div
@@ -76,7 +76,7 @@ export default function ReportButton({ reportedType, reportedId, className = "" 
             {submitted ? (
               <div className="text-center">
                 <p className="mb-1 text-2xl">✅</p>
-                <p className="font-black uppercase text-white">Report sent</p>
+                <p className="font-black uppercase text-ink">Report sent</p>
                 <p className="mt-1 text-sm font-bold text-text-muted">
                   Our team will take a look. Thanks for helping keep LinkY101 safe.
                 </p>
@@ -90,7 +90,7 @@ export default function ReportButton({ reportedType, reportedId, className = "" 
               </div>
             ) : (
               <>
-                <p className="mb-3 font-black uppercase text-white">Report this</p>
+                <p className="mb-3 font-black uppercase text-ink">Report this</p>
                 <div className="mb-3 flex flex-col gap-2">
                   {CATEGORIES.map((c) => (
                     <button
@@ -112,7 +112,7 @@ export default function ReportButton({ reportedType, reportedId, className = "" 
                   onChange={(e) => setDescription(e.target.value.slice(0, 500))}
                   placeholder="Add details (optional)"
                   rows={3}
-                  className="mb-3 w-full rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted focus:border-orange focus:outline-none"
+                  className="mb-3 w-full rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted focus:border-orange focus:outline-none"
                 />
                 <div className="flex gap-2">
                   <button
@@ -126,7 +126,7 @@ export default function ReportButton({ reportedType, reportedId, className = "" 
                     type="button"
                     disabled={!category || submitting}
                     onClick={handleSubmit}
-                    className="flex-1 rounded-xl border-3 border-orange bg-orange py-2 text-xs font-black uppercase text-navy disabled:opacity-40"
+                    className="flex-1 rounded-xl border-3 border-orange bg-orange py-2 text-xs font-black uppercase text-ink disabled:opacity-40"
                   >
                     {submitting ? "Sending..." : "Submit"}
                   </button>

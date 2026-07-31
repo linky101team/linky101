@@ -55,7 +55,7 @@ export default function LeaderboardPage() {
                   {row.first_name?.charAt(0).toUpperCase() ?? "?"}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-black text-white">
+                  <p className="truncate text-sm font-black text-ink">
                     {row.first_name} {isMe && <span className="text-pink">(You)</span>}
                   </p>
                   <p className="text-xs font-bold text-text-muted">

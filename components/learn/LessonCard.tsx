@@ -16,7 +16,7 @@ export default function LessonCard({ post, reaction }: LessonCardProps) {
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-3 border-pink bg-gradient-pink-purple text-xs font-black text-white">
           {post.author?.first_name?.charAt(0).toUpperCase() ?? "?"}
         </span>
-        <span className="text-sm font-black text-white">{post.author?.first_name ?? "LinkY101"}</span>
+        <span className="text-sm font-black text-ink">{post.author?.first_name ?? "LinkY101"}</span>
         <span className="ml-auto rounded-full border-2 border-pink px-2 py-0.5 text-[10px] font-black uppercase text-pink">
           Creator
         </span>

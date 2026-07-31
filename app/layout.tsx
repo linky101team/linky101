@@ -52,7 +52,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0f172a",
+  themeColor: "#B3E5FC",
 };
 
 export default function RootLayout({
@@ -62,8 +62,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={nunito.variable}>
-      <body className="bg-bg font-sans antialiased">
-        <div className="mx-auto min-h-screen w-full max-w-[430px] bg-bg">
+      <body className="bg-bg font-sans antialiased lg:flex lg:min-h-screen lg:items-center lg:justify-center lg:gap-12 lg:p-8" style={{ background: "linear-gradient(160deg, #64B5F6, #E1F5FE)" }}>
+        <div className="hidden text-center lg:block">
+          <h1 className="text-5xl font-black uppercase tracking-wide text-white drop-shadow-lg">
+            Link<span className="text-[#0D1B2A]">Y</span>101
+          </h1>
+          <p className="mt-2 max-w-xs text-sm font-bold text-white/90">
+            The gamified app where teen entrepreneurs learn, connect, and launch their ideas.
+          </p>
+        </div>
+
+        {/*
+          The `lg:transform` below isn't decorative — per the CSS spec, an
+          element with a `transform` becomes the containing block for any
+          `position: fixed` descendant. That's what keeps the bottom nav,
+          modals, and the Linky AI bubble anchored to this phone frame on
+          desktop instead of escaping to the real browser window edges.
+        */}
+        <div className="mx-auto min-h-screen w-full max-w-[430px] bg-bg lg:min-h-0 lg:h-[860px] lg:overflow-y-auto lg:rounded-[40px] lg:border-8 lg:border-white lg:shadow-2xl lg:[transform:translateZ(0)]">
           {children}
         </div>
       </body>

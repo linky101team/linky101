@@ -236,7 +236,7 @@ export default function MentorDashboardPage() {
             onChange={(e) => setBioDraft(e.target.value.slice(0, BIO_MAX))}
             rows={3}
             placeholder="Write a short bio students will see..."
-            className="w-full rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted focus:border-sky focus:outline-none"
+            className="w-full rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none"
           />
           <div className="mt-1 flex items-center justify-between">
             <p className="text-[10px] font-bold text-text-muted">{bioDraft.length}/{BIO_MAX}</p>
@@ -254,17 +254,17 @@ export default function MentorDashboardPage() {
 
       <div className="grid grid-cols-2 gap-3">
         <GameCard borderColor="sky" glowColor="sky" className="text-center">
-          <p className="text-2xl font-black text-white">{answered.length}</p>
+          <p className="text-2xl font-black text-ink">{answered.length}</p>
           <p className="text-xs font-bold uppercase text-text-muted">Answers Given</p>
         </GameCard>
         <GameCard borderColor="purple" glowColor="purple" className="text-center">
-          <p className="text-2xl font-black text-white">{uniqueAskers}</p>
+          <p className="text-2xl font-black text-ink">{uniqueAskers}</p>
           <p className="text-xs font-bold uppercase text-text-muted">Students Helped</p>
         </GameCard>
       </div>
 
       <div>
-        <p className="mb-3 font-black uppercase tracking-wide text-white">📥 Unanswered ({pending.length})</p>
+        <p className="mb-3 font-black uppercase tracking-wide text-ink">📥 Unanswered ({pending.length})</p>
         {pending.length === 0 ? (
           <p className="text-sm font-bold text-text-muted">You&apos;re all caught up!</p>
         ) : (
@@ -272,7 +272,7 @@ export default function MentorDashboardPage() {
             {pending.map((q) => (
               <GameCard key={q.id} borderColor="sky">
                 <p className="mb-1 text-xs font-black text-pink">{q.asker?.first_name ?? "Member"} asked:</p>
-                <p className="mb-3 text-sm font-bold text-white">{q.question_text}</p>
+                <p className="mb-3 text-sm font-bold text-ink">{q.question_text}</p>
                 {answeringId === q.id ? (
                   <div className="flex flex-col gap-2">
                     <textarea
@@ -280,7 +280,7 @@ export default function MentorDashboardPage() {
                       onChange={(e) => setAnswerText(e.target.value.slice(0, ANSWER_MAX))}
                       rows={4}
                       placeholder="Write your answer..."
-                      className="w-full rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted focus:border-sky focus:outline-none"
+                      className="w-full rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none"
                     />
                     <p className="text-right text-xs font-bold text-text-muted">
                       {answerText.length}/{ANSWER_MAX}
@@ -325,7 +325,7 @@ export default function MentorDashboardPage() {
       </div>
 
       <div>
-        <p className="mb-3 font-black uppercase tracking-wide text-white">✅ Your Recent Answers</p>
+        <p className="mb-3 font-black uppercase tracking-wide text-ink">✅ Your Recent Answers</p>
         {answered.length === 0 ? (
           <p className="text-sm font-bold text-text-muted">No answers yet.</p>
         ) : (
@@ -333,7 +333,7 @@ export default function MentorDashboardPage() {
             {answered.map((a) => (
               <div key={a.id} className="rounded-xl border-3 border-green bg-card p-3">
                 <p className="text-xs font-black text-pink">{a.asker?.first_name ?? "Member"} asked:</p>
-                <p className="mb-1 text-sm font-bold text-white">{a.question_text}</p>
+                <p className="mb-1 text-sm font-bold text-ink">{a.question_text}</p>
                 <p className="text-xs font-bold text-text-muted">Your answer: {a.answer_text}</p>
               </div>
             ))}

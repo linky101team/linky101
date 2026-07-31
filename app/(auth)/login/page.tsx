@@ -9,7 +9,7 @@ import GameCard from "@/components/ui/GameCard";
 import GradientButton from "@/components/ui/GradientButton";
 
 const inputClass =
-  "w-full rounded-xl border-3 border-border bg-navy/60 px-4 py-3 font-bold text-white placeholder:text-text-muted focus:border-sky focus:outline-none";
+  "w-full rounded-xl border-3 border-border bg-white px-4 py-3 font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -43,12 +43,15 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col justify-center gap-6 px-5 py-10">
+    <main className="auth-gradient-bg flex min-h-screen flex-col justify-center gap-6 px-5 py-10">
       <div className="text-center">
+        <span className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-3xl border-3 border-sky bg-gradient-primary text-2xl font-black text-white shadow-glow-sky">
+          🚀
+        </span>
         <h1 className="heading-game text-3xl">
           Link<span className="text-sky">Y</span>101
         </h1>
-        <p className="mt-1 text-sm font-bold text-text-muted">Welcome back.</p>
+        <p className="mt-1 text-sm font-bold text-ink">Welcome back.</p>
       </div>
 
       <GameCard borderColor="sky" glowColor="sky">

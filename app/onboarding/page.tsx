@@ -72,17 +72,25 @@ export default function OnboardingPage() {
   async function handleFinish() {
     setSaving(true);
 
-    await updateProfile({
-      interests,
-      dream: dream.trim() ? dream.trim() : null,
-      onboarding_completed: true,
-    });
+    // Never make the user stare at "Getting Ready" for more than 1.5s —
+    // race the real save against a timeout and navigate at whichever comes
+    // first. If the network is slow, the save keeps running in the
+    // background and the store updates whenever it lands.
+    const work = (async () => {
+      await updateProfile({
+        interests,
+        dream: dream.trim() ? dream.trim() : null,
+        onboarding_completed: true,
+      });
 
-    if (profile) {
-      await supabase.rpc("increment_xp", { user_id: profile.id, amount: TUTORIAL_XP });
-    }
+      if (profile) {
+        await supabase.rpc("increment_xp", { user_id: profile.id, amount: TUTORIAL_XP });
+      }
 
-    await fetchProfile();
+      await fetchProfile();
+    })();
+
+    await Promise.race([work, new Promise((resolve) => setTimeout(resolve, 1500))]);
     router.push("/home");
   }
 
@@ -169,7 +177,7 @@ export default function OnboardingPage() {
               onChange={(e) => setDream(e.target.value.slice(0, DREAM_MAX))}
               placeholder="I want to launch my own..."
               rows={5}
-              className="w-full resize-none bg-transparent font-bold text-white placeholder:text-text-muted focus:outline-none"
+              className="w-full resize-none bg-transparent font-bold text-ink placeholder:text-text-muted focus:outline-none"
             />
             <p className="mt-1 text-right text-xs font-bold text-text-muted">
               {dream.length}/{DREAM_MAX}
@@ -203,7 +211,7 @@ export default function OnboardingPage() {
           <GameCard borderColor="sky" glowColor={taskDone ? "green" : undefined}>
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="font-black uppercase text-white">
+                <p className="font-black uppercase text-ink">
                   Say hi in the community feed
                 </p>
                 <p className="mt-1 text-xs font-bold text-text-muted">
@@ -222,7 +230,7 @@ export default function OnboardingPage() {
               className={`mt-4 flex w-full items-center justify-center gap-2 rounded-xl border-3 py-3 font-black uppercase tracking-wide transition-colors ${
                 taskDone
                   ? "border-green bg-green/20 text-green"
-                  : "border-border bg-navy/60 text-white"
+                  : "border-border bg-navy/60 text-ink"
               }`}
             >
               {taskDone ? (

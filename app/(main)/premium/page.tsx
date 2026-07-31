@@ -46,8 +46,8 @@ export default function PremiumPage() {
     <div className="flex flex-col gap-6">
       <div className="rounded-[18px] border-3 border-pink bg-gradient-pink-purple p-6 text-center shadow-glow-pink">
         <p className="text-3xl">✨</p>
-        <h1 className="heading-game mt-2 text-2xl text-white">Go Premium</h1>
-        <p className="mt-1 text-sm font-bold text-white/90">
+        <h1 className="heading-game mt-2 text-2xl text-ink">Go Premium</h1>
+        <p className="mt-1 text-sm font-bold text-ink/90">
           Level up faster with exclusive tools built for young founders.
         </p>
       </div>
@@ -82,7 +82,7 @@ export default function PremiumPage() {
             <p className="mb-3 text-center text-xs font-black uppercase text-yellow">✨ Premium</p>
             <div className="flex flex-col gap-2">
               {FEATURES.map((f) => (
-                <div key={f.label} className="flex items-center gap-2 text-xs font-bold text-white">
+                <div key={f.label} className="flex items-center gap-2 text-xs font-bold text-ink">
                   <Check className="h-3.5 w-3.5 shrink-0 text-green" strokeWidth={3} />
                   <span>
                     {f.emoji} {f.label}

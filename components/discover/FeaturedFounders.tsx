@@ -78,7 +78,7 @@ export default function FeaturedFounders() {
 
   return (
     <div>
-      <p className="mb-3 font-black uppercase tracking-wide text-white">⭐ Featured Founders</p>
+      <p className="mb-3 font-black uppercase tracking-wide text-ink">⭐ Featured Founders</p>
       <div className="flex gap-3 overflow-x-auto pb-2">
         {loading && <p className="text-sm font-bold text-text-muted">Loading...</p>}
         {founders.map((f) => {
@@ -91,7 +91,7 @@ export default function FeaturedFounders() {
               <span className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full border-3 border-pink bg-gradient-pink-purple text-lg font-black text-white">
                 {f.first_name.charAt(0).toUpperCase()}
               </span>
-              <p className="truncate text-sm font-black text-white">{f.first_name}</p>
+              <p className="truncate text-sm font-black text-ink">{f.first_name}</p>
               <p className="mb-2 truncate text-[10px] font-bold text-text-muted">
                 Lv {f.level} · {getLevelTitle(f.level)}
               </p>

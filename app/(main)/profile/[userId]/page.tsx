@@ -37,7 +37,7 @@ const SCHOOL_TYPE_LABEL: Record<string, string> = {
 function StatBox({ label, value }: { label: string; value: number }) {
   return (
     <div>
-      <p className="text-base font-black text-white">{value}</p>
+      <p className="text-base font-black text-ink">{value}</p>
       <p className="text-[9px] font-bold uppercase tracking-wide text-text-muted">{label}</p>
     </div>
   );
@@ -187,13 +187,13 @@ export default function PublicProfilePage() {
       {!privacy.hide_dream && target.dream && (
         <GameCard borderColor="pink" glowColor="pink">
           <p className="mb-2 text-xs font-black uppercase tracking-wide text-pink">💭 Dream</p>
-          <p className="text-sm font-bold italic text-white">&ldquo;{target.dream}&rdquo;</p>
+          <p className="text-sm font-bold italic text-ink">&ldquo;{target.dream}&rdquo;</p>
         </GameCard>
       )}
 
       {target.interests.length > 0 && (
         <div>
-          <p className="mb-3 font-black uppercase tracking-wide text-white">✨ Interests</p>
+          <p className="mb-3 font-black uppercase tracking-wide text-ink">✨ Interests</p>
           <div className="flex flex-wrap gap-2">
             {target.interests.map((tag) => (
               <span

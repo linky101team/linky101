@@ -96,7 +96,7 @@ export default function AdminFeedbackPage() {
                   {new Date(row.created_at).toLocaleDateString()}
                 </span>
               </div>
-              <p className="mb-1 text-sm font-black text-white">{row.subject}</p>
+              <p className="mb-1 text-sm font-black text-ink">{row.subject}</p>
               <p className="mb-3 text-sm font-bold text-text-muted">{row.message}</p>
 
               {row.admin_response && (
@@ -110,7 +110,7 @@ export default function AdminFeedbackPage() {
                 <select
                   value={row.status}
                   onChange={(e) => handleStatus(row, e.target.value)}
-                  className="rounded-xl border-3 border-border bg-navy/60 px-2 py-1.5 text-xs font-bold text-white"
+                  className="rounded-xl border-3 border-border bg-white px-2 py-1.5 text-xs font-bold text-ink"
                 >
                   {STATUS_OPTIONS.map((s) => (
                     <option key={s} value={s}>
@@ -127,7 +127,7 @@ export default function AdminFeedbackPage() {
                     onChange={(e) => setDrafts((prev) => ({ ...prev, [row.id]: e.target.value }))}
                     rows={2}
                     placeholder="Write a response..."
-                    className="w-full rounded-xl border-3 border-border bg-navy/60 px-3 py-2 text-sm font-bold text-white placeholder:text-text-muted focus:border-pink focus:outline-none"
+                    className="w-full rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none"
                   />
                   <GradientButton variant="pink" size="sm" onClick={() => handleRespond(row)}>
                     Send Response

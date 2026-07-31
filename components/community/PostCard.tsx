@@ -48,10 +48,10 @@ export default function PostCard({
           {post.author?.first_name?.charAt(0).toUpperCase() ?? "?"}
         </span>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-black text-white">{post.author?.first_name ?? "Member"}</p>
+          <p className="truncate text-sm font-black text-ink">{post.author?.first_name ?? "Member"}</p>
         </div>
         {isGold ? (
-          <span className="shrink-0 rounded-full bg-gradient-yellow-orange px-2 py-0.5 text-[10px] font-black uppercase text-navy">
+          <span className="shrink-0 rounded-full bg-gradient-yellow-orange px-2 py-0.5 text-[10px] font-black uppercase text-ink">
             ⭐ Gold Post
           </span>
         ) : (

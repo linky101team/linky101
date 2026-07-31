@@ -110,7 +110,7 @@ export default function NotificationsPage() {
             >
               <span className="text-xl">{TYPE_ICON[n.type] ?? "🔔"}</span>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-black text-white">{n.title}</p>
+                <p className="text-sm font-black text-ink">{n.title}</p>
                 {n.body && <p className="text-xs font-bold text-text-muted">{n.body}</p>}
                 <p className="mt-1 text-[10px] font-bold uppercase text-text-muted">{timeAgo(n.created_at)}</p>
               </div>

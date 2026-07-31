@@ -34,7 +34,7 @@ export default function LeaderboardPreview() {
   return (
     <GameCard borderColor="pink" glowColor="pink">
       <div className="mb-3 flex items-center justify-between">
-        <span className="font-black uppercase tracking-wide text-white">🏆 Leaderboard</span>
+        <span className="font-black uppercase tracking-wide text-ink">🏆 Leaderboard</span>
         <Link href="/leaderboard" className="text-xs font-black uppercase tracking-wide text-sky">
           See Full Rankings →
         </Link>
@@ -57,7 +57,7 @@ export default function LeaderboardPreview() {
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-3 border-pink bg-gradient-pink-purple text-xs font-black text-white">
                   {row.first_name?.charAt(0).toUpperCase() ?? "?"}
                 </span>
-                <span className="flex-1 truncate text-sm font-bold text-white">
+                <span className="flex-1 truncate text-sm font-bold text-ink">
                   {row.first_name} {isMe && <span className="text-pink">(You)</span>}
                 </span>
                 <span className="shrink-0 text-xs font-black text-yellow">{row.xp} XP</span>
