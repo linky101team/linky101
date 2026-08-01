@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, Home, BookOpen, Mic, Compass, User, Star, Sparkles, Wrench } from "lucide-react";
+import { Bell, Home, BookOpen, Mic, Compass, User, Star, Sparkles, Wrench, Trophy, Crown } from "lucide-react";
 import type { Profile } from "@/hooks/useProfile";
 
 const PRIMARY = [
@@ -14,9 +14,9 @@ const PRIMARY = [
 ];
 
 const SECONDARY = [
-  { href: "/mentors", icon: Star, color: "#7C3AED", label: "Ambassadors" },
-  { href: "/dreams", icon: Sparkles, color: "#EC4899", label: "Dream Wall" },
-  { href: "/tools", icon: Wrench, color: "#06B6D4", label: "Founder Tools" },
+  { href: "/mentors", icon: Star, color: "#7C3AED", tint: "#F3E8FF", label: "Ambassadors" },
+  { href: "/dreams", icon: Sparkles, color: "#EC4899", tint: "#FCE7F3", label: "Dream Wall" },
+  { href: "/tools", icon: Wrench, color: "#06B6D4", tint: "#CFFAFE", label: "Founder Tools" },
 ];
 
 interface SidebarProps {
@@ -31,8 +31,9 @@ export default function Sidebar({ profile, hasUnread }: SidebarProps) {
 
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-gray-200 bg-white lg:flex">
-      <Link href="/home" className="px-6 py-6 text-2xl font-extrabold tracking-tight text-[#1E1B4B]">
-        LinkY<span className="text-grad">101</span>
+      {/* Brand: LinkY in black, 101 in gold. Not a gradient, not red — this is fixed. */}
+      <Link href="/home" className="px-6 py-6 text-2xl font-extrabold tracking-tight text-[#111111]">
+        LinkY<span className="text-[#F5B301]">101</span>
       </Link>
 
       <nav className="flex-1 overflow-y-auto px-3">
@@ -43,23 +44,26 @@ export default function Sidebar({ profile, hasUnread }: SidebarProps) {
             <Link
               key={tab.href}
               href={tab.href}
-              className="mb-1 flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-bold transition-colors"
+              className="mb-1.5 flex items-center gap-3 rounded-2xl px-2.5 py-2 text-sm font-bold transition-all hover:bg-gray-50"
               style={{
                 backgroundColor: active ? tab.tint : "transparent",
-                color: active ? "#1E1B4B" : "#6B7280",
+                color: active ? "#1E1B4B" : "#4B5563",
               }}
             >
-              <Icon
-                className="h-5 w-5"
-                style={{ color: active ? tab.color : "#9CA3AF" }}
-                strokeWidth={active ? 2.5 : 2}
-              />
+              {/* Icons stay in colour whether or not the tab is active — the rail
+                  should look alive, not like a list of grey text. */}
+              <span
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+                style={{ backgroundColor: active ? "#FFFFFF" : tab.tint }}
+              >
+                <Icon className="h-[18px] w-[18px]" style={{ color: tab.color }} strokeWidth={2.5} />
+              </span>
               {tab.label}
             </Link>
           );
         })}
 
-        <p className="mb-1 mt-5 px-3.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+        <p className="mb-2 mt-6 px-3 text-[10px] font-extrabold uppercase tracking-wider text-gray-400">
           Explore
         </p>
         {SECONDARY.map((tab) => {
@@ -69,44 +73,80 @@ export default function Sidebar({ profile, hasUnread }: SidebarProps) {
             <Link
               key={tab.href}
               href={tab.href}
-              className="mb-1 flex items-center gap-3 rounded-xl px-3.5 py-2 text-sm font-semibold transition-colors hover:bg-gray-50"
-              style={{ color: active ? "#1E1B4B" : "#6B7280" }}
+              className="mb-1.5 flex items-center gap-3 rounded-2xl px-2.5 py-2 text-sm font-bold transition-all hover:bg-gray-50"
+              style={{
+                backgroundColor: active ? tab.tint : "transparent",
+                color: active ? "#1E1B4B" : "#4B5563",
+              }}
             >
-              <Icon
-                className="h-4.5 w-4.5"
-                style={{ color: active ? tab.color : "#9CA3AF" }}
-                strokeWidth={2}
-              />
+              <span
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+                style={{ backgroundColor: active ? "#FFFFFF" : tab.tint }}
+              >
+                <Icon className="h-[18px] w-[18px]" style={{ color: tab.color }} strokeWidth={2.5} />
+              </span>
               {tab.label}
             </Link>
           );
         })}
+
+        {/* Primary call to action — also stops the rail trailing off into dead space */}
+        <Link
+          href="/dreams"
+          className="grad-brand mt-5 flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-extrabold text-white transition-transform hover:-translate-y-0.5"
+        >
+          <Sparkles className="h-4 w-4" strokeWidth={2.5} />
+          Post your idea
+        </Link>
+
+        <Link
+          href="/dreams"
+          className="grad-gold mt-3 block rounded-2xl border border-[#F59E0B]/40 p-3.5"
+        >
+          <p className="flex items-center gap-1.5 text-xs font-extrabold text-[#92400E]">
+            <Trophy className="h-3.5 w-3.5" strokeWidth={2.5} />
+            Top 50 win an event
+          </p>
+          <p className="mt-1 text-[11px] leading-relaxed text-[#92400E]/80">
+            Most-loved ideas each month get a Zoom with an ambassador.
+          </p>
+        </Link>
+
+        {!profile?.is_premium && (
+          <Link
+            href="/premium"
+            className="mt-3 flex items-center gap-2 rounded-2xl bg-[#F5F3FF] p-3.5 transition-colors hover:bg-[#EDE9FE]"
+          >
+            <Crown className="h-4 w-4 shrink-0 text-[#7C3AED]" strokeWidth={2.5} />
+            <span className="text-xs font-extrabold text-[#5B21B6]">Go Pro</span>
+          </Link>
+        )}
       </nav>
 
-      <div className="flex flex-col gap-2 border-t border-gray-100 p-4">
+      <div className="flex flex-col gap-1 border-t border-gray-100 p-3">
         <Link
           href="/notifications"
-          className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-sm font-semibold text-gray-500 hover:bg-gray-50"
+          className="flex items-center gap-3 rounded-2xl px-2.5 py-2 text-sm font-bold text-gray-500 hover:bg-gray-50"
         >
-          <span className="relative">
-            <Bell className="h-5 w-5" strokeWidth={2} />
-            {hasUnread && <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-[#EC4899]" />}
+          <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gray-100">
+            <Bell className="h-[18px] w-[18px] text-gray-500" strokeWidth={2.5} />
+            {hasUnread && <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-[#EC4899]" />}
           </span>
           Notifications
         </Link>
 
-        <Link href="/profile" className="mt-1 flex items-center gap-3 rounded-xl px-2 py-2 hover:bg-gray-50">
+        <Link href="/profile" className="flex items-center gap-3 rounded-2xl px-2.5 py-2 hover:bg-gray-50">
           {profile?.avatar_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={profile.avatar_url} alt={profile.first_name} className="h-9 w-9 rounded-full object-cover" />
           ) : (
-            <div className="grad-brand flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold text-white">
+            <div className="grad-brand flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white">
               {initial}
             </div>
           )}
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-bold text-gray-900">{profile?.first_name ?? "You"}</p>
-            <p className="text-xs text-gray-400">View profile</p>
+            <p className="truncate text-sm font-bold text-[#1E1B4B]">{profile?.first_name ?? "You"}</p>
+            <p className="text-xs capitalize text-gray-400">{profile?.role ?? "Founder"}</p>
           </div>
         </Link>
       </div>

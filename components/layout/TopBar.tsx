@@ -91,8 +91,9 @@ export default function TopBar({ profile, hasUnread }: TopBarProps) {
           <span className="text-sm font-extrabold text-[#C2410C]">{streak}</span>
         </div>
 
-        <Link href="/home" className="text-lg font-extrabold tracking-tight text-[#1E1B4B] lg:hidden">
-          LinkY<span className="text-grad">101</span>
+        {/* LinkY black, 101 gold. Not a gradient, not red. */}
+        <Link href="/home" className="text-lg font-extrabold tracking-tight text-[#111111] lg:hidden">
+          LinkY<span className="text-[#F5B301]">101</span>
         </Link>
 
         <div className="flex items-center gap-2.5">
