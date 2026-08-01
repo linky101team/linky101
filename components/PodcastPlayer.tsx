@@ -10,8 +10,9 @@ export interface PlayerPodcast {
   title: string;
   episode_number: number | null;
   audio_url: string;
-  duration_seconds: number | null;
-  category: string;
+  /** Length in minutes — matches the live `podcasts` table. */
+  duration_minutes: number | null;
+  guest_name?: string | null;
 }
 
 interface PodcastPlayerProps {
@@ -35,7 +36,7 @@ export default function PodcastPlayer({ podcast, onClose, onCompleted }: Podcast
   const [minimized, setMinimized] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(podcast.duration_seconds ?? 0);
+  const [duration, setDuration] = useState((podcast.duration_minutes ?? 0) * 60);
   const [speed, setSpeed] = useState(1);
   const [doneToast, setDoneToast] = useState(false);
   const hasCompletedRef = useRef(false);
@@ -96,7 +97,7 @@ export default function PodcastPlayer({ podcast, onClose, onCompleted }: Podcast
         ref={audioRef}
         src={podcast.audio_url}
         onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
-        onLoadedMetadata={(e) => setDuration(e.currentTarget.duration || podcast.duration_seconds || 0)}
+        onLoadedMetadata={(e) => setDuration(e.currentTarget.duration || (podcast.duration_minutes ?? 0) * 60)}
         onEnded={handleEnded}
       />
 
@@ -141,8 +142,8 @@ export default function PodcastPlayer({ podcast, onClose, onCompleted }: Podcast
               >
                 <ChevronDown className="h-5 w-5" strokeWidth={2.5} />
               </button>
-              <span className="rounded-full bg-[#E3F2FD] px-2.5 py-0.5 text-[10px] font-bold capitalize text-[#039BE5]">
-                {podcast.category.replace(/_/g, " ")}
+              <span className="rounded-full bg-[#F3E8FF] px-2.5 py-0.5 text-[10px] font-bold text-[#7C3AED]">
+                {podcast.guest_name ? `with ${podcast.guest_name}` : "Episode"}
               </span>
               <button type="button" onClick={onClose} className="text-gray-400" aria-label="Close player">
                 <X className="h-5 w-5" strokeWidth={2.5} />

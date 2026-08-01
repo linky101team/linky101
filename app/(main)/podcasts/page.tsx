@@ -1,30 +1,20 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Headphones, Play, Check } from "lucide-react";
+import { Headphones, Play, Check, Mic } from "lucide-react";
 import { createClientSupabase } from "@/lib/supabase/client";
 import { useProfile } from "@/hooks/useProfile";
 import PodcastPlayer, { type PlayerPodcast } from "@/components/PodcastPlayer";
 import { Reveal, LiftCard } from "@/components/ui/Reveal";
 
-const CATEGORY_STYLE: Record<string, { label: string; tile: string; chipBg: string; chipText: string }> = {
-  starting_a_business: { label: "Starting a Business", tile: "bg-[#FCE7F3]", chipBg: "bg-[#FCE7F3]", chipText: "text-[#DB2777]" },
-  marketing_branding: { label: "Marketing & Branding", tile: "bg-[#F3E8FF]", chipBg: "bg-[#F3E8FF]", chipText: "text-[#7C3AED]" },
-  money_finance: { label: "Money & Finance", tile: "bg-[#D1FAE5]", chipBg: "bg-[#D1FAE5]", chipText: "text-[#059669]" },
-  leadership_teams: { label: "Leadership & Teams", tile: "bg-[#CFFAFE]", chipBg: "bg-[#CFFAFE]", chipText: "text-[#0891B2]" },
-  founder_stories: { label: "Founder Stories", tile: "bg-[#FEF3C7]", chipBg: "bg-[#FEF3C7]", chipText: "text-[#B45309]" },
-  digital_tech: { label: "Digital & Tech", tile: "bg-[#E0E7FF]", chipBg: "bg-[#E0E7FF]", chipText: "text-[#4F46E5]" },
-  general: { label: "General", tile: "bg-gray-100", chipBg: "bg-gray-100", chipText: "text-gray-500" },
-};
-
-function formatDuration(seconds: number | null): string {
-  if (!seconds) return "";
-  const m = Math.round(seconds / 60);
-  return `${m} min`;
+function formatDuration(minutes: number | null): string {
+  if (!minutes) return "";
+  return `${minutes} min`;
 }
 
 interface Podcast extends PlayerPodcast {
   description: string | null;
+  external_url?: string | null;
 }
 
 export default function PodcastsPage() {
@@ -34,16 +24,17 @@ export default function PodcastsPage() {
   const [listenedIds, setListenedIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [nowPlaying, setNowPlaying] = useState<Podcast | null>(null);
-  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     if (!profile) return;
     async function load() {
+      // Columns here match the LIVE `podcasts` table, which differs from the
+      // migration files: it has duration_minutes and guest_name, and no
+      // category or is_published.
       const [{ data: rows }, { data: listens }] = await Promise.all([
         supabase
           .from("podcasts")
-          .select("id, title, description, episode_number, audio_url, duration_seconds, category")
-          .eq("is_published", true)
+          .select("id, title, description, episode_number, audio_url, duration_minutes, guest_name, external_url")
           .order("episode_number", { ascending: false }),
         supabase.from("podcast_listens").select("podcast_id").eq("user_id", profile!.id),
       ]);
@@ -66,17 +57,17 @@ export default function PodcastsPage() {
     );
   }
 
-  const categories = ["all", ...Array.from(new Set(podcasts.map((p) => p.category)))];
-  const visible = filter === "all" ? podcasts : podcasts.filter((p) => p.category === filter);
   const featured = podcasts[0];
-  const rest = visible.filter((p) => p.id !== featured?.id);
+  const rest = podcasts.filter((p) => p.id !== featured?.id);
 
   return (
     <div className="flex flex-col gap-5 pb-28">
       <Reveal>
         <div>
           <h1 className="text-2xl font-extrabold text-[#1E1B4B]">Podcasts 🎙️</h1>
-          <p className="text-sm text-gray-500">Real young founders. Real stories. Listen on the way to school.</p>
+          <p className="text-sm text-gray-500">
+            Real young founders. Real stories. Listen on the way to school.
+          </p>
         </div>
       </Reveal>
 
@@ -85,12 +76,12 @@ export default function PodcastsPage() {
           <Headphones className="mx-auto h-10 w-10 text-[#7C3AED]" strokeWidth={1.75} />
           <p className="mt-3 text-lg font-extrabold text-[#1E1B4B]">First episodes dropping soon</p>
           <p className="mx-auto mt-1 max-w-xs text-sm text-gray-500">
-            Interviews with teen founders who are already making money. Check back shortly.
+            Interviews with founders who are already making money. Check back shortly.
           </p>
         </div>
       )}
 
-      {/* Featured / today's episode */}
+      {/* Featured episode */}
       {featured && (
         <Reveal index={1}>
           <LiftCard>
@@ -99,17 +90,24 @@ export default function PodcastsPage() {
               onClick={() => featured.audio_url && setNowPlaying(featured)}
               className="grad-hero w-full rounded-3xl p-6 text-left"
             >
-              <p className="text-[11px] font-bold uppercase tracking-widest text-white/80">Today&apos;s episode</p>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-white/80">
+                Today&apos;s episode
+              </p>
               <p className="mt-2 text-xl font-extrabold leading-tight text-white">{featured.title}</p>
+              {featured.guest_name && (
+                <p className="mt-1 text-sm font-semibold text-white/80">with {featured.guest_name}</p>
+              )}
               {featured.description && (
-                <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/80">{featured.description}</p>
+                <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/80">
+                  {featured.description}
+                </p>
               )}
               <div className="mt-4 flex items-center gap-3">
                 <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white">
                   <Play className="h-5 w-5 fill-[#7C3AED] text-[#7C3AED]" />
                 </span>
                 <span className="text-sm font-bold text-white">
-                  {formatDuration(featured.duration_seconds) || "Play now"}
+                  {formatDuration(featured.duration_minutes) || "Play now"}
                 </span>
               </div>
             </button>
@@ -117,31 +115,9 @@ export default function PodcastsPage() {
         </Reveal>
       )}
 
-      {/* Category filter */}
-      {categories.length > 2 && (
-        <div className="flex gap-2 overflow-x-auto pb-1">
-          {categories.map((c) => {
-            const style = CATEGORY_STYLE[c] ?? CATEGORY_STYLE.general;
-            return (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setFilter(c)}
-                className={`shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-xs font-bold transition-all ${
-                  filter === c ? "grad-brand text-white" : "border border-gray-200 bg-white text-gray-500"
-                }`}
-              >
-                {c === "all" ? "All episodes" : style.label}
-              </button>
-            );
-          })}
-        </div>
-      )}
-
       {/* Episode list */}
       <div className="flex flex-col gap-3">
         {rest.map((podcast, i) => {
-          const style = CATEGORY_STYLE[podcast.category] ?? CATEGORY_STYLE.general;
           const heard = listenedIds.has(podcast.id);
           return (
             <Reveal key={podcast.id} index={i}>
@@ -153,10 +129,8 @@ export default function PodcastsPage() {
                     nowPlaying?.id === podcast.id ? "border-[#7C3AED]" : "border-gray-200"
                   }`}
                 >
-                  <div
-                    className={`relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl ${style.tile}`}
-                  >
-                    <Headphones className="h-6 w-6 text-[#1E1B4B]" strokeWidth={2} />
+                  <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#F3E8FF]">
+                    <Mic className="h-6 w-6 text-[#7C3AED]" strokeWidth={2} />
                     {podcast.episode_number != null && (
                       <span className="absolute -bottom-1.5 rounded-full bg-[#1E1B4B] px-1.5 py-0.5 text-[9px] font-bold text-white">
                         EP {podcast.episode_number}
@@ -165,14 +139,12 @@ export default function PodcastsPage() {
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <span
-                      className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold ${style.chipBg} ${style.chipText}`}
-                    >
-                      {style.label}
-                    </span>
-                    <p className="mt-1 truncate font-bold text-[#1E1B4B]">{podcast.title}</p>
+                    <p className="truncate font-bold text-[#1E1B4B]">{podcast.title}</p>
+                    {podcast.guest_name && (
+                      <p className="truncate text-xs text-gray-500">with {podcast.guest_name}</p>
+                    )}
                     <p className="mt-0.5 flex items-center gap-2 text-[11px] font-semibold text-gray-400">
-                      {formatDuration(podcast.duration_seconds)}
+                      {formatDuration(podcast.duration_minutes)}
                       {heard && (
                         <span className="flex items-center gap-0.5 text-[#10B981]">
                           <Check className="h-3 w-3" strokeWidth={3} /> Played
