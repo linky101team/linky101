@@ -67,11 +67,20 @@ export default function MentorsPage() {
 
   return (
     <div className="flex flex-col gap-5 pb-16">
-      <div>
-        <h1 className="text-lg font-bold text-gray-900">🌟 Ambassadors</h1>
-        <p className="text-sm text-gray-500">
-          Real people who share their story and want to help young founders grow
-        </p>
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h1 className="text-lg font-bold text-gray-900">🌟 Ambassadors</h1>
+          <p className="text-sm text-gray-500">
+            Real people who share their story and want to help young founders grow
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setShowAsk(true)}
+          className="hidden shrink-0 rounded-full bg-[#1A1A2E] px-4 py-2.5 text-sm font-bold text-white transition-transform active:scale-95 lg:block"
+        >
+          + Ask a question
+        </button>
       </div>
 
       <div className="flex flex-col gap-3">
@@ -190,7 +199,7 @@ export default function MentorsPage() {
         </div>
       )}
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-24 z-30">
+      <div className="pointer-events-none fixed inset-x-0 bottom-24 z-30 lg:hidden">
         <div className="mx-auto max-w-[430px] px-5">
           <button
             type="button"

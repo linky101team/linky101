@@ -64,7 +64,7 @@ export default function TutorialPrompt({ tourId }: TutorialPromptProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed inset-x-0 bottom-24 z-40 mx-auto max-w-[430px] px-4"
+            className="fixed inset-x-0 bottom-24 z-40 mx-auto max-w-[430px] px-4 lg:hidden"
           >
             <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-3 shadow-lg">
               <span className="text-2xl">{tour.emoji}</span>

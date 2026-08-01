@@ -49,7 +49,7 @@ export default function InstallPrompt() {
   if (!visible || !deferredEvent) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-40 z-50 mx-auto max-w-[430px] px-4">
+    <div className="fixed inset-x-0 bottom-40 z-50 mx-auto max-w-[430px] px-4 lg:hidden">
       <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-3 shadow-lg">
         <img src="/icon.svg" alt="LinkY101" className="h-10 w-10 shrink-0 rounded-xl" />
         <div className="min-w-0 flex-1">

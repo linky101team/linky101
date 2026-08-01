@@ -91,7 +91,7 @@ export default function PodcastPlayer({ podcast, onClose, onCompleted }: Podcast
   const progressPct = duration > 0 ? Math.min(100, (currentTime / duration) * 100) : 0;
 
   return (
-    <div className="fixed inset-x-0 bottom-16 z-40 mx-auto max-w-[430px] px-3">
+    <div className="fixed inset-x-0 bottom-16 z-40 mx-auto max-w-[430px] px-3 lg:inset-x-auto lg:right-8 lg:bottom-8 lg:mx-0 lg:w-96 lg:px-0">
       <audio
         ref={audioRef}
         src={podcast.audio_url}
