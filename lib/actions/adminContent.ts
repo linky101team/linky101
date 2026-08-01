@@ -79,16 +79,18 @@ export async function togglePodcastPublished(podcastId: string, isPublished: boo
   if (error) throw new Error(error.message);
 }
 
+// Columns match the LIVE `podcasts` table: duration_minutes and guest_name,
+// with no category or is_published.
 export async function createPodcast(input: {
   title: string;
   description: string;
   episode_number: number | null;
   audio_url: string;
-  duration_seconds: number | null;
-  category: string;
+  duration_minutes: number | null;
+  guest_name: string | null;
 }) {
   const supabase = await requireAdmin();
-  const { error } = await supabase.from("podcasts").insert({ ...input, is_published: true });
+  const { error } = await supabase.from("podcasts").insert(input);
   if (error) throw new Error(error.message);
 }
 

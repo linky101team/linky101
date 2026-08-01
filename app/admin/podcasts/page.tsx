@@ -2,8 +2,7 @@
 
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { createClientSupabase } from "@/lib/supabase/client";
-import { togglePodcastPublished, createPodcast } from "@/lib/actions/adminContent";
-import { QUIZ_CATEGORIES } from "@/lib/quizCategories";
+import { createPodcast } from "@/lib/actions/adminContent";
 import SectionTitle from "@/components/ui/SectionTitle";
 import GameCard from "@/components/ui/GameCard";
 import GradientButton from "@/components/ui/GradientButton";
@@ -13,12 +12,9 @@ interface Podcast {
   title: string;
   description: string | null;
   episode_number: number | null;
-  category: string;
-  duration_seconds: number | null;
-  is_published: boolean;
+  duration_minutes: number | null;
+  guest_name: string | null;
 }
-
-const CATEGORY_KEYS = Object.keys(QUIZ_CATEGORIES);
 
 export default function AdminPodcastsPage() {
   const supabase = useMemo(() => createClientSupabase(), []);
@@ -30,8 +26,8 @@ export default function AdminPodcastsPage() {
     description: "",
     episode_number: "",
     audio_url: "",
-    duration_seconds: "",
-    category: CATEGORY_KEYS[0],
+    duration_minutes: "",
+    guest_name: "",
   });
   const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -41,7 +37,7 @@ export default function AdminPodcastsPage() {
     setLoading(true);
     const { data } = await supabase
       .from("podcasts")
-      .select("id, title, description, episode_number, category, duration_seconds, is_published")
+      .select("id, title, description, episode_number, duration_minutes, guest_name")
       .order("episode_number");
     setPodcasts((data as Podcast[]) ?? []);
     setLoading(false);
@@ -51,12 +47,6 @@ export default function AdminPodcastsPage() {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  function handleToggle(podcast: Podcast) {
-    const next = !podcast.is_published;
-    setPodcasts((prev) => prev.map((p) => (p.id === podcast.id ? { ...p, is_published: next } : p)));
-    startTransition(() => togglePodcastPublished(podcast.id, next).catch(() => load()));
-  }
 
   function handleCreate() {
     if (!form.title.trim() || !form.audio_url.trim()) {
@@ -72,10 +62,10 @@ export default function AdminPodcastsPage() {
           description: form.description.trim(),
           episode_number: form.episode_number ? Number(form.episode_number) : null,
           audio_url: form.audio_url.trim(),
-          duration_seconds: form.duration_seconds ? Number(form.duration_seconds) : null,
-          category: form.category,
+          duration_minutes: form.duration_minutes ? Number(form.duration_minutes) : null,
+          guest_name: form.guest_name.trim() || null,
         });
-        setForm({ title: "", description: "", episode_number: "", audio_url: "", duration_seconds: "", category: CATEGORY_KEYS[0] });
+        setForm({ title: "", description: "", episode_number: "", audio_url: "", duration_minutes: "", guest_name: "" });
         setShowForm(false);
         await load();
       } catch (err) {
@@ -125,24 +115,19 @@ export default function AdminPodcastsPage() {
               className="w-20 rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
             />
             <input
-              value={form.duration_seconds}
-              onChange={(e) => setForm((f) => ({ ...f, duration_seconds: e.target.value }))}
-              placeholder="Duration (s)"
+              value={form.duration_minutes}
+              onChange={(e) => setForm((f) => ({ ...f, duration_minutes: e.target.value }))}
+              placeholder="Duration (min)"
               type="number"
               className="flex-1 rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
             />
           </div>
-          <select
-            value={form.category}
-            onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
-            className="rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink"
-          >
-            {CATEGORY_KEYS.map((key) => (
-              <option key={key} value={key}>
-                {QUIZ_CATEGORIES[key].label}
-              </option>
-            ))}
-          </select>
+          <input
+            value={form.guest_name}
+            onChange={(e) => setForm((f) => ({ ...f, guest_name: e.target.value }))}
+            placeholder="Guest name (optional)"
+            className="rounded-xl border-3 border-border bg-white px-3 py-2 text-sm font-bold text-ink placeholder:text-text-muted"
+          />
           {errorMsg && <p className="text-xs font-bold text-orange">{errorMsg}</p>}
           <GradientButton variant="pink" size="sm" disabled={saving} onClick={handleCreate}>
             {saving ? "Publishing..." : "Publish Episode"}
@@ -161,17 +146,8 @@ export default function AdminPodcastsPage() {
                   {p.episode_number ? `Ep. ${p.episode_number} · ` : ""}
                   {p.title}
                 </p>
-                <p className="text-[10px] font-bold text-text-muted">{QUIZ_CATEGORIES[p.category]?.label ?? p.category}</p>
+                <p className="text-[10px] font-bold text-text-muted">{p.guest_name ? `with ${p.guest_name}` : ""}</p>
               </div>
-              <button
-                type="button"
-                onClick={() => handleToggle(p)}
-                className={`shrink-0 rounded-full border-2 px-2 py-1 text-[9px] font-black uppercase ${
-                  p.is_published ? "border-green bg-green/20 text-green" : "border-border text-text-muted"
-                }`}
-              >
-                {p.is_published ? "Published" : "Draft"}
-              </button>
             </GameCard>
           ))}
         </div>
