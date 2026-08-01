@@ -1,9 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { AnimatePresence } from "framer-motion";
 import { MapPin, Sparkles } from "lucide-react";
-import { AMBASSADORS, type Ambassador } from "@/lib/ambassadors";
+import { AMBASSADORS, ambassadorAvatar, type Ambassador } from "@/lib/ambassadors";
 import { Reveal, LiftCard } from "@/components/ui/Reveal";
+import AmbassadorModal from "@/components/discover/AmbassadorModal";
 
 interface AmbassadorGridProps {
   /** Cap the number shown (e.g. a preview on Discover). Omit to show all. */
@@ -19,6 +21,9 @@ export default function AmbassadorGrid({
   onSelect,
 }: AmbassadorGridProps) {
   const [filter, setFilter] = useState("All");
+  // The grid owns the profile modal so "View profile" works everywhere it is
+  // used, not only where a parent happened to pass a handler.
+  const [selected, setSelected] = useState<Ambassador | null>(null);
 
   // Only offer filters that actually match somebody, so no chip leads to an
   // empty grid.
@@ -64,11 +69,21 @@ export default function AmbassadorGrid({
           <Reveal key={a.id} index={i}>
             <LiftCard>
               <div className="flex h-full flex-col items-center rounded-2xl border border-gray-200 bg-white p-5 text-center shadow-sm">
+                {/* Real photo, cropped from the LinkedIn banner they supplied.
+                    Initials only ever show if the image fails to load. */}
                 <span
-                  className="flex h-16 w-16 items-center justify-center rounded-full text-lg font-extrabold text-white"
+                  className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full text-lg font-extrabold text-white ring-2 ring-white"
                   style={{ backgroundColor: a.color }}
                 >
-                  {a.initials}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={ambassadorAvatar(a.id)}
+                    alt={a.name}
+                    className="h-full w-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
                 </span>
 
                 <p className="mt-3 text-base font-extrabold leading-tight text-[#1E1B4B]">{a.name}</p>
@@ -95,7 +110,7 @@ export default function AmbassadorGrid({
                 */}
                 <button
                   type="button"
-                  onClick={() => onSelect?.(a)}
+                  onClick={() => (onSelect ? onSelect(a) : setSelected(a))}
                   className="mt-4 w-full rounded-full border-2 border-[#1E1B4B] py-2.5 text-sm font-extrabold text-[#1E1B4B] transition-colors hover:bg-[#1E1B4B] hover:text-white"
                 >
                   View profile →
@@ -113,6 +128,10 @@ export default function AmbassadorGrid({
           <p className="text-sm text-gray-500">Try another filter.</p>
         </div>
       )}
+
+      <AnimatePresence>
+        {selected && <AmbassadorModal a={selected} onClose={() => setSelected(null)} />}
+      </AnimatePresence>
     </div>
   );
 }

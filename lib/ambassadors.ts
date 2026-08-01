@@ -267,3 +267,19 @@ export const AMBASSADORS: Ambassador[] = [
     adviceConfirmed: false,
   },
 ];
+
+/**
+ * Photo paths.
+ *
+ * Both come out of the LinkedIn banner composites in the original profile
+ * cards: the banner is the full 760x200 image, and the avatar is the circular
+ * profile photo cropped out of its left-hand side. Filenames match `id`, so
+ * these are derived rather than stored on every entry.
+ */
+export function ambassadorAvatar(id: string): string {
+  return `/ambassadors/avatars/${id}.jpg`;
+}
+
+export function ambassadorBanner(id: string): string {
+  return `/ambassadors/${id}.jpg`;
+}
