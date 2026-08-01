@@ -37,8 +37,8 @@ export default function MentorCard({
 
   return (
     <div
-      className={`w-56 shrink-0 rounded-2xl border-3 bg-card p-3 ${
-        isTopMentor ? "border-yellow shadow-glow-yellow" : "border-sky shadow-glow-sky"
+      className={`w-56 shrink-0 rounded-2xl border-2 bg-card p-3 ${
+        isTopMentor ? "border-yellow shadow-card" : "border-sky shadow-card"
       }`}
     >
       <button type="button" onClick={onOpenProfile} className="mb-2 flex w-full items-center gap-2 text-left">
@@ -46,10 +46,10 @@ export default function MentorCard({
           <img
             src={mentor.avatar_url}
             alt={mentor.display_name}
-            className="h-10 w-10 shrink-0 rounded-full border-3 border-sky object-cover"
+            className="h-10 w-10 shrink-0 rounded-full border-2 border-sky object-cover"
           />
         ) : (
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-3 border-sky bg-gradient-sky-purple text-sm font-black text-white">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-sky grad-brand text-sm font-black text-white">
             {mentor.display_name.charAt(0).toUpperCase()}
           </span>
         )}
@@ -90,8 +90,8 @@ export default function MentorCard({
         <button
           type="button"
           onClick={onToggleFollow}
-          className={`w-full rounded-full border-3 py-1 text-[10px] font-black uppercase ${
-            isFollowing ? "border-border text-text-muted" : "border-sky bg-gradient-sky-purple text-white"
+          className={`w-full rounded-full border-2 py-1 text-[10px] font-black uppercase ${
+            isFollowing ? "border-border text-text-muted" : "border-sky grad-brand text-white"
           }`}
         >
           {isFollowing ? "Following" : "Follow"}

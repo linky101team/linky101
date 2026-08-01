@@ -49,10 +49,10 @@ export default function MentorProfileModal({ mentor, answersCount, onClose }: Me
               <img
                 src={mentor.avatar_url}
                 alt={mentor.display_name}
-                className="mx-auto mb-3 h-20 w-20 rounded-full border-4 border-sky object-cover shadow-glow-sky"
+                className="mx-auto mb-3 h-20 w-20 rounded-full border-4 border-sky object-cover shadow-card"
               />
             ) : (
-              <span className="mx-auto mb-3 flex h-20 w-20 items-center justify-center rounded-full border-4 border-sky bg-gradient-sky-purple text-2xl font-black text-white shadow-glow-sky">
+              <span className="mx-auto mb-3 flex h-20 w-20 items-center justify-center rounded-full border-4 border-sky grad-brand text-2xl font-black text-white shadow-card">
                 {mentor.display_name.charAt(0).toUpperCase()}
               </span>
             )}
