@@ -6,6 +6,7 @@ import { createClientSupabase } from "@/lib/supabase/client";
 import { useProfile } from "@/hooks/useProfile";
 import AmbassadorGrid from "@/components/discover/AmbassadorGrid";
 import type { Mentor } from "@/components/mentors/MentorCard";
+import MentorGrid from "@/components/mentors/MentorGrid";
 import QuestionCard, { type MentorQuestion } from "@/components/mentors/QuestionCard";
 import AskQuestionModal from "@/components/mentors/AskQuestionModal";
 import { Reveal } from "@/components/ui/Reveal";
@@ -37,9 +38,12 @@ export default function MentorsPage() {
     if (!profile) return;
 
     async function load() {
+      // select("*") on purpose: a hand-written column list makes Supabase
+      // reject the whole query with a 400 the moment one name is missing,
+      // which renders as a silent "no mentors" instead of an error.
       const { data: mentorRows } = await supabase
         .from("mentors")
-        .select("id, display_name, bio, expertise, is_verified, avatar_url, rating_avg, rating_count")
+        .select("*")
         .eq("is_active", true);
       setMentors(mentorRows ?? []);
 
@@ -99,6 +103,17 @@ export default function MentorsPage() {
           </Link>
         </div>
       </Reveal>
+
+      {/* Mentors were being loaded and then never rendered — they only ever
+          reached the ask-a-question dropdown. They belong on the page. */}
+      <div className="mt-1">
+        <h2 className="text-lg font-extrabold text-[#1E1B4B]">🛡️ Verified mentors</h2>
+        <p className="text-sm text-gray-500">
+          DBS-checked adults. Everyone can see them and ask — answers are public.
+        </p>
+      </div>
+
+      <MentorGrid mentors={mentors} />
 
       <div className="mt-1">
         <h2 className="text-lg font-extrabold text-[#1E1B4B]">❓ Ask them anything</h2>
