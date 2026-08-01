@@ -28,13 +28,15 @@ export default function PodcastsPage() {
   useEffect(() => {
     if (!profile) return;
     async function load() {
-      // Columns here match the LIVE `podcasts` table, which differs from the
-      // migration files: it has duration_minutes and guest_name, and no
-      // category or is_published.
+      // Deliberately `select("*")`. The live `podcasts` table has drifted from
+      // the migration files more than once, and a hand-written column list
+      // makes Supabase reject the WHOLE query with a 400 the moment one name
+      // is wrong — which renders as a silent "no episodes" empty state.
+      // Asking for everything cannot fail that way.
       const [{ data: rows }, { data: listens }] = await Promise.all([
         supabase
           .from("podcasts")
-          .select("id, title, description, episode_number, audio_url, duration_minutes, guest_name, external_url")
+          .select("*")
           .order("episode_number", { ascending: false }),
         supabase.from("podcast_listens").select("podcast_id").eq("user_id", profile!.id),
       ]);
