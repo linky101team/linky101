@@ -148,6 +148,22 @@ if you add one, tell Lucy explicitly that she needs to run it.
 `.env.local` is gitignored. A build will fail without
 `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` set.
 
+**The live database has drifted from these migration files.** Do not assume the
+schema in `supabase/migrations/` matches production. Two known cases: `profiles`
+already had a `role` column holding values outside founder/ambassador, and a
+legacy `dreams` table exists with a different shape (`profile_id`/`text`) which
+is why the Dream Wall uses `dream_wall_posts` / `dream_wall_likes` instead. That
+legacy `dreams` table is untouched and should be reviewed and dropped once
+you've confirmed nothing reads from it. Before writing a migration, check what
+is actually there:
+
+```sql
+select table_name, column_name, data_type
+from information_schema.columns
+where table_schema = 'public' and table_name in ('the_table')
+order by ordinal_position;
+```
+
 ---
 
 ## Known gaps

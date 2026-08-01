@@ -37,7 +37,7 @@ export default function DreamsPage() {
 
   async function load() {
     const { data: rows, error: dreamErr } = await supabase
-      .from("dreams")
+      .from("dream_wall_posts")
       .select("id, body, author_id, created_at, author:profiles(first_name, region)")
       .eq("moderation_status", "approved")
       .order("created_at", { ascending: false })
@@ -54,12 +54,12 @@ export default function DreamsPage() {
 
     const ids = list.map((d) => d.id);
     if (ids.length > 0) {
-      const { data: likes } = await supabase.from("dream_likes").select("dream_id, user_id").in("dream_id", ids);
+      const { data: likes } = await supabase.from("dream_wall_likes").select("post_id, user_id").in("post_id", ids);
       const counts: Record<string, number> = {};
       const mine = new Set<string>();
       for (const l of likes ?? []) {
-        counts[l.dream_id] = (counts[l.dream_id] ?? 0) + 1;
-        if (l.user_id === profile?.id) mine.add(l.dream_id);
+        counts[l.post_id] = (counts[l.post_id] ?? 0) + 1;
+        if (l.user_id === profile?.id) mine.add(l.post_id);
       }
       setLikeCounts(counts);
       setMyLikes(mine);
@@ -79,7 +79,7 @@ export default function DreamsPage() {
     setPosting(true);
     setError(null);
 
-    const { error: insertErr } = await supabase.from("dreams").insert({
+    const { error: insertErr } = await supabase.from("dream_wall_posts").insert({
       author_id: profile.id,
       body,
       region: profile.region ?? null,
@@ -112,9 +112,9 @@ export default function DreamsPage() {
     setLikeCounts((prev) => ({ ...prev, [dreamId]: (prev[dreamId] ?? 0) + (liked ? -1 : 1) }));
 
     if (liked) {
-      await supabase.from("dream_likes").delete().eq("dream_id", dreamId).eq("user_id", profile.id);
+      await supabase.from("dream_wall_likes").delete().eq("post_id", dreamId).eq("user_id", profile.id);
     } else {
-      await supabase.from("dream_likes").insert({ dream_id: dreamId, user_id: profile.id });
+      await supabase.from("dream_wall_likes").insert({ post_id: dreamId, user_id: profile.id });
     }
   }
 
