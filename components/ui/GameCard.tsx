@@ -21,7 +21,7 @@ export default function GameCard({
 }: CardProps) {
   return (
     <div
-      className={`rounded-xl border border-gray-200 bg-white p-4 shadow-sm ${className}`}
+      className={`rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-shadow duration-200 hover:shadow-md ${className}`}
       {...rest}
     >
       {children}

@@ -9,6 +9,7 @@ import { AMBASSADORS } from "@/lib/ambassadors";
 import type { Mentor } from "@/components/mentors/MentorCard";
 import QuestionCard, { type MentorQuestion } from "@/components/mentors/QuestionCard";
 import AskQuestionModal from "@/components/mentors/AskQuestionModal";
+import { Reveal, LiftCard } from "@/components/ui/Reveal";
 
 export default function MentorsPage() {
   const { profile } = useProfile();
@@ -74,10 +75,12 @@ export default function MentorsPage() {
       </div>
 
       <div className="flex flex-col gap-3">
-        {AMBASSADORS.map((a) => {
+        {AMBASSADORS.map((a, i) => {
           const isOpen = expanded === a.id;
           return (
-            <div key={a.id} className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+            <Reveal key={a.id} index={i}>
+            <LiftCard>
+            <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
               <div className="flex items-center gap-3">
                 <span
                   className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-base font-bold text-white"
@@ -121,6 +124,8 @@ export default function MentorsPage() {
                 </div>
               )}
             </div>
+            </LiftCard>
+            </Reveal>
           );
         })}
       </div>

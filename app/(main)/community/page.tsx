@@ -10,6 +10,7 @@ import PostCard from "@/components/community/PostCard";
 import CommentSection from "@/components/community/CommentSection";
 import NewPostModal from "@/components/community/NewPostModal";
 import TutorialPrompt from "@/components/TutorialPrompt";
+import { Reveal } from "@/components/ui/Reveal";
 import type { CommunityPost, ReactionState } from "@/components/community/types";
 
 const PAGE_SIZE = 10;
@@ -101,7 +102,7 @@ function StarterPostCard({ post }: { post: StarterPost }) {
   const chip = STARTER_CHIP[post.category];
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition-shadow duration-200 hover:shadow-md">
       <div className="mb-2.5 flex items-center gap-2.5">
         <span
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
@@ -254,38 +255,46 @@ export default function CommunityPage() {
       </div>
 
       {category === "all" && (
-        <div className="rounded-2xl bg-[#1A1A2E] p-4">
-          <p className="font-bold text-white">Welcome to the Feed 👋</p>
-          <p className="mt-1 text-sm leading-relaxed text-white/70">
-            Share a win, ask a question or drop an idea. Everyone here is building something — tap{" "}
-            <span className="font-bold text-[#FFD93D]">+</span> to post yours.
-          </p>
-        </div>
+        <Reveal>
+          <div className="rounded-2xl bg-[#1A1A2E] p-4">
+            <p className="font-bold text-white">Welcome to the Feed 👋</p>
+            <p className="mt-1 text-sm leading-relaxed text-white/70">
+              Share a win, ask a question or drop an idea. Everyone here is building something — tap{" "}
+              <span className="font-bold text-[#FFD93D]">+</span> to post yours.
+            </p>
+          </div>
+        </Reveal>
       )}
 
       <div data-tour="community-feed" className="flex flex-col gap-4">
-        {posts.map((post) => (
-          <PostCard
-            key={post.id}
-            post={post}
-            reaction={reactionsByPost[post.id] ?? { counts: {}, active: [] }}
-            commentCount={commentCounts[post.id] ?? 0}
-            commentsOpen={openComments.has(post.id)}
-            onToggleComments={() => toggleComments(post.id)}
-          >
-            <CommentSection
-              postId={post.id}
-              isOpen={openComments.has(post.id)}
-              canCustomComment
-              authorName={profile?.first_name ?? "You"}
-              onCommentAdded={() =>
-                setCommentCounts((prev) => ({ ...prev, [post.id]: (prev[post.id] ?? 0) + 1 }))
-              }
-            />
-          </PostCard>
+        {posts.map((post, i) => (
+          <Reveal key={post.id} index={i}>
+            <PostCard
+              post={post}
+              reaction={reactionsByPost[post.id] ?? { counts: {}, active: [] }}
+              commentCount={commentCounts[post.id] ?? 0}
+              commentsOpen={openComments.has(post.id)}
+              onToggleComments={() => toggleComments(post.id)}
+            >
+              <CommentSection
+                postId={post.id}
+                isOpen={openComments.has(post.id)}
+                canCustomComment
+                authorName={profile?.first_name ?? "You"}
+                onCommentAdded={() =>
+                  setCommentCounts((prev) => ({ ...prev, [post.id]: (prev[post.id] ?? 0) + 1 }))
+                }
+              />
+            </PostCard>
+          </Reveal>
         ))}
 
-        {!loading && starterPosts.map((post) => <StarterPostCard key={post.id} post={post} />)}
+        {!loading &&
+          starterPosts.map((post, i) => (
+            <Reveal key={post.id} index={posts.length + i}>
+              <StarterPostCard post={post} />
+            </Reveal>
+          ))}
       </div>
 
       {loading && <p className="text-center text-sm font-semibold text-gray-400">Loading...</p>}
@@ -314,7 +323,7 @@ export default function CommunityPage() {
             type="button"
             onClick={() => setShowNewPost(true)}
             aria-label="New post"
-            className="pointer-events-auto ml-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#1A1A2E] text-2xl font-bold text-white shadow-lg transition-transform active:scale-90"
+            className="pointer-events-auto ml-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#1A1A2E] text-2xl font-bold text-white shadow-lg transition-transform hover:-translate-y-0.5 hover:shadow-xl active:scale-90"
           >
             +
           </button>

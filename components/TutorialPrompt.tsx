@@ -66,22 +66,22 @@ export default function TutorialPrompt({ tourId }: TutorialPromptProps) {
             exit={{ opacity: 0, y: 20 }}
             className="fixed inset-x-0 bottom-24 z-40 mx-auto max-w-[430px] px-4"
           >
-            <div className="flex items-center gap-3 rounded-2xl border-3 border-purple bg-card p-3 shadow-glow-purple">
+            <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-3 shadow-lg">
               <span className="text-2xl">{tour.emoji}</span>
-              <p className="flex-1 text-xs font-bold text-ink">
-                Want a quick tour of <span className="text-purple">{tour.label}</span>?
+              <p className="flex-1 text-xs font-bold text-gray-900">
+                Want a quick tour of <span className="text-[#A78BFA]">{tour.label}</span>?
               </p>
               <button
                 type="button"
                 onClick={handleDismiss}
-                className="rounded-full border-3 border-border px-2.5 py-1.5 text-[10px] font-black uppercase text-text-muted"
+                className="rounded-full border border-gray-200 px-2.5 py-1.5 text-[10px] font-bold uppercase text-gray-400 transition-transform active:scale-95"
               >
                 Skip
               </button>
               <button
                 type="button"
                 onClick={handleStart}
-                className="rounded-full border-3 border-purple bg-gradient-purple-pink px-3 py-1.5 text-[10px] font-black uppercase text-white"
+                className="rounded-full bg-[#A78BFA] px-3 py-1.5 text-[10px] font-bold uppercase text-white transition-transform active:scale-95"
               >
                 Tour
               </button>

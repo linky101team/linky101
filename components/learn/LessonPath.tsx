@@ -6,6 +6,7 @@ import { Check, ChevronLeft, ChevronRight, Play } from "lucide-react";
 import { createClientSupabase } from "@/lib/supabase/client";
 import { useProfile } from "@/hooks/useProfile";
 import { CURRICULUM_CATEGORIES, CURRICULUM_COLOR_CLASSES, getCategoryBySlug } from "@/lib/curriculum";
+import { Reveal, LiftCard } from "@/components/ui/Reveal";
 
 interface ProgressRow {
   lesson_id: string;
@@ -179,7 +180,7 @@ export default function LessonPath() {
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        {CURRICULUM_CATEGORIES.map((category) => {
+        {CURRICULUM_CATEGORIES.map((category, i) => {
           const colors = CURRICULUM_COLOR_CLASSES[category.color];
           const categoryLessons = lessons.filter((l) => l.category === category.slug);
           const completedCount = categoryLessons.filter((l) => progress[l.id]).length;
@@ -188,29 +189,32 @@ export default function LessonPath() {
           const isDone = totalCount > 0 && completedCount === totalCount;
 
           return (
-            <button
-              key={category.slug}
-              type="button"
-              onClick={() => setOpenCategory(category.slug)}
-              className={`relative flex flex-col items-start gap-2 rounded-2xl p-4 text-left shadow-sm transition-transform active:scale-[0.97] ${colors.bgLight}`}
-            >
-              {isDone && (
-                <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#2ECC71]">
-                  <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />
-                </span>
-              )}
-              <span className="text-4xl">{category.emoji}</span>
-              <p className="font-bold leading-tight text-gray-900">{category.title}</p>
-              <p className="text-xs text-gray-500">
-                {completedCount}/{totalCount} lessons
-              </p>
-              <div className="h-1.5 w-full rounded-full bg-white/80">
-                <div
-                  className={`h-1.5 rounded-full ${colors.bg} transition-all`}
-                  style={{ width: `${pct}%` }}
-                />
-              </div>
-            </button>
+            <Reveal key={category.slug} index={i}>
+              <LiftCard>
+                <button
+                  type="button"
+                  onClick={() => setOpenCategory(category.slug)}
+                  className={`relative flex w-full flex-col items-start gap-2 rounded-2xl p-4 text-left shadow-sm ${colors.bgLight}`}
+                >
+                  {isDone && (
+                    <span className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#2ECC71]">
+                      <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />
+                    </span>
+                  )}
+                  <span className="text-4xl">{category.emoji}</span>
+                  <p className="font-bold leading-tight text-gray-900">{category.title}</p>
+                  <p className="text-xs text-gray-500">
+                    {completedCount}/{totalCount} lessons
+                  </p>
+                  <div className="h-1.5 w-full rounded-full bg-white/80">
+                    <div
+                      className={`h-1.5 rounded-full ${colors.bg} transition-all`}
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                </button>
+              </LiftCard>
+            </Reveal>
           );
         })}
       </div>

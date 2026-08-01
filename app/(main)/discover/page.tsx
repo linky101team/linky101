@@ -1,36 +1,54 @@
+"use client";
+
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import {
+  ChevronRight,
+  Target,
+  Megaphone,
+  PiggyBank,
+  Wrench,
+  Palette,
+  Rocket,
+  Briefcase,
+  Building2,
+  Cpu,
+  Mic,
+} from "lucide-react";
 import SearchBar from "@/components/discover/SearchBar";
 import TutorialPrompt from "@/components/TutorialPrompt";
+import { Reveal, LiftCard } from "@/components/ui/Reveal";
 import { AMBASSADORS } from "@/lib/ambassadors";
 
 const TOPICS = [
-  { key: "Pitch Decks", emoji: "🎯", bg: "bg-[#FFF0F0]" },
-  { key: "Marketing", emoji: "📣", bg: "bg-[#E3F2FD]" },
-  { key: "Finance", emoji: "💰", bg: "bg-[#E8F5E9]" },
-  { key: "Tools", emoji: "🛠️", bg: "bg-[#F3E8FF]" },
-  { key: "Branding", emoji: "🎨", bg: "bg-[#FFF8E1]" },
-  { key: "Start Up", emoji: "🚀", bg: "bg-[#E1F5FE]" },
+  { key: "Pitch Decks", icon: Target, bg: "bg-[#FFF0F0]", color: "#FF6B6B" },
+  { key: "Marketing", icon: Megaphone, bg: "bg-[#E3F2FD]", color: "#039BE5" },
+  { key: "Finance", icon: PiggyBank, bg: "bg-[#E8F5E9]", color: "#2ECC71" },
+  { key: "Tools", icon: Wrench, bg: "bg-[#F3E8FF]", color: "#7C3AED" },
+  { key: "Branding", icon: Palette, bg: "bg-[#FFF8E1]", color: "#B8860B" },
+  { key: "Start Up", icon: Rocket, bg: "bg-[#E1F5FE]", color: "#0288D1" },
 ];
 
 const OPPORTUNITY_SPOTLIGHT = [
   {
-    emoji: "💼",
+    icon: Briefcase,
     tile: "bg-[#FFF8E1]",
+    color: "#B8860B",
     title: "Tycoon Enterprise Competition",
     org: "Peter Jones Foundation",
     chip: "Closes Sept",
   },
   {
-    emoji: "🏢",
+    icon: Building2,
     tile: "bg-[#E8F5E9]",
+    color: "#2ECC71",
     title: "Work Experience Placements",
     org: "Speakers for Schools",
     chip: "Rolling",
   },
   {
-    emoji: "🤖",
+    icon: Cpu,
     tile: "bg-[#E3F2FD]",
+    color: "#039BE5",
     title: "TeenTech Awards",
     org: "TeenTech",
     chip: "Ages 11–18",
@@ -57,24 +75,27 @@ export default function DiscoverPage() {
           </Link>
         </div>
         <div className="flex flex-col gap-2.5">
-          {OPPORTUNITY_SPOTLIGHT.map((opp) => (
-            <Link
-              key={opp.title}
-              href="/opportunities"
-              className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-3.5 shadow-sm transition-transform active:scale-[0.98]"
-            >
-              <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-xl ${opp.tile}`}>
-                {opp.emoji}
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-bold text-gray-900">{opp.title}</p>
-                <p className="text-xs text-gray-500">{opp.org}</p>
-              </div>
-              <span className="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-500">
-                {opp.chip}
-              </span>
-              <ChevronRight className="h-4 w-4 shrink-0 text-gray-300" />
-            </Link>
+          {OPPORTUNITY_SPOTLIGHT.map((opp, i) => (
+            <Reveal key={opp.title} index={i}>
+              <LiftCard>
+                <Link
+                  href="/opportunities"
+                  className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-3.5 shadow-sm"
+                >
+                  <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${opp.tile}`}>
+                    <opp.icon className="h-5 w-5" style={{ color: opp.color }} strokeWidth={2.25} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-bold text-gray-900">{opp.title}</p>
+                    <p className="text-xs text-gray-500">{opp.org}</p>
+                  </div>
+                  <span className="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-500">
+                    {opp.chip}
+                  </span>
+                  <ChevronRight className="h-4 w-4 shrink-0 text-gray-300" />
+                </Link>
+              </LiftCard>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -82,15 +103,20 @@ export default function DiscoverPage() {
       <section data-tour="discover-topics">
         <h2 className="mb-3 font-bold text-gray-900">🧭 Browse topics</h2>
         <div className="grid grid-cols-3 gap-3">
-          {TOPICS.map((t) => (
-            <Link
-              key={t.key}
-              href={`/learn/topic/${encodeURIComponent(t.key)}`}
-              className={`flex flex-col items-center gap-1.5 rounded-2xl p-4 text-center shadow-sm transition-transform active:scale-[0.96] ${t.bg}`}
-            >
-              <span className="text-3xl">{t.emoji}</span>
-              <span className="text-xs font-bold leading-tight text-gray-900">{t.key}</span>
-            </Link>
+          {TOPICS.map((t, i) => (
+            <Reveal key={t.key} index={i}>
+              <LiftCard>
+                <Link
+                  href={`/learn/topic/${encodeURIComponent(t.key)}`}
+                  className={`flex flex-col items-center gap-2 rounded-2xl p-4 text-center shadow-sm ${t.bg}`}
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/70">
+                    <t.icon className="h-5 w-5" style={{ color: t.color }} strokeWidth={2.25} />
+                  </div>
+                  <span className="text-xs font-bold leading-tight text-gray-900">{t.key}</span>
+                </Link>
+              </LiftCard>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -103,40 +129,47 @@ export default function DiscoverPage() {
           </Link>
         </div>
         <div className="flex flex-col gap-2.5">
-          {AMBASSADORS.slice(0, 2).map((a) => (
-            <Link
-              key={a.id}
-              href="/mentors"
-              className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-3.5 shadow-sm transition-transform active:scale-[0.98]"
-            >
-              <span
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
-                style={{ backgroundColor: a.color }}
-              >
-                {a.initials}
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-bold text-gray-900">{a.name}</p>
-                <p className="truncate text-xs text-gray-500">{a.role}</p>
-              </div>
-              <ChevronRight className="h-4 w-4 shrink-0 text-gray-300" />
-            </Link>
+          {AMBASSADORS.slice(0, 2).map((a, i) => (
+            <Reveal key={a.id} index={i}>
+              <LiftCard>
+                <Link
+                  href="/mentors"
+                  className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-3.5 shadow-sm"
+                >
+                  <span
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
+                    style={{ backgroundColor: a.color }}
+                  >
+                    {a.initials}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-bold text-gray-900">{a.name}</p>
+                    <p className="truncate text-xs text-gray-500">{a.role}</p>
+                  </div>
+                  <ChevronRight className="h-4 w-4 shrink-0 text-gray-300" />
+                </Link>
+              </LiftCard>
+            </Reveal>
           ))}
         </div>
       </section>
 
       <section>
-        <Link
-          href="/learn?tab=podcasts"
-          className="flex items-center gap-3 rounded-2xl bg-[#1A1A2E] p-4 transition-transform active:scale-[0.98]"
-        >
-          <span className="text-3xl">🎙️</span>
-          <div className="min-w-0 flex-1">
-            <p className="font-bold text-white">The LinkY101 Podcast</p>
-            <p className="text-xs text-white/60">Real young founders, real stories</p>
-          </div>
-          <ChevronRight className="h-5 w-5 shrink-0 text-white/50" />
-        </Link>
+        <LiftCard>
+          <Link
+            href="/learn?tab=podcasts"
+            className="flex items-center gap-3 rounded-2xl bg-[#1A1A2E] p-4"
+          >
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10">
+              <Mic className="h-5 w-5 text-[#FFD93D]" strokeWidth={2.25} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="font-bold text-white">The LinkY101 Podcast</p>
+              <p className="text-xs text-white/60">Real young founders, real stories</p>
+            </div>
+            <ChevronRight className="h-5 w-5 shrink-0 text-white/50" />
+          </Link>
+        </LiftCard>
       </section>
 
       <TutorialPrompt tourId="discover" />

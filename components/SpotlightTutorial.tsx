@@ -66,7 +66,7 @@ export default function SpotlightTutorial({ tour, stepIndex, onNext, onSkip }: S
     <div className="fixed inset-0 z-[70]">
       {rect ? (
         <motion.div
-          className="pointer-events-none absolute rounded-2xl border-3 border-pink"
+          className="pointer-events-none absolute rounded-2xl border-[3px] border-[#FF6B6B]"
           animate={{
             top: rect.top - PADDING,
             left: rect.left - PADDING,
@@ -93,19 +93,19 @@ export default function SpotlightTutorial({ tour, stepIndex, onNext, onSkip }: S
           key={stepIndex}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute left-4 right-4 mx-auto max-w-[380px] rounded-[18px] border-3 border-pink bg-card p-4 shadow-glow-pink"
+          className="absolute left-4 right-4 mx-auto max-w-[380px] rounded-[18px] border border-gray-200 bg-white p-4 shadow-xl"
           style={{ top: tooltipTop }}
         >
-          <p className="mb-1 text-[10px] font-black uppercase tracking-wide text-pink">
+          <p className="mb-1 text-[10px] font-bold uppercase tracking-wide text-[#FF6B6B]">
             Step {stepIndex + 1}/{tour.steps.length}
           </p>
-          <h3 className="mb-1 text-base font-black text-ink">{step.title}</h3>
-          <p className="mb-3 text-sm font-bold text-text-muted">{step.body}</p>
+          <h3 className="mb-1 text-base font-bold text-gray-900">{step.title}</h3>
+          <p className="mb-3 text-sm font-medium text-gray-500">{step.body}</p>
           <div className="flex gap-2">
             <button
               type="button"
               onClick={onSkip}
-              className="flex-1 rounded-xl border-3 border-border py-2 text-xs font-black uppercase text-text-muted"
+              className="flex-1 rounded-xl border border-gray-200 py-2 text-xs font-bold uppercase text-gray-500 transition-transform active:scale-95"
             >
               Skip
             </button>

@@ -42,7 +42,7 @@ export default function PostCard({
   const name = post.author?.first_name ?? "Member";
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition-shadow duration-200 hover:shadow-md">
       <div className="mb-2.5 flex items-center gap-2.5">
         <span
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
