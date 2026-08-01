@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import {
-  ChevronRight,
   Sparkles,
   Wrench,
   Star,
@@ -13,7 +12,7 @@ import {
 import SearchBar from "@/components/discover/SearchBar";
 import TutorialPrompt from "@/components/TutorialPrompt";
 import { Reveal, LiftCard } from "@/components/ui/Reveal";
-import { AMBASSADORS } from "@/lib/ambassadors";
+import AmbassadorGrid from "@/components/discover/AmbassadorGrid";
 import { UK_REGIONS } from "@/lib/regions";
 
 const HUB = [
@@ -123,38 +122,25 @@ export default function DiscoverPage() {
         </div>
       </section>
 
-      {/* Ambassador preview */}
+      {/* Ambassadors — full card grid with sector and region filters */}
       <section data-tour="discover-founders">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-extrabold text-[#1E1B4B]">⭐ Ambassadors</h2>
-          <Link href="/mentors" className="text-sm font-bold text-[#7C3AED]">
-            Meet them all ›
-          </Link>
-        </div>
-        <div className="flex flex-col gap-2.5">
-          {AMBASSADORS.slice(0, 3).map((a, i) => (
-            <Reveal key={a.id} index={i}>
-              <LiftCard>
-                <Link
-                  href="/mentors"
-                  className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-3.5 shadow-sm"
-                >
-                  <span
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
-                    style={{ backgroundColor: a.color }}
-                  >
-                    {a.initials}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-bold text-[#1E1B4B]">{a.name}</p>
-                    <p className="truncate text-xs text-gray-500">{a.role}</p>
-                  </div>
-                  <ChevronRight className="h-4 w-4 shrink-0 text-gray-300" />
-                </Link>
-              </LiftCard>
-            </Reveal>
-          ))}
-        </div>
+        <Reveal>
+          <div className="grad-hero mb-4 rounded-2xl p-5">
+            <h2 className="text-xl font-extrabold text-white">Meet the Ambassadors</h2>
+            <p className="mt-1 text-sm text-white/85">
+              Real founders from across the UK and beyond — filter by what they do or where they are
+            </p>
+          </div>
+        </Reveal>
+
+        <AmbassadorGrid />
+
+        <Link
+          href="/mentors"
+          className="mt-4 block rounded-2xl border border-gray-200 bg-white py-3 text-center text-sm font-bold text-[#7C3AED]"
+        >
+          Ask them a question →
+        </Link>
       </section>
 
       <TutorialPrompt tourId="discover" />

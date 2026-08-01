@@ -2,14 +2,109 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Lightbulb } from "lucide-react";
+import { Lightbulb, X, MapPin, ExternalLink } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { createClientSupabase } from "@/lib/supabase/client";
 import { useProfile } from "@/hooks/useProfile";
-import { AMBASSADORS } from "@/lib/ambassadors";
+import { type Ambassador } from "@/lib/ambassadors";
+import AmbassadorGrid from "@/components/discover/AmbassadorGrid";
 import type { Mentor } from "@/components/mentors/MentorCard";
 import QuestionCard, { type MentorQuestion } from "@/components/mentors/QuestionCard";
 import AskQuestionModal from "@/components/mentors/AskQuestionModal";
-import { Reveal, LiftCard } from "@/components/ui/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
+
+function AmbassadorModal({ a, onClose }: { a: Ambassador; onClose: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+      className="fixed inset-0 z-[70] flex items-end justify-center bg-black/50 p-0 sm:items-center sm:p-4"
+    >
+      <motion.div
+        initial={{ y: 60, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 60, opacity: 0 }}
+        transition={{ type: "spring", damping: 26, stiffness: 300 }}
+        onClick={(e) => e.stopPropagation()}
+        className="max-h-[88vh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-white sm:rounded-3xl"
+      >
+        <div className="grad-hero relative p-6 text-center">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="absolute right-4 top-4 text-white/80 hover:text-white"
+          >
+            <X className="h-5 w-5" strokeWidth={2.5} />
+          </button>
+          <span
+            className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border-4 border-white/30 text-2xl font-extrabold text-white"
+            style={{ backgroundColor: a.color }}
+          >
+            {a.initials}
+          </span>
+          <p className="mt-3 text-xl font-extrabold text-white">{a.name}</p>
+          <p className="text-sm font-semibold text-white/85">{a.role}</p>
+          <p className="mt-1 flex items-center justify-center gap-1 text-xs text-white/70">
+            <MapPin className="h-3 w-3" strokeWidth={2.5} />
+            {a.location}
+          </p>
+        </div>
+
+        <div className="p-5">
+          <p className="mb-2 text-[10px] font-extrabold uppercase tracking-wider text-[#EC4899]">About</p>
+          {a.bio.map((para, i) => (
+            <p key={i} className="mb-2 text-sm leading-relaxed text-gray-600">
+              {para}
+            </p>
+          ))}
+
+          <p className="mb-2 mt-4 text-[10px] font-extrabold uppercase tracking-wider text-[#EC4899]">
+            Known for
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {a.tags.map((t) => (
+              <span key={t} className="rounded-full bg-[#F5F3FF] px-2.5 py-1 text-[11px] font-bold text-[#5B21B6]">
+                {t}
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-4 rounded-2xl border border-[#FCD34D] bg-[#FEF3C7] p-4">
+            <p className="mb-1.5 flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[#92400E]">
+              <Lightbulb className="h-3.5 w-3.5" strokeWidth={2.5} />
+              One piece of advice
+            </p>
+            {a.adviceConfirmed ? (
+              <p className="text-sm font-semibold italic leading-relaxed text-[#78350F]">
+                &ldquo;{a.advice}&rdquo;
+              </p>
+            ) : (
+              <p className="text-sm leading-relaxed text-[#92400E]/70">
+                Coming soon — we&apos;re waiting on {a.name.split(" ")[0]}&apos;s own words for the next
+                generation.
+              </p>
+            )}
+          </div>
+
+          {a.linkedin && (
+            <a
+              href={a.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 flex items-center justify-center gap-2 rounded-full border border-gray-200 py-2.5 text-sm font-bold text-gray-600"
+            >
+              <ExternalLink className="h-4 w-4" strokeWidth={2.5} />
+              Connect on LinkedIn
+            </a>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
 
 export default function MentorsPage() {
   const { profile } = useProfile();
@@ -21,7 +116,7 @@ export default function MentorsPage() {
   const [tab, setTab] = useState<"all" | "mine">("all");
   const [loading, setLoading] = useState(true);
   const [showAsk, setShowAsk] = useState(false);
-  const [expanded, setExpanded] = useState<string | null>(null);
+  const [selected, setSelected] = useState<Ambassador | null>(null);
 
   async function loadQuestions() {
     const { data } = await supabase
@@ -67,120 +162,43 @@ export default function MentorsPage() {
 
   return (
     <div className="flex flex-col gap-5 pb-16">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <h1 className="text-lg font-bold text-gray-900">🌟 Ambassadors</h1>
-          <p className="text-sm text-gray-500">
-            Real people who share their story and want to help young founders grow
-          </p>
+      <Reveal>
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-extrabold text-[#1E1B4B]">Ambassadors ⭐</h1>
+            <p className="text-sm text-gray-500">
+              Real founders sharing one hard-won lesson each
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowAsk(true)}
+            className="grad-brand hidden shrink-0 rounded-full px-4 py-2.5 text-sm font-bold text-white transition-transform active:scale-95 lg:block"
+          >
+            + Ask a question
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={() => setShowAsk(true)}
-          className="hidden shrink-0 rounded-full bg-[#1A1A2E] px-4 py-2.5 text-sm font-bold text-white transition-transform active:scale-95 lg:block"
-        >
-          + Ask a question
-        </button>
-      </div>
+      </Reveal>
 
-      <div className="flex flex-col gap-3">
-        {AMBASSADORS.map((a, i) => {
-          const isOpen = expanded === a.id;
-          return (
-            <Reveal key={a.id} index={i}>
-            <LiftCard>
-            <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
-              <div className="flex items-center gap-3">
-                <span
-                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-base font-bold text-white"
-                  style={{ backgroundColor: a.color }}
-                >
-                  {a.initials}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="font-bold leading-snug text-gray-900">{a.name}</p>
-                  <p className="truncate text-xs text-gray-500">{a.role}</p>
-                  <div className="mt-1.5 flex flex-wrap gap-1">
-                    {a.tags.map((t) => (
-                      <span
-                        key={t.label}
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${t.bg} ${t.text}`}
-                      >
-                        {t.label}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setExpanded(isOpen ? null : a.id)}
-                  className="shrink-0 rounded-full bg-[#1A1A2E] px-4 py-2 text-sm font-bold text-white transition-transform active:scale-95"
-                >
-                  {isOpen ? "Close" : "View →"}
-                </button>
-              </div>
+      <AmbassadorGrid onSelect={setSelected} />
 
-              {isOpen && (
-                <div className="mt-3 border-t border-gray-100 pt-3">
-                  <p className="text-sm leading-relaxed text-gray-600">{a.bio}</p>
-
-                  {/*
-                    Ambassadors inspire publicly — there is deliberately no
-                    private messaging between an ambassador and a young founder.
-                    (Mentors are a separate, DBS-checked group; that's where
-                    1-to-1 support lives.)
-                  */}
-                  <div className="mt-3 rounded-2xl border border-[#FCD34D] bg-[#FEF3C7] p-4">
-                    <p className="mb-1.5 flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[#92400E]">
-                      <Lightbulb className="h-3.5 w-3.5" strokeWidth={2.5} />
-                      One piece of advice
-                    </p>
-                    {a.advice ? (
-                      <p className="text-sm font-semibold italic leading-relaxed text-[#78350F]">
-                        &ldquo;{a.advice}&rdquo;
-                      </p>
-                    ) : (
-                      <p className="text-sm leading-relaxed text-[#92400E]/70">
-                        Coming soon — we&apos;re collecting {a.name.split(" ")[0]}&apos;s advice for the next
-                        generation.
-                      </p>
-                    )}
-                  </div>
-
-                  {a.linkedin && (
-                    <a
-                      href={a.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-2 block rounded-full border border-gray-200 py-2.5 text-center text-sm font-bold text-gray-600 transition-transform active:scale-[0.98]"
-                    >
-                      Connect on LinkedIn ↗
-                    </a>
-                  )}
-                </div>
-              )}
-            </div>
-            </LiftCard>
-            </Reveal>
-          );
-        })}
-      </div>
-
-      <div className="rounded-2xl bg-[#FFF8E1] p-4">
-        <p className="font-bold text-gray-900">💡 Become an Ambassador</p>
-        <p className="mt-1 text-sm leading-relaxed text-gray-600">
-          Give 10 minutes of your story and inspire the next generation of founders.
-        </p>
-        <Link
-          href="/feedback"
-          className="mt-3 inline-block rounded-full bg-[#1A1A2E] px-5 py-2 text-sm font-bold text-white transition-transform active:scale-95"
-        >
-          Get in touch →
-        </Link>
-      </div>
+      <Reveal>
+        <div className="grad-gold rounded-2xl border border-[#F59E0B]/40 p-5">
+          <p className="font-extrabold text-[#92400E]">💡 Become an Ambassador</p>
+          <p className="mt-1 text-sm leading-relaxed text-[#92400E]">
+            Give ten minutes of your story and inspire the next generation of founders.
+          </p>
+          <Link
+            href="/feedback"
+            className="mt-3 inline-block rounded-full bg-[#1E1B4B] px-5 py-2 text-sm font-bold text-white transition-transform active:scale-95"
+          >
+            Get in touch →
+          </Link>
+        </div>
+      </Reveal>
 
       <div className="mt-1">
-        <h2 className="font-bold text-gray-900">❓ Ask them anything</h2>
+        <h2 className="text-lg font-extrabold text-[#1E1B4B]">❓ Ask them anything</h2>
         <p className="text-sm text-gray-500">
           Post a question — the best ones get answered publicly every week
         </p>
@@ -193,7 +211,7 @@ export default function MentorsPage() {
             type="button"
             onClick={() => setTab(t)}
             className={`flex-1 rounded-full py-2 text-xs font-bold transition-all ${
-              tab === t ? "bg-[#1A1A2E] text-white" : "text-gray-500"
+              tab === t ? "grad-brand text-white" : "text-gray-500"
             }`}
           >
             {t === "all" ? "All questions" : "My questions"}
@@ -206,7 +224,7 @@ export default function MentorsPage() {
       ) : visibleQuestions.length === 0 ? (
         <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm">
           <span className="text-4xl">❓</span>
-          <p className="mt-2 font-bold text-gray-900">
+          <p className="mt-2 font-bold text-[#1E1B4B]">
             {tab === "mine" ? "You haven't asked anything yet" : "No questions yet"}
           </p>
           <p className="text-sm text-gray-500">
@@ -232,12 +250,16 @@ export default function MentorsPage() {
             type="button"
             onClick={() => setShowAsk(true)}
             aria-label="Ask a question"
-            className="pointer-events-auto ml-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#1A1A2E] text-2xl font-bold text-white shadow-lg transition-transform active:scale-90"
+            className="grad-brand pointer-events-auto ml-auto flex h-14 w-14 items-center justify-center rounded-full text-2xl font-bold text-white shadow-lg transition-transform active:scale-90"
           >
             +
           </button>
         </div>
       </div>
+
+      <AnimatePresence>
+        {selected && <AmbassadorModal a={selected} onClose={() => setSelected(null)} />}
+      </AnimatePresence>
 
       <AskQuestionModal
         isOpen={showAsk}
