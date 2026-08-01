@@ -2,28 +2,32 @@
 
 import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import SectionTitle from "@/components/ui/SectionTitle";
 import LessonPath from "@/components/learn/LessonPath";
-import PodcastsTab from "@/components/learn/PodcastsTab";
 import QuizzesTab from "@/components/learn/QuizzesTab";
+import { Reveal } from "@/components/ui/Reveal";
 
-type Tab = "lessons" | "podcasts" | "quizzes";
+type Tab = "lessons" | "quizzes";
 
-const TABS: { key: Tab; label: string; active: string }[] = [
-  { key: "lessons", label: "Lessons", active: "bg-[#2ECC71] text-white" },
-  { key: "podcasts", label: "Podcasts", active: "bg-[#7C3AED] text-white" },
-  { key: "quizzes", label: "Quizzes", active: "bg-[#FFD93D] text-gray-900" },
+// Podcasts used to be a third tab here. It's now a top-level page of its own
+// (/podcasts) because it's a headline feature, not a sub-tab.
+const TABS: { key: Tab; label: string }[] = [
+  { key: "lessons", label: "Courses" },
+  { key: "quizzes", label: "Quizzes" },
 ];
 
 function LearnContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const rawTab = searchParams.get("tab");
-  const tab: Tab = rawTab === "podcasts" || rawTab === "quizzes" ? rawTab : "lessons";
+  const tab: Tab = searchParams.get("tab") === "quizzes" ? "quizzes" : "lessons";
 
   return (
-    <div className="flex flex-col gap-5">
-      <SectionTitle title="Learn" />
+    <div className="flex flex-col gap-5 pb-8">
+      <Reveal>
+        <div>
+          <h1 className="text-2xl font-extrabold text-[#1E1B4B]">Learn 📚</h1>
+          <p className="text-sm text-gray-500">Real business skills, in bite-sized lessons</p>
+        </div>
+      </Reveal>
 
       <div className="flex gap-2">
         {TABS.map((t) => (
@@ -31,8 +35,10 @@ function LearnContent() {
             key={t.key}
             type="button"
             onClick={() => router.push(t.key === "lessons" ? "/learn" : `/learn?tab=${t.key}`)}
-            className={`flex-1 rounded-full py-2 text-sm font-bold transition-all active:scale-95 ${
-              tab === t.key ? `${t.active} shadow-sm` : "bg-white text-gray-500 border border-gray-200"
+            className={`flex-1 rounded-full py-2.5 text-sm font-bold transition-all active:scale-95 ${
+              tab === t.key
+                ? "grad-brand text-white shadow-sm"
+                : "border border-gray-200 bg-white text-gray-500"
             }`}
           >
             {t.label}
@@ -42,7 +48,6 @@ function LearnContent() {
 
       <div>
         {tab === "lessons" && <LessonPath />}
-        {tab === "podcasts" && <PodcastsTab />}
         {tab === "quizzes" && <QuizzesTab />}
       </div>
     </div>
@@ -51,7 +56,7 @@ function LearnContent() {
 
 export default function LearnPage() {
   return (
-    <Suspense fallback={<div className="skeleton-shimmer h-64 rounded-xl" />}>
+    <Suspense fallback={<div className="skeleton-shimmer h-64 rounded-2xl" />}>
       <LearnContent />
     </Suspense>
   );

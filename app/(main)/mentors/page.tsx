@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Crown } from "lucide-react";
+import { Lightbulb } from "lucide-react";
 import { createClientSupabase } from "@/lib/supabase/client";
 import { useProfile } from "@/hooks/useProfile";
 import { AMBASSADORS } from "@/lib/ambassadors";
@@ -123,13 +123,40 @@ export default function MentorsPage() {
               {isOpen && (
                 <div className="mt-3 border-t border-gray-100 pt-3">
                   <p className="text-sm leading-relaxed text-gray-600">{a.bio}</p>
-                  <Link
-                    href="/premium"
-                    className="mt-3 flex items-center justify-center gap-1.5 rounded-full bg-[#FFF7DB] py-2.5 text-sm font-bold text-[#B8860B] transition-transform active:scale-[0.98]"
-                  >
-                    <Crown className="h-4 w-4" strokeWidth={2.5} />
-                    Message 1-on-1 — Pro
-                  </Link>
+
+                  {/*
+                    Ambassadors inspire publicly — there is deliberately no
+                    private messaging between an ambassador and a young founder.
+                    (Mentors are a separate, DBS-checked group; that's where
+                    1-to-1 support lives.)
+                  */}
+                  <div className="mt-3 rounded-2xl border border-[#FCD34D] bg-[#FEF3C7] p-4">
+                    <p className="mb-1.5 flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[#92400E]">
+                      <Lightbulb className="h-3.5 w-3.5" strokeWidth={2.5} />
+                      One piece of advice
+                    </p>
+                    {a.advice ? (
+                      <p className="text-sm font-semibold italic leading-relaxed text-[#78350F]">
+                        &ldquo;{a.advice}&rdquo;
+                      </p>
+                    ) : (
+                      <p className="text-sm leading-relaxed text-[#92400E]/70">
+                        Coming soon — we&apos;re collecting {a.name.split(" ")[0]}&apos;s advice for the next
+                        generation.
+                      </p>
+                    )}
+                  </div>
+
+                  {a.linkedin && (
+                    <a
+                      href={a.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 block rounded-full border border-gray-200 py-2.5 text-center text-sm font-bold text-gray-600 transition-transform active:scale-[0.98]"
+                    >
+                      Connect on LinkedIn ↗
+                    </a>
+                  )}
                 </div>
               )}
             </div>

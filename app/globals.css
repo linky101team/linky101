@@ -2,21 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  Launchpad palette. The token NAMES below are unchanged on purpose — they're
+  referenced hundreds of times across the app (text-ink, text-text-muted,
+  border-border, bg-card ...), so re-pointing their values re-skins the whole
+  product at once instead of touching every file. `sky` is the primary accent
+  token throughout the codebase, so it now points at Launchpad purple.
+*/
 :root {
-  --pink: #ff6b6b;
-  --sky: #039be5;
-  --sky-deep: #0288d1;
+  --purple: #7c3aed;
+  --pink: #ec4899;
+  --cyan: #06b6d4;
 
-  --bg: #b3e5fc;
+  --sky: #7c3aed;
+  --sky-deep: #6d28d9;
+
+  --bg: #f5f3ff;
   --card: #ffffff;
-  --border: #e5e7eb;
-  --text-muted: #5c7a99;
-  --ink: #1a1a2e;
+  --border: #e9e5f5;
+  --text-muted: #6b7280;
+  --ink: #1e1b4b;
 
-  --yellow: #ffd93d;
-  --green: #4ecdc4;
+  --yellow: #f59e0b;
+  --green: #10b981;
 
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 2px 12px rgba(124, 58, 237, 0.08);
 }
 
 * {
@@ -40,23 +50,54 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Signature Launchpad gradient — purple → pink → cyan. Used for hero
+     banners and primary calls to action. */
+  .grad-hero {
+    background: linear-gradient(135deg, #7c3aed 0%, #ec4899 50%, #06b6d4 100%);
+  }
+
+  .grad-brand {
+    background: linear-gradient(135deg, #7c3aed, #ec4899);
+  }
+
+  .grad-cool {
+    background: linear-gradient(135deg, #7c3aed, #06b6d4);
+  }
+
+  .grad-gold {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+  }
+
+  .text-grad {
+    background: linear-gradient(90deg, #c084fc, #f472b6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 }
 
 @layer components {
   .card {
-    @apply bg-card border border-gray-200 rounded-xl p-4 shadow-sm;
+    @apply bg-card border border-gray-200 rounded-2xl p-4;
+    box-shadow: var(--shadow-card);
   }
 
   .btn-pink {
-    @apply bg-[#FF6B6B] text-white font-bold rounded-xl px-6 py-3 transition-transform active:scale-[0.97];
+    @apply bg-[#EC4899] text-white font-bold rounded-full px-6 py-3 transition-transform active:scale-[0.97];
   }
 
   .btn-green {
-    @apply bg-[#2ECC71] text-white font-bold rounded-xl px-6 py-3 transition-transform active:scale-[0.97];
+    @apply bg-[#10B981] text-white font-bold rounded-full px-6 py-3 transition-transform active:scale-[0.97];
   }
 
   .btn-yellow {
-    @apply bg-[#FFD93D] text-white font-bold rounded-xl px-6 py-3 transition-transform active:scale-[0.97];
+    @apply bg-[#F59E0B] text-white font-bold rounded-full px-6 py-3 transition-transform active:scale-[0.97];
+  }
+
+  .btn-brand {
+    @apply text-white font-bold rounded-full px-6 py-3 transition-transform active:scale-[0.97];
+    background: linear-gradient(135deg, #7c3aed, #ec4899);
   }
 }
 
@@ -73,7 +114,7 @@ body {
 }
 
 .auth-gradient-bg {
-  background: linear-gradient(120deg, #b3e5fc, #81d4fa, #e1f5fe, #b3e5fc);
+  background: linear-gradient(120deg, #7c3aed, #ec4899, #06b6d4, #7c3aed);
   background-size: 300% 300%;
   animation: auth-gradient-shift 15s ease infinite;
 }
@@ -88,7 +129,22 @@ body {
 }
 
 .skeleton-shimmer {
-  background: linear-gradient(90deg, #eef7fc 25%, #dcefff 37%, #eef7fc 63%);
+  background: linear-gradient(90deg, #efeafd 25%, #e2d9fb 37%, #efeafd 63%);
   background-size: 800px 100%;
   animation: shimmer 1.4s linear infinite;
+}
+
+@keyframes confetti-fade {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+}
+
+.confetti-burst {
+  animation: confetti-fade 2s forwards;
 }

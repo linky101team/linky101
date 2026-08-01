@@ -20,6 +20,15 @@ export interface Profile {
   avatar_url: string | null;
   profile_flair: Record<string, unknown>;
   interests: string[];
+  /** UK region, e.g. "Yorkshire". Null until onboarding collects it. */
+  region: string | null;
+  /**
+   * Self-selected role. "Mentor" is deliberately NOT an option — mentors are
+   * hand-picked, DBS-checked adults and live in the separate `mentors` table.
+   */
+  role: "founder" | "ambassador";
+  /** Ambassadors must pass an over-18 check before being publicly listed. */
+  ambassador_verified: boolean;
   onboarding_completed: boolean;
   completed_tours: string[];
   is_admin: boolean;

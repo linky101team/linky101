@@ -10,6 +10,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        purple: "var(--purple)",
+        cyan: "var(--cyan)",
         pink: "var(--pink)",
         sky: "var(--sky)",
         "sky-deep": "var(--sky-deep)",

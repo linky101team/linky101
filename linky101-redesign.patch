@@ -1,0 +1,4041 @@
+From 9b187777eb7ac50bc16ea0872da5a38c57b57ac5 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 31 Jul 2026 22:08:55 +0000
+Subject: [PATCH] =?UTF-8?q?Remove=20all=20gamification=20=E2=80=94=20clean?=
+ =?UTF-8?q?=20professional=20redesign?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Strip levels, XP, coins, spin wheels, locked features, and gamified
+styling. Everything unlocked from day one. Clean light-blue theme with
+professional card-based UI, icon-only bottom nav, and simplified
+lesson/quiz flow.
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01XPsVo6QjMQ2cxip5nFLtfW
+---
+ app/(auth)/login/page.tsx              | 120 ++++-----
+ app/(auth)/signup/page.tsx             | 352 ++++++++++++-------------
+ app/(auth)/verify/page.tsx             |   1 -
+ app/(main)/home/page.tsx               | 137 ++++++----
+ app/(main)/layout.tsx                  | 111 +++-----
+ app/(main)/learn/lesson/[id]/page.tsx  |  91 +++----
+ app/(main)/learn/page.tsx              |  54 ++--
+ app/(main)/profile/page.tsx            | 226 ++++++----------
+ app/(main)/tasks/page.tsx              |  21 +-
+ app/globals.css                        | 109 ++------
+ app/layout.tsx                         |  21 +-
+ components/Confetti.tsx                |  57 +---
+ components/FloatingRewards.tsx         |  27 +-
+ components/LevelProgressModal.tsx      | 196 +-------------
+ components/LevelUpModal.tsx            |  80 +-----
+ components/SpinResult.tsx              |  56 +---
+ components/SpinWheel.tsx               |  66 +----
+ components/WelcomeBack.tsx             |  84 +-----
+ components/home/DailySpinPreview.tsx   | 144 +---------
+ components/home/DailyTasksCard.tsx     | 207 +--------------
+ components/home/LeaderboardPreview.tsx |  70 +----
+ components/home/LevelRoadmapCard.tsx   | 134 +---------
+ components/home/SchoolTeamPreview.tsx  |  87 +-----
+ components/learn/LessonPath.tsx        | 135 +++-------
+ components/tasks/DailySpinSection.tsx  | 135 +---------
+ components/ui/GameCard.tsx             |  50 +---
+ components/ui/GradientButton.tsx       |  26 +-
+ components/ui/LevelBadge.tsx           |  65 +----
+ components/ui/LockedFeature.tsx        |  22 +-
+ components/ui/SectionTitle.tsx         |   4 +-
+ components/ui/XPBar.tsx                |  41 +--
+ lib/curriculum.ts                      |  25 +-
+ package-lock.json                      |  42 ---
+ tailwind.config.ts                     |  24 +-
+ 34 files changed, 641 insertions(+), 2379 deletions(-)
+
+diff --git a/app/(auth)/login/page.tsx b/app/(auth)/login/page.tsx
+index 596d928..3743c26 100644
+--- a/app/(auth)/login/page.tsx
++++ b/app/(auth)/login/page.tsx
+@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
+ import Link from "next/link";
+ import { createClientSupabase } from "@/lib/supabase/client";
+ import { friendlyAuthError } from "@/lib/authErrors";
+-import GameCard from "@/components/ui/GameCard";
+-import GradientButton from "@/components/ui/GradientButton";
++import Card from "@/components/ui/GameCard";
++import Button from "@/components/ui/GradientButton";
+ 
+ const inputClass =
+-  "w-full rounded-xl border-3 border-border bg-white px-4 py-3 font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none";
++  "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-[#039BE5] focus:ring-1 focus:ring-[#039BE5] focus:outline-none";
+ 
+ export default function LoginPage() {
+   const router = useRouter();
+@@ -43,67 +43,69 @@ export default function LoginPage() {
+   }
+ 
+   return (
+-    <main className="auth-gradient-bg flex min-h-screen flex-col justify-center gap-6 px-5 py-10">
+-      <div className="text-center">
+-        <span className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-3xl border-3 border-sky bg-gradient-primary text-2xl font-black text-white shadow-glow-sky">
+-          🚀
+-        </span>
+-        <h1 className="heading-game text-3xl">
+-          Link<span className="text-sky">Y</span>101
+-        </h1>
+-        <p className="mt-1 text-sm font-bold text-ink">Welcome back.</p>
+-      </div>
++    <main className="auth-gradient-bg flex min-h-screen flex-col items-center justify-center px-5 py-10">
++      <div className="w-full max-w-sm">
++        <div className="mb-8 text-center">
++          <h1 className="text-3xl font-bold text-gray-900">
++            Link<span className="text-[#FF6B6B]">Y</span>101
++          </h1>
++          <p className="mt-1 text-sm text-gray-600">
++            Your professional network — before LinkedIn
++          </p>
++        </div>
+ 
+-      <GameCard borderColor="sky" glowColor="sky">
+-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+-          <div>
+-            <label className="mb-1 block text-xs font-black uppercase tracking-wide text-text-muted">
+-              Email
+-            </label>
+-            <input
+-              type="email"
+-              className={inputClass}
+-              value={email}
+-              onChange={(e) => setEmail(e.target.value)}
+-              placeholder="you@example.com"
+-              autoComplete="email"
+-            />
+-          </div>
++        <Card>
++          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
++            <div>
++              <label className="mb-1 block text-sm font-medium text-gray-600">
++                Email
++              </label>
++              <input
++                type="email"
++                className={inputClass}
++                value={email}
++                onChange={(e) => setEmail(e.target.value)}
++                placeholder="you@example.com"
++                autoComplete="email"
++              />
++            </div>
+ 
+-          <div>
+-            <label className="mb-1 block text-xs font-black uppercase tracking-wide text-text-muted">
+-              Password
+-            </label>
+-            <input
+-              type="password"
+-              className={inputClass}
+-              value={password}
+-              onChange={(e) => setPassword(e.target.value)}
+-              placeholder="Your password"
+-              autoComplete="current-password"
+-            />
+-          </div>
++            <div>
++              <label className="mb-1 block text-sm font-medium text-gray-600">
++                Password
++              </label>
++              <input
++                type="password"
++                className={inputClass}
++                value={password}
++                onChange={(e) => setPassword(e.target.value)}
++                placeholder="Your password"
++                autoComplete="current-password"
++              />
++            </div>
+ 
+-          {errorMsg && <p className="text-center text-sm font-bold text-orange">{errorMsg}</p>}
++            {errorMsg && (
++              <p className="text-center text-sm text-red-500">{errorMsg}</p>
++            )}
+ 
+-          <GradientButton
+-            type="submit"
+-            variant="sky"
+-            size="lg"
+-            disabled={submitting}
+-            className="w-full"
+-          >
+-            {submitting ? "Logging in..." : "Log In"}
+-          </GradientButton>
+-        </form>
+-      </GameCard>
++            <Button
++              type="submit"
++              variant="pink"
++              disabled={submitting}
++              className="w-full"
++            >
++              {submitting ? "Logging in..." : "Log In"}
++            </Button>
++          </form>
++        </Card>
+ 
+-      <p className="text-center text-sm font-bold text-text-muted">
+-        New to LinkY101?{" "}
+-        <Link href="/signup" className="text-pink">
+-          Join now
+-        </Link>
+-      </p>
++        <p className="mt-6 text-center text-sm text-gray-600">
++          New to LinkY101?{" "}
++          <Link href="/signup" className="text-[#FF6B6B] hover:underline">
++            Join now
++          </Link>
++        </p>
++      </div>
+     </main>
+   );
+ }
+diff --git a/app/(auth)/signup/page.tsx b/app/(auth)/signup/page.tsx
+index b768161..e293e87 100644
+--- a/app/(auth)/signup/page.tsx
++++ b/app/(auth)/signup/page.tsx
+@@ -6,15 +6,15 @@ import Link from "next/link";
+ import { ChevronDown, Search } from "lucide-react";
+ import { createClientSupabase } from "@/lib/supabase/client";
+ import { friendlyAuthError } from "@/lib/authErrors";
+-import GameCard from "@/components/ui/GameCard";
+-import GradientButton from "@/components/ui/GradientButton";
++import Card from "@/components/ui/GameCard";
++import Button from "@/components/ui/GradientButton";
+ 
+ const AGE_OPTIONS = [10, 11, 12, 13, 14, 15, 16, 17, 18];
+ const MIN_AGE = 13;
+ const MAX_AGE = 18;
+ 
+ const inputClass =
+-  "w-full rounded-xl border-3 border-border bg-white px-4 py-3 font-bold text-ink placeholder:text-text-muted focus:border-sky focus:outline-none";
++  "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-[#039BE5] focus:ring-1 focus:ring-[#039BE5] focus:outline-none";
+ 
+ interface School {
+   id: string;
+@@ -143,187 +143,185 @@ export default function SignupPage() {
+   }
+ 
+   return (
+-    <main className="auth-gradient-bg flex min-h-screen flex-col justify-center gap-6 px-5 py-10">
+-      <div className="text-center">
+-        <span className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-3xl border-3 border-pink bg-gradient-pink-purple text-2xl font-black text-white shadow-glow-pink">
+-          🚀
+-        </span>
+-        <h1 className="heading-game text-3xl">
+-          Join Link<span className="text-pink">Y</span>101
+-        </h1>
+-        <p className="mt-1 text-sm font-bold text-ink">
+-          Build. Connect. Launch. Let&apos;s go.
+-        </p>
+-      </div>
++    <main className="auth-gradient-bg flex min-h-screen flex-col items-center justify-center px-5 py-10">
++      <div className="w-full max-w-sm">
++        <div className="mb-8 text-center">
++          <h1 className="text-3xl font-bold text-gray-900">
++            Join Link<span className="text-[#FF6B6B]">Y</span>101
++          </h1>
++          <p className="mt-1 text-sm text-gray-600">
++            Start your entrepreneurship journey
++          </p>
++        </div>
++
++        <Card>
++          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
++            <div>
++              <label className="mb-1 block text-sm font-medium text-gray-600">
++                First Name
++              </label>
++              <input
++                className={inputClass}
++                value={firstName}
++                onChange={(e) => setFirstName(e.target.value)}
++                placeholder="Alex"
++                autoComplete="given-name"
++              />
++            </div>
+ 
+-      <GameCard borderColor="pink" glowColor="pink">
+-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+-          <div>
+-            <label className="mb-1 block text-xs font-black uppercase tracking-wide text-text-muted">
+-              First Name
+-            </label>
+-            <input
+-              className={inputClass}
+-              value={firstName}
+-              onChange={(e) => setFirstName(e.target.value)}
+-              placeholder="Alex"
+-              autoComplete="given-name"
+-            />
+-          </div>
+-
+-          <div>
+-            <label className="mb-1 block text-xs font-black uppercase tracking-wide text-text-muted">
+-              Email
+-            </label>
+-            <input
+-              type="email"
+-              className={inputClass}
+-              value={email}
+-              onChange={(e) => setEmail(e.target.value)}
+-              placeholder="you@example.com"
+-              autoComplete="email"
+-            />
+-          </div>
+-
+-          <div>
+-            <label className="mb-1 block text-xs font-black uppercase tracking-wide text-text-muted">
+-              Password
+-            </label>
+-            <input
+-              type="password"
+-              className={inputClass}
+-              value={password}
+-              onChange={(e) => setPassword(e.target.value)}
+-              placeholder="At least 8 characters"
+-              autoComplete="new-password"
+-            />
+-          </div>
+-
+-          <div>
+-            <label className="mb-1 block text-xs font-black uppercase tracking-wide text-text-muted">
+-              Age
+-            </label>
+-            <select
+-              className={`${inputClass} appearance-none`}
+-              value={age}
+-              onChange={(e) => setAge(e.target.value === "" ? "" : Number(e.target.value))}
+-            >
+-              <option value="">Select your age</option>
+-              {AGE_OPTIONS.map((a) => (
+-                <option key={a} value={a}>
+-                  {a}
+-                </option>
+-              ))}
+-            </select>
+-          </div>
+-
+-          {ageBlocked ? (
+-            <div className="rounded-xl border-3 border-orange bg-white p-4 text-center">
+-              <p className="font-black uppercase text-orange">
+-                LinkY101 is for ages 13–18! Come back soon 🚀
+-              </p>
++            <div>
++              <label className="mb-1 block text-sm font-medium text-gray-600">
++                Email
++              </label>
++              <input
++                type="email"
++                className={inputClass}
++                value={email}
++                onChange={(e) => setEmail(e.target.value)}
++                placeholder="you@example.com"
++                autoComplete="email"
++              />
+             </div>
+-          ) : (
+-            <>
+-              <div ref={schoolBoxRef} className="relative">
+-                <label className="mb-1 block text-xs font-black uppercase tracking-wide text-text-muted">
+-                  School
+-                </label>
+-                <button
+-                  type="button"
+-                  onClick={() => setSchoolPanelOpen((open) => !open)}
+-                  className={`${inputClass} flex items-center justify-between text-left ${
+-                    schoolLabel ? "" : "text-text-muted"
+-                  }`}
+-                >
+-                  <span className="truncate">{schoolLabel || "Find your school"}</span>
+-                  <ChevronDown className="h-4 w-4 shrink-0" strokeWidth={3} />
+-                </button>
+-
+-                {schoolPanelOpen && (
+-                  <div className="absolute z-10 mt-2 w-full rounded-xl border-3 border-purple bg-card p-2 shadow-glow-purple">
+-                    <div className="relative mb-2">
+-                      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
+-                      <input
+-                        value={schoolQuery}
+-                        onChange={(e) => setSchoolQuery(e.target.value)}
+-                        placeholder="Search schools..."
+-                        className="w-full rounded-lg border-3 border-border bg-white py-2 pl-9 pr-3 text-sm font-bold text-ink placeholder:text-text-muted focus:border-purple focus:outline-none"
+-                      />
+-                    </div>
+ 
+-                    <button
+-                      type="button"
+-                      onClick={pickHomeschool}
+-                      className="w-full rounded-lg px-3 py-2 text-left text-sm font-bold text-ink hover:bg-white"
+-                    >
+-                      🏠 I&apos;m homeschooled
+-                    </button>
+-                    <button
+-                      type="button"
+-                      onClick={pickNoSchoolYet}
+-                      className="w-full rounded-lg px-3 py-2 text-left text-sm font-bold text-ink hover:bg-white"
+-                    >
+-                      🏫 My school isn&apos;t on LinkY101 yet
+-                    </button>
+-
+-                    <div className="my-1 border-t-3 border-border" />
+-
+-                    <div className="max-h-40 overflow-y-auto">
+-                      {filteredSchools.length === 0 && (
+-                        <p className="px-3 py-2 text-sm font-bold text-text-muted">
+-                          No schools found.
+-                        </p>
+-                      )}
+-                      {filteredSchools.map((school) => (
+-                        <button
+-                          key={school.id}
+-                          type="button"
+-                          onClick={() => pickSchool(school)}
+-                          className="w-full rounded-lg px-3 py-2 text-left text-sm font-bold text-ink hover:bg-white"
+-                        >
+-                          {school.name}
+-                        </button>
+-                      ))}
+-                    </div>
+-                  </div>
+-                )}
+-              </div>
++            <div>
++              <label className="mb-1 block text-sm font-medium text-gray-600">
++                Password
++              </label>
++              <input
++                type="password"
++                className={inputClass}
++                value={password}
++                onChange={(e) => setPassword(e.target.value)}
++                placeholder="At least 8 characters"
++                autoComplete="new-password"
++              />
++            </div>
+ 
+-              <label className="flex items-start gap-3 text-sm font-bold text-text-muted">
+-                <input
+-                  type="checkbox"
+-                  checked={parentalConsent}
+-                  onChange={(e) => setParentalConsent(e.target.checked)}
+-                  className="mt-1 h-5 w-5 shrink-0 accent-pink"
+-                />
+-                A parent or guardian has agreed to me using LinkY101
++            <div>
++              <label className="mb-1 block text-sm font-medium text-gray-600">
++                Age
+               </label>
++              <select
++                className={`${inputClass} appearance-none`}
++                value={age}
++                onChange={(e) => setAge(e.target.value === "" ? "" : Number(e.target.value))}
++              >
++                <option value="">Select your age</option>
++                {AGE_OPTIONS.map((a) => (
++                  <option key={a} value={a}>
++                    {a}
++                  </option>
++                ))}
++              </select>
++            </div>
++
++            {ageBlocked ? (
++              <div className="rounded-xl bg-gray-50 p-4 text-center">
++                <p className="text-sm text-gray-600">
++                  LinkY101 is for ages 13-18. Come back when you&apos;re old enough!
++                </p>
++              </div>
++            ) : (
++              <>
++                <div ref={schoolBoxRef} className="relative">
++                  <label className="mb-1 block text-sm font-medium text-gray-600">
++                    School
++                  </label>
++                  <button
++                    type="button"
++                    onClick={() => setSchoolPanelOpen((open) => !open)}
++                    className={`${inputClass} flex items-center justify-between text-left ${
++                      schoolLabel ? "" : "text-gray-400"
++                    }`}
++                  >
++                    <span className="truncate">{schoolLabel || "Find your school"}</span>
++                    <ChevronDown className="h-4 w-4 shrink-0 text-gray-400" />
++                  </button>
++
++                  {schoolPanelOpen && (
++                    <div className="absolute z-10 mt-2 w-full rounded-xl border border-gray-200 bg-white p-2 shadow-lg">
++                      <div className="relative mb-2">
++                        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
++                        <input
++                          value={schoolQuery}
++                          onChange={(e) => setSchoolQuery(e.target.value)}
++                          placeholder="Search schools..."
++                          className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#039BE5] focus:outline-none"
++                        />
++                      </div>
++
++                      <button
++                        type="button"
++                        onClick={pickHomeschool}
++                        className="w-full rounded-lg px-3 py-2 text-left text-sm text-gray-900 hover:bg-gray-50"
++                      >
++                        I&apos;m homeschooled
++                      </button>
++                      <button
++                        type="button"
++                        onClick={pickNoSchoolYet}
++                        className="w-full rounded-lg px-3 py-2 text-left text-sm text-gray-900 hover:bg-gray-50"
++                      >
++                        My school isn&apos;t on LinkY101 yet
++                      </button>
++
++                      <div className="my-1 border-t border-gray-200" />
++
++                      <div className="max-h-40 overflow-y-auto">
++                        {filteredSchools.length === 0 && (
++                          <p className="px-3 py-2 text-sm text-gray-400">
++                            No schools found.
++                          </p>
++                        )}
++                        {filteredSchools.map((school) => (
++                          <button
++                            key={school.id}
++                            type="button"
++                            onClick={() => pickSchool(school)}
++                            className="w-full rounded-lg px-3 py-2 text-left text-sm text-gray-900 hover:bg-gray-50"
++                          >
++                            {school.name}
++                          </button>
++                        ))}
++                      </div>
++                    </div>
++                  )}
++                </div>
++
++                <label className="flex items-start gap-3 text-sm text-gray-600">
++                  <input
++                    type="checkbox"
++                    checked={parentalConsent}
++                    onChange={(e) => setParentalConsent(e.target.checked)}
++                    className="mt-1 h-5 w-5 shrink-0 accent-[#FF6B6B]"
++                  />
++                  A parent or guardian has agreed to me using LinkY101
++                </label>
+ 
+-              {errorMsg && (
+-                <p className="text-center text-sm font-bold text-orange">{errorMsg}</p>
+-              )}
++                {errorMsg && (
++                  <p className="text-center text-sm text-red-500">{errorMsg}</p>
++                )}
+ 
+-              <GradientButton
+-                type="submit"
+-                variant="pink"
+-                size="lg"
+-                disabled={submitting}
+-                className="w-full"
+-              >
+-                {submitting ? "Joining..." : "Join LinkY101 🚀"}
+-              </GradientButton>
+-            </>
+-          )}
+-        </form>
+-      </GameCard>
+-
+-      <p className="text-center text-sm font-bold text-text-muted">
+-        Already have an account?{" "}
+-        <Link href="/login" className="text-sky">
+-          Log in
+-        </Link>
+-      </p>
++                <Button
++                  type="submit"
++                  variant="green"
++                  disabled={submitting}
++                  className="w-full"
++                >
++                  {submitting ? "Joining..." : "Join LinkY101"}
++                </Button>
++              </>
++            )}
++          </form>
++        </Card>
++
++        <p className="mt-6 text-center text-sm text-gray-600">
++          Already have an account?{" "}
++          <Link href="/login" className="text-[#039BE5] hover:underline">
++            Log in
++          </Link>
++        </p>
++      </div>
+     </main>
+   );
+ }
+diff --git a/app/(auth)/verify/page.tsx b/app/(auth)/verify/page.tsx
+index 91cb369..ec8fdc6 100644
+--- a/app/(auth)/verify/page.tsx
++++ b/app/(auth)/verify/page.tsx
+@@ -47,7 +47,6 @@ export default function VerifyPage() {
+           </div>
+           <GradientButton
+             variant="sky"
+-            size="sm"
+             className="mt-3 w-full"
+             disabled={!email || status === "sending"}
+             onClick={handleResend}
+diff --git a/app/(main)/home/page.tsx b/app/(main)/home/page.tsx
+index b61b24d..9bf0bab 100644
+--- a/app/(main)/home/page.tsx
++++ b/app/(main)/home/page.tsx
+@@ -1,72 +1,113 @@
+ "use client";
+ 
+-import { useState } from "react";
++import Link from "next/link";
+ import { useProfile } from "@/hooks/useProfile";
+-import LevelUpModal from "@/components/LevelUpModal";
+-import LevelRoadmapCard from "@/components/home/LevelRoadmapCard";
+-import DailyTasksCard from "@/components/home/DailyTasksCard";
+-import SchoolTeamPreview from "@/components/home/SchoolTeamPreview";
+-import DailySpinPreview from "@/components/home/DailySpinPreview";
+-import LeaderboardPreview from "@/components/home/LeaderboardPreview";
+-import TutorialPrompt from "@/components/TutorialPrompt";
++import Card from "@/components/ui/GameCard";
++import SectionTitle from "@/components/ui/SectionTitle";
++import { BookOpen, MessageCircle, Compass, ChevronRight } from "lucide-react";
+ 
+ export default function HomePage() {
+   const { profile } = useProfile();
+-  const [levelUp, setLevelUp] = useState<number | null>(null);
+ 
+   if (!profile) {
+     return (
+       <div className="flex flex-col gap-4">
+-        <div className="skeleton-shimmer h-24 rounded-[20px]" />
+-        <div className="skeleton-shimmer h-40 rounded-[20px]" />
+-        <div className="skeleton-shimmer h-32 rounded-[20px]" />
++        <div className="skeleton-shimmer h-20 rounded-xl" />
++        <div className="skeleton-shimmer h-32 rounded-xl" />
++        <div className="skeleton-shimmer h-32 rounded-xl" />
+       </div>
+     );
+   }
+ 
+   return (
+-    <div className="flex flex-col gap-6">
+-      <div className="grid grid-cols-3 gap-2">
+-        <div className="flex flex-col items-center gap-0.5 rounded-2xl border-3 border-orange bg-white p-3 shadow-card">
+-          <span className="text-xl">🔥</span>
+-          <span className="text-lg font-black text-ink">{profile.current_streak}</span>
+-          <span className="text-[9px] font-bold uppercase tracking-wide text-text-muted">Streak</span>
+-        </div>
+-        <div className="flex flex-col items-center gap-0.5 rounded-2xl border-3 border-sky bg-white p-3 shadow-card">
+-          <span className="text-xl">⭐</span>
+-          <span className="text-lg font-black text-ink">{profile.xp}</span>
+-          <span className="text-[9px] font-bold uppercase tracking-wide text-text-muted">Total XP</span>
+-        </div>
+-        <div className="flex flex-col items-center gap-0.5 rounded-2xl border-3 border-yellow bg-white p-3 shadow-card">
+-          <span className="text-xl">🪙</span>
+-          <span className="text-lg font-black text-ink">{profile.link_coins}</span>
+-          <span className="text-[9px] font-bold uppercase tracking-wide text-text-muted">LinkCoins</span>
+-        </div>
++    <div className="flex flex-col gap-5">
++      {/* Welcome */}
++      <div>
++        <h1 className="text-xl font-bold text-gray-900">
++          Hey {profile.first_name}!
++        </h1>
++        <p className="text-sm text-gray-500">Welcome back to LinkY101</p>
+       </div>
+ 
+-      <div data-tour="home-roadmap">
+-        <LevelRoadmapCard level={profile.level} xp={profile.xp} />
+-      </div>
+-      <div data-tour="home-tasks">
+-        <DailyTasksCard onLevelUp={setLevelUp} />
+-      </div>
+-      <div data-tour="home-team">
+-        <SchoolTeamPreview />
+-      </div>
+-      <div data-tour="home-spin">
+-        <DailySpinPreview onLevelUp={setLevelUp} />
++      {/* Streak card */}
++      <Card className="flex items-center gap-3 bg-gradient-to-r from-[#FFF9E6] to-[#FFF3CC]">
++        <span className="text-2xl">🔥</span>
++        <div>
++          <p className="font-bold text-gray-900">{profile.current_streak || 0} day streak</p>
++          <p className="text-xs text-gray-500">Keep learning to grow your streak</p>
++        </div>
++      </Card>
++
++      {/* Quick Actions */}
++      <div className="grid grid-cols-3 gap-3">
++        <Link href="/learn" className="card flex flex-col items-center gap-2 py-4 text-center transition-transform active:scale-[0.97]">
++          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#E8F5E9]">
++            <BookOpen className="h-5 w-5 text-[#2ECC71]" />
++          </div>
++          <span className="text-xs font-semibold text-gray-700">Start Learning</span>
++        </Link>
++        <Link href="/community" className="card flex flex-col items-center gap-2 py-4 text-center transition-transform active:scale-[0.97]">
++          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FFF0F0]">
++            <MessageCircle className="h-5 w-5 text-[#FF6B6B]" />
++          </div>
++          <span className="text-xs font-semibold text-gray-700">Post an Idea</span>
++        </Link>
++        <Link href="/discover" className="card flex flex-col items-center gap-2 py-4 text-center transition-transform active:scale-[0.97]">
++          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FFFDE7]">
++            <Compass className="h-5 w-5 text-[#F5A623]" />
++          </div>
++          <span className="text-xs font-semibold text-gray-700">Discover</span>
++        </Link>
+       </div>
+-      <div data-tour="home-leaderboard">
+-        <LeaderboardPreview />
++
++      {/* Continue Learning */}
++      <div>
++        <SectionTitle emoji="📚" title="Continue Learning" actionLabel="See all" actionHref="/learn" />
++        <Link href="/learn" className="mt-2 block">
++          <Card className="flex items-center gap-3 transition-transform active:scale-[0.98]">
++            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#E3F2FD]">
++              <BookOpen className="h-6 w-6 text-[#039BE5]" />
++            </div>
++            <div className="min-w-0 flex-1">
++              <p className="font-semibold text-gray-900">Business Basics</p>
++              <p className="text-xs text-gray-500">Pick up where you left off</p>
++            </div>
++            <ChevronRight className="h-5 w-5 shrink-0 text-gray-400" />
++          </Card>
++        </Link>
+       </div>
+ 
+-      <LevelUpModal
+-        isOpen={levelUp !== null}
+-        newLevel={levelUp ?? 1}
+-        onClose={() => setLevelUp(null)}
+-      />
++      {/* Your Progress */}
++      <div>
++        <SectionTitle emoji="📊" title="Your Progress" />
++        <Card className="mt-2">
++          <div className="grid grid-cols-3 gap-4 text-center">
++            <div>
++              <p className="text-lg font-bold text-gray-900">0</p>
++              <p className="text-xs text-gray-500">Lessons Done</p>
++            </div>
++            <div>
++              <p className="text-lg font-bold text-gray-900">0</p>
++              <p className="text-xs text-gray-500">Quizzes Passed</p>
++            </div>
++            <div>
++              <p className="text-lg font-bold text-gray-900">{profile.current_streak || 0}</p>
++              <p className="text-xs text-gray-500">Day Streak</p>
++            </div>
++          </div>
++        </Card>
++      </div>
+ 
+-      <TutorialPrompt tourId="home" />
++      {/* Trending in Community */}
++      <div>
++        <SectionTitle emoji="🔥" title="Trending Ideas" actionLabel="See all" actionHref="/community" />
++        <Card className="mt-2">
++          <p className="text-sm text-gray-500">See what other young entrepreneurs are working on</p>
++          <Link href="/community" className="mt-2 inline-block text-sm font-semibold text-[#039BE5]">
++            Visit Community →
++          </Link>
++        </Card>
++      </div>
+     </div>
+   );
+ }
+diff --git a/app/(main)/layout.tsx b/app/(main)/layout.tsx
+index 9b76161..0aa0594 100644
+--- a/app/(main)/layout.tsx
++++ b/app/(main)/layout.tsx
+@@ -3,25 +3,19 @@
+ import { useEffect, useMemo, useState } from "react";
+ import Link from "next/link";
+ import { usePathname } from "next/navigation";
+-import { Bell } from "lucide-react";
++import { Bell, Home, BookOpen, Users, Compass, User } from "lucide-react";
+ import { useProfile } from "@/hooks/useProfile";
+ import { createClientSupabase } from "@/lib/supabase/client";
+-import LevelBadge from "@/components/ui/LevelBadge";
+-import XPBar from "@/components/ui/XPBar";
+-import WelcomeBack from "@/components/WelcomeBack";
+ import InstallPrompt from "@/components/InstallPrompt";
+ import NotificationPermissionModal from "@/components/NotificationPermissionModal";
+ import LinkyChat from "@/components/LinkyChat";
+-import LevelProgressModal from "@/components/LevelProgressModal";
+-import FloatingRewards from "@/components/FloatingRewards";
+ 
+ const TABS = [
+-  { href: "/home", label: "Home", emoji: "🏠" },
+-  { href: "/learn", label: "Learn", emoji: "📚" },
+-  { href: "/community", label: "Community", emoji: "👥" },
+-  { href: "/discover", label: "Discover", emoji: "🔍" },
+-  { href: "/teams", label: "Teams", emoji: "🏫" },
+-  { href: "/profile", label: "Profile", emoji: "👤" },
++  { href: "/home", icon: Home },
++  { href: "/learn", icon: BookOpen },
++  { href: "/community", icon: Users },
++  { href: "/discover", icon: Compass },
++  { href: "/profile", icon: User },
+ ];
+ 
+ export default function MainLayout({ children }: { children: React.ReactNode }) {
+@@ -29,11 +23,6 @@ export default function MainLayout({ children }: { children: React.ReactNode })
+   const pathname = usePathname();
+   const supabase = useMemo(() => createClientSupabase(), []);
+   const [hasUnread, setHasUnread] = useState(false);
+-  const [activeWarning, setActiveWarning] = useState<{
+-    warning_type: string;
+-    reason: string | null;
+-    expires_at: string | null;
+-  } | null>(null);
+ 
+   useEffect(() => {
+     if (!profile) return;
+@@ -43,22 +32,12 @@ export default function MainLayout({ children }: { children: React.ReactNode })
+       .eq("user_id", profile.id)
+       .eq("is_read", false)
+       .then(({ count }) => setHasUnread((count ?? 0) > 0));
+-
+-    supabase
+-      .from("user_warnings")
+-      .select("warning_type, reason, expires_at")
+-      .eq("user_id", profile.id)
+-      .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`)
+-      .order("issued_at", { ascending: false })
+-      .limit(1)
+-      .maybeSingle()
+-      .then(({ data }) => setActiveWarning(data));
+   }, [profile, supabase]);
+ 
+   if (loading && !profile) {
+     return (
+       <div className="flex min-h-screen items-center justify-center">
+-        <p className="font-black uppercase text-text-muted">Loading...</p>
++        <p className="font-semibold text-text-muted">Loading...</p>
+       </div>
+     );
+   }
+@@ -66,76 +45,58 @@ export default function MainLayout({ children }: { children: React.ReactNode })
+   const initial = profile?.first_name?.charAt(0).toUpperCase() ?? "?";
+ 
+   return (
+-    <div className="flex min-h-screen flex-col pb-24">
+-      {profile && <WelcomeBack firstName={profile.first_name} />}
++    <div className="flex min-h-screen flex-col pb-20">
+       {profile && <NotificationPermissionModal pushEnabled={!!profile.notification_settings?.push_enabled} />}
+ 
+-      <header data-tour="home-topbar" className="flex flex-col gap-3 border-b-3 border-border bg-card px-5 py-4">
+-        <div className="flex items-center justify-between gap-3">
+-          <div className="flex min-w-0 items-center gap-3">
++      <header className="flex items-center justify-between border-b border-gray-200 bg-white px-5 py-3">
++        <span className="font-bold text-lg text-ink">
++          Link<span className="text-[#FF6B6B]">Y</span>101
++        </span>
++
++        <div className="flex items-center gap-3">
++          <Link href="/notifications" aria-label="Notifications" className="relative p-1 text-ink">
++            <Bell className="h-5 w-5" strokeWidth={2} />
++            {hasUnread && (
++              <span className="absolute right-0 top-0 h-2 w-2 rounded-full bg-[#FF6B6B]" />
++            )}
++          </Link>
++
++          <Link href="/profile" aria-label="Profile">
+             {profile?.avatar_url ? (
+               <img
+                 src={profile.avatar_url}
+                 alt={profile.first_name}
+-                className="h-11 w-11 shrink-0 rounded-full border-3 border-pink object-cover"
++                className="h-8 w-8 rounded-full object-cover"
+               />
+             ) : (
+-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-3 border-pink bg-gradient-pink-purple font-black text-white shadow-glow-pink">
++              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FF6B6B] text-sm font-bold text-white">
+                 {initial}
+               </div>
+             )}
+-            <div className="min-w-0">
+-              <p className="truncate font-black uppercase text-ink">
+-                {profile?.first_name ?? "Member"}
+-              </p>
+-              <LevelBadge level={profile?.level ?? 1} size="sm" interactive />
+-            </div>
+-          </div>
+-
+-          <div className="flex shrink-0 items-center gap-2">
+-            <span className="flex items-center gap-1 rounded-full border-3 border-orange bg-navy/60 px-2 py-1 text-xs font-black text-orange">
+-              🔥 {profile?.current_streak ?? 0}
+-            </span>
+-            <span className="flex items-center gap-1 rounded-full border-3 border-yellow bg-navy/60 px-2 py-1 text-xs font-black text-yellow">
+-              ⭐ {profile?.xp ?? 0}
+-            </span>
+-            <Link href="/notifications" aria-label="Notifications" className="relative p-1 text-ink">
+-              <Bell className="h-5 w-5" strokeWidth={2.5} />
+-              {hasUnread && (
+-                <span className="absolute right-0 top-0 h-2.5 w-2.5 rounded-full border border-card bg-orange" />
+-              )}
+-            </Link>
+-          </div>
++          </Link>
+         </div>
+-
+-        <XPBar level={profile?.level ?? 1} xp={profile?.xp ?? 0} showLabel={false} />
+       </header>
+ 
+-      {activeWarning && (
+-        <div className="border-b-3 border-orange bg-orange/10 px-5 py-2 text-center text-xs font-black uppercase text-orange">
+-          ⚠️ {activeWarning.warning_type.replace("_", " ")}
+-          {activeWarning.reason ? `: ${activeWarning.reason}` : ""}
+-          {activeWarning.expires_at &&
+-            ` (until ${new Date(activeWarning.expires_at).toLocaleDateString()})`}
+-        </div>
+-      )}
+-
+       <main className="flex-1 px-5 py-4">{children}</main>
+ 
+       <nav className="fixed inset-x-0 bottom-0 z-40">
+-        <div className="mx-auto flex max-w-[430px] border-t border-[#90CAF9] bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.06)]">
++        <div className="mx-auto flex max-w-[430px] border-t border-gray-200 bg-white">
+           {TABS.map((tab) => {
+             const active = pathname.startsWith(tab.href);
++            const Icon = tab.icon;
+             return (
+               <Link
+                 key={tab.href}
+                 href={tab.href}
+-                className={`flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] font-extrabold uppercase tracking-wide transition-transform active:scale-95 ${
+-                  active ? "text-sky" : "text-[#9CA3AF]"
+-                }`}
++                className="flex flex-1 flex-col items-center gap-1 py-3 transition-colors"
+               >
+-                <span className="text-[24px] leading-none">{tab.emoji}</span>
+-                <span>{tab.label}</span>
++                <Icon
++                  className={`h-5 w-5 ${active ? "text-[#FF6B6B]" : "text-gray-400"}`}
++                  strokeWidth={active ? 2.5 : 2}
++                />
++                {active && (
++                  <span className="h-1 w-1 rounded-full bg-[#FF6B6B]" />
++                )}
+               </Link>
+             );
+           })}
+@@ -144,8 +105,6 @@ export default function MainLayout({ children }: { children: React.ReactNode })
+ 
+       <InstallPrompt />
+       <LinkyChat />
+-      <LevelProgressModal />
+-      <FloatingRewards />
+     </div>
+   );
+ }
+diff --git a/app/(main)/learn/lesson/[id]/page.tsx b/app/(main)/learn/lesson/[id]/page.tsx
+index 48ea0f9..48f471f 100644
+--- a/app/(main)/learn/lesson/[id]/page.tsx
++++ b/app/(main)/learn/lesson/[id]/page.tsx
+@@ -8,10 +8,7 @@ import { createClientSupabase } from "@/lib/supabase/client";
+ import { completeCurriculumLesson } from "@/lib/actions/curriculum";
+ import { useProfileStore } from "@/hooks/useProfile";
+ import { getCategoryBySlug, CURRICULUM_COLOR_CLASSES } from "@/lib/curriculum";
+-import { floatXP, floatCoins } from "@/lib/floatingRewards";
+-import Confetti from "@/components/Confetti";
+ import GradientButton from "@/components/ui/GradientButton";
+-import LevelUpModal from "@/components/LevelUpModal";
+ 
+ interface LessonSection {
+   heading: string;
+@@ -48,9 +45,9 @@ interface LessonData {
+ }
+ 
+ const TAKEAWAY_STYLES: Record<LessonTakeaway["color"], string> = {
+-  yellow: "border-yellow bg-yellow/10 text-ink",
+-  mint: "border-green bg-green/10 text-ink",
+-  coral: "border-pink bg-pink/10 text-ink",
++  yellow: "border-[#FFD93D] bg-[#FFFDE7]",
++  mint: "border-[#4ECDC4] bg-[#E8F5E9]",
++  coral: "border-[#FF6B6B] bg-[#FFF0F0]",
+ };
+ 
+ type Stage = "reading" | "quiz" | "done";
+@@ -72,10 +69,7 @@ export default function LessonDetailPage() {
+   const [shake, setShake] = useState(false);
+ 
+   const [submitting, setSubmitting] = useState(false);
+-  const [xpEarned, setXpEarned] = useState(0);
+-  const [coinsEarned, setCoinsEarned] = useState(0);
+   const [firstCompletion, setFirstCompletion] = useState(false);
+-  const [levelUp, setLevelUp] = useState<number | null>(null);
+ 
+   useEffect(() => {
+     async function load() {
+@@ -134,13 +128,8 @@ export default function LessonDetailPage() {
+     try {
+       const finalScore = score + (selected !== null && selected === lesson.content.quiz[qIndex].correct ? 1 : 0);
+       const result = await completeCurriculumLesson(lesson.id, finalScore);
+-      setXpEarned(result.xpEarned);
+-      setCoinsEarned(result.coinsEarned);
+       setFirstCompletion(result.firstCompletion);
+-      if (result.xpEarned > 0) floatXP(result.xpEarned);
+-      if (result.coinsEarned > 0) floatCoins(result.coinsEarned);
+       refreshProfile();
+-      if (result.leveledUp && result.newLevel) setLevelUp(result.newLevel);
+     } finally {
+       setSubmitting(false);
+     }
+@@ -148,16 +137,16 @@ export default function LessonDetailPage() {
+ 
+   if (loading) {
+     return (
+-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg">
+-        <p className="font-black uppercase text-text-muted">Loading lesson...</p>
++      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#B3E5FC]">
++        <p className="font-semibold text-gray-500">Loading lesson...</p>
+       </div>
+     );
+   }
+ 
+   if (!lesson) {
+     return (
+-      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-bg p-6 text-center">
+-        <p className="font-black uppercase text-ink">Lesson not found</p>
++      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-[#B3E5FC] p-6 text-center">
++        <p className="font-bold text-gray-900">Lesson not found</p>
+         <GradientButton variant="sky" onClick={() => router.push("/learn")}>
+           Back to Learn
+         </GradientButton>
+@@ -168,19 +157,19 @@ export default function LessonDetailPage() {
+   const question = lesson.content.quiz[qIndex];
+ 
+   return (
+-    <div className="fixed inset-0 z-50 overflow-y-auto bg-bg">
++    <div className="fixed inset-0 z-50 overflow-y-auto bg-[#B3E5FC]">
+       <div className="relative mx-auto flex min-h-screen w-full max-w-[430px] flex-col px-5 py-6">
+         <div className="mb-4 flex items-center justify-between">
+           <button
+             type="button"
+             onClick={() => router.push("/learn")}
+             aria-label="Back to Learn"
+-            className="flex h-9 w-9 items-center justify-center rounded-full border-3 border-border bg-card text-text-muted"
++            className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500"
+           >
+-            <ChevronLeft className="h-5 w-5" strokeWidth={3} />
++            <ChevronLeft className="h-5 w-5" strokeWidth={2} />
+           </button>
+           {category && (
+-            <span className={`rounded-full border-2 px-2 py-0.5 text-[9px] font-black uppercase tracking-wide ${colors.border} ${colors.text}`}>
++            <span className={`rounded-full px-3 py-1 text-xs font-semibold ${colors.bgLight} ${colors.text}`}>
+               {category.emoji} {category.title}
+             </span>
+           )}
+@@ -191,28 +180,28 @@ export default function LessonDetailPage() {
+           <div className="flex flex-col gap-5 pb-24">
+             <div className="text-center">
+               <span className="text-5xl">{lesson.emoji}</span>
+-              <h1 className="heading-game mt-2 text-xl">{lesson.title}</h1>
++              <h1 className="mt-2 text-xl font-bold text-gray-900">{lesson.title}</h1>
+             </div>
+ 
+-            <p className="rounded-2xl border-3 border-border bg-card p-4 text-sm font-bold text-ink shadow-card">
++            <div className="rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-700 shadow-sm">
+               {lesson.content.intro}
+-            </p>
++            </div>
+ 
+             {lesson.content.sections.map((section, i) => (
+               <div key={i} className="flex flex-col gap-1">
+-                <p className={`text-sm font-black uppercase tracking-wide ${colors.text}`}>{section.heading}</p>
+-                <p className="text-sm font-bold leading-relaxed text-ink">{section.body}</p>
++                <p className={`text-sm font-bold ${colors.text}`}>{section.heading}</p>
++                <p className="text-sm leading-relaxed text-gray-700">{section.body}</p>
+               </div>
+             ))}
+ 
+             {lesson.content.takeaways?.map((takeaway, i) => (
+-              <div key={i} className={`rounded-2xl border-3 p-4 text-sm font-bold ${TAKEAWAY_STYLES[takeaway.color]}`}>
+-                💡 {takeaway.text}
++              <div key={i} className={`rounded-xl border p-4 text-sm text-gray-700 ${TAKEAWAY_STYLES[takeaway.color]}`}>
++                {takeaway.text}
+               </div>
+             ))}
+ 
+             <GradientButton variant="sky" size="lg" className="mt-2 w-full" onClick={() => setStage("quiz")}>
+-              {alreadyCompleted ? "Retake Mini-Quiz" : "Take the Mini-Quiz →"}
++              {alreadyCompleted ? "Retake Mini-Quiz" : "Take the Mini-Quiz"}
+             </GradientButton>
+           </div>
+         )}
+@@ -221,24 +210,24 @@ export default function LessonDetailPage() {
+           <>
+             <div className="mb-6 flex items-center justify-center gap-2">
+               {lesson.content.quiz.map((_, i) => {
+-                let dotClass = "border-border bg-transparent";
+-                if (i < qIndex) dotClass = "border-green bg-green";
+-                else if (i === qIndex) dotClass = `${colors.border} ${colors.bg} animate-pulse`;
++                let dotClass = "border-gray-200 bg-transparent";
++                if (i < qIndex) dotClass = "border-[#2ECC71] bg-[#2ECC71]";
++                else if (i === qIndex) dotClass = `border-gray-300 ${colors.bg} animate-pulse`;
+                 return <span key={i} className={`h-2.5 w-2.5 shrink-0 rounded-full border-2 ${dotClass}`} />;
+               })}
+             </div>
+ 
+             <motion.div animate={shake ? { x: [0, -8, 8, -8, 8, 0] } : { x: 0 }} transition={{ duration: 0.4 }}>
+-              <h2 className="heading-game mb-6 text-lg">{question.question}</h2>
++              <h2 className="mb-6 text-lg font-bold text-gray-900">{question.question}</h2>
+ 
+               <div className="flex flex-col gap-3">
+                 {question.options.map((opt, i) => {
+                   const isSelected = selected === i;
+                   const isCorrectOption = i === question.correct;
+-                  let stateClass = "border-border bg-card";
++                  let stateClass = "border-gray-200 bg-white";
+                   if (selected !== null) {
+-                    if (isCorrectOption) stateClass = "border-green bg-green/10 shadow-glow-green";
+-                    else if (isSelected) stateClass = "border-orange bg-orange/10";
++                    if (isCorrectOption) stateClass = "border-[#2ECC71] bg-[#E8F5E9]";
++                    else if (isSelected) stateClass = "border-[#FF6B6B] bg-[#FFF0F0]";
+                   }
+                   return (
+                     <button
+@@ -246,11 +235,11 @@ export default function LessonDetailPage() {
+                       type="button"
+                       disabled={selected !== null}
+                       onClick={() => handleSelect(i)}
+-                      className={`flex items-center justify-between rounded-xl border-3 p-3 text-left text-sm font-bold text-ink ${stateClass}`}
++                      className={`flex items-center justify-between rounded-xl border p-3 text-left text-sm font-medium text-gray-900 transition-colors ${stateClass}`}
+                     >
+                       <span>{opt}</span>
+-                      {selected !== null && isCorrectOption && <Check className="h-4 w-4 shrink-0 text-green" strokeWidth={3} />}
+-                      {selected !== null && isSelected && !isCorrectOption && <X className="h-4 w-4 shrink-0 text-orange" strokeWidth={3} />}
++                      {selected !== null && isCorrectOption && <Check className="h-4 w-4 shrink-0 text-[#2ECC71]" strokeWidth={2.5} />}
++                      {selected !== null && isSelected && !isCorrectOption && <X className="h-4 w-4 shrink-0 text-[#FF6B6B]" strokeWidth={2.5} />}
+                     </button>
+                   );
+                 })}
+@@ -258,8 +247,8 @@ export default function LessonDetailPage() {
+             </motion.div>
+ 
+             {selected !== null && question.explanation && (
+-              <div className="mt-4 rounded-xl border-3 border-sky bg-card p-3 text-sm font-bold text-text-muted shadow-card">
+-                💡 {question.explanation}
++              <div className="mt-4 rounded-xl border border-gray-200 bg-white p-3 text-sm text-gray-600 shadow-sm">
++                {question.explanation}
+               </div>
+             )}
+ 
+@@ -273,23 +262,19 @@ export default function LessonDetailPage() {
+ 
+         {stage === "done" && (
+           <div className="relative flex flex-1 flex-col items-center justify-center gap-3 text-center">
+-            {firstCompletion && <Confetti />}
+             <span className="text-5xl">{firstCompletion ? "🎉" : "✅"}</span>
+-            <h1 className="heading-game text-2xl">Lesson Complete!</h1>
+-            <p className="text-sm font-bold text-text-muted">
++            <h1 className="text-2xl font-bold text-gray-900">Lesson Complete!</h1>
++            <p className="text-sm text-gray-500">
+               {score}/{lesson.content.quiz.length} correct on the mini-quiz
+             </p>
+ 
+             {submitting ? (
+-              <p className="text-sm font-bold text-text-muted">Saving your progress...</p>
++              <p className="text-sm text-gray-500">Saving your progress...</p>
+             ) : firstCompletion ? (
+-              <div className="flex flex-col items-center gap-1">
+-                <p className="text-lg font-black text-sky">+{xpEarned} XP earned!</p>
+-                <p className="text-lg font-black text-yellow">+{coinsEarned} 🪙 LinkCoins earned!</p>
+-              </div>
++              <p className="text-sm font-semibold text-[#2ECC71]">Great job! Progress saved.</p>
+             ) : (
+-              <p className="text-sm font-bold text-text-muted">
+-                No extra rewards — you&apos;ve already completed this lesson before.
++              <p className="text-sm text-gray-500">
++                You&apos;ve already completed this lesson before.
+               </p>
+             )}
+ 
+@@ -298,8 +283,6 @@ export default function LessonDetailPage() {
+             </GradientButton>
+           </div>
+         )}
+-
+-        <LevelUpModal isOpen={levelUp !== null} newLevel={levelUp ?? 1} onClose={() => setLevelUp(null)} />
+       </div>
+     </div>
+   );
+diff --git a/app/(main)/learn/page.tsx b/app/(main)/learn/page.tsx
+index 13dd781..3a44c84 100644
+--- a/app/(main)/learn/page.tsx
++++ b/app/(main)/learn/page.tsx
+@@ -1,83 +1,59 @@
+ "use client";
+ 
+-import { Suspense, useState } from "react";
++import { Suspense } from "react";
+ import { useRouter, useSearchParams } from "next/navigation";
+-import { useProfile } from "@/hooks/useProfile";
+ import SectionTitle from "@/components/ui/SectionTitle";
+ import LessonPath from "@/components/learn/LessonPath";
+ import PodcastsTab from "@/components/learn/PodcastsTab";
+ import QuizzesTab from "@/components/learn/QuizzesTab";
+-import SubmitLessonModal from "@/components/learn/SubmitLessonModal";
+-import TutorialPrompt from "@/components/TutorialPrompt";
+ 
+ type Tab = "lessons" | "podcasts" | "quizzes";
+-const SUBMIT_LEVEL = 10;
+ 
+-const TABS: { key: Tab; label: string; emoji: string }[] = [
+-  { key: "lessons", label: "Lessons", emoji: "📚" },
+-  { key: "podcasts", label: "Podcasts", emoji: "🎧" },
+-  { key: "quizzes", label: "Quizzes", emoji: "🧠" },
++const TABS: { key: Tab; label: string }[] = [
++  { key: "lessons", label: "Lessons" },
++  { key: "podcasts", label: "Podcasts" },
++  { key: "quizzes", label: "Quizzes" },
+ ];
+ 
+ function LearnContent() {
+   const router = useRouter();
+   const searchParams = useSearchParams();
+-  const { profile } = useProfile();
+-  const [showSubmit, setShowSubmit] = useState(false);
+   const rawTab = searchParams.get("tab");
+   const tab: Tab = rawTab === "podcasts" || rawTab === "quizzes" ? rawTab : "lessons";
+-  const canSubmit = (profile?.level ?? 0) >= SUBMIT_LEVEL;
+ 
+   return (
+-    <div className="flex flex-col gap-6">
+-      <SectionTitle emoji="📚" title="Learn" />
++    <div className="flex flex-col gap-5">
++      <SectionTitle title="Learn" />
+ 
+-      <div data-tour="learn-tabs" className="flex gap-2">
++      <div className="flex gap-2">
+         {TABS.map((t) => (
+           <button
+             key={t.key}
+             type="button"
+             onClick={() => router.push(t.key === "lessons" ? "/learn" : `/learn?tab=${t.key}`)}
+-            className={`flex-1 rounded-xl border-3 py-2 text-xs font-black uppercase tracking-wide ${
+-              tab === t.key ? "border-pink bg-pink text-white shadow-glow-pink" : "border-border text-text-muted"
++            className={`flex-1 rounded-full py-2 text-sm font-semibold transition-colors ${
++              tab === t.key
++                ? "bg-[#FF6B6B] text-white"
++                : "bg-white text-gray-500 border border-gray-200"
+             }`}
+           >
+-            {t.emoji} {t.label}
++            {t.label}
+           </button>
+         ))}
+       </div>
+ 
+-      <div data-tour="learn-feed">
++      <div>
+         {tab === "lessons" && <LessonPath />}
+         {tab === "podcasts" && <PodcastsTab />}
+         {tab === "quizzes" && <QuizzesTab />}
+       </div>
+-
+-      {canSubmit && (
+-        <div data-tour="learn-fab" className="pointer-events-none fixed inset-x-0 bottom-40 z-30">
+-          <div className="mx-auto max-w-[430px] px-4">
+-            <button
+-              type="button"
+-              onClick={() => setShowSubmit(true)}
+-              aria-label="Submit a lesson"
+-              className="pointer-events-auto ml-auto flex h-14 w-14 items-center justify-center rounded-full border-3 border-pink bg-gradient-pink-purple text-2xl font-black text-white shadow-glow-pink"
+-            >
+-              +
+-            </button>
+-          </div>
+-        </div>
+-      )}
+-
+-      <SubmitLessonModal isOpen={showSubmit} onClose={() => setShowSubmit(false)} onSubmitted={() => setShowSubmit(false)} />
+-
+-      <TutorialPrompt tourId="learn" />
+     </div>
+   );
+ }
+ 
+ export default function LearnPage() {
+   return (
+-    <Suspense fallback={<p className="text-sm font-bold text-text-muted">Loading...</p>}>
++    <Suspense fallback={<div className="skeleton-shimmer h-64 rounded-xl" />}>
+       <LearnContent />
+     </Suspense>
+   );
+diff --git a/app/(main)/profile/page.tsx b/app/(main)/profile/page.tsx
+index e238718..f7a6b56 100644
+--- a/app/(main)/profile/page.tsx
++++ b/app/(main)/profile/page.tsx
+@@ -3,64 +3,46 @@
+ import { useEffect, useMemo, useState } from "react";
+ import Link from "next/link";
+ import { useRouter } from "next/navigation";
+-import { LogOut, Pencil, Settings } from "lucide-react";
++import { LogOut, Settings, MapPin } from "lucide-react";
+ import { createClientSupabase } from "@/lib/supabase/client";
+ import { useProfile, useProfileStore } from "@/hooks/useProfile";
+-import { getLevelTitle } from "@/lib/levels";
+-import GameCard from "@/components/ui/GameCard";
+-import LevelBadge from "@/components/ui/LevelBadge";
+-import XPBar from "@/components/ui/XPBar";
+-import GradientButton from "@/components/ui/GradientButton";
+-import AchievementsGrid from "@/components/profile/AchievementsGrid";
++import Card from "@/components/ui/GameCard";
++import Button from "@/components/ui/GradientButton";
+ import ActivityTimeline from "@/components/profile/ActivityTimeline";
+ import PostsGrid from "@/components/profile/PostsGrid";
+-import TutorialPrompt from "@/components/TutorialPrompt";
+ 
+ const SCHOOL_TYPE_LABEL: Record<string, string> = {
+   homeschool: "Homeschooled",
+   no_school_yet: "No school yet",
+ };
+ 
+-function StatBox({ label, value }: { label: string; value: number }) {
+-  return (
+-    <div>
+-      <p className="text-base font-black text-ink">{value}</p>
+-      <p className="text-[9px] font-bold uppercase tracking-wide text-text-muted">{label}</p>
+-    </div>
+-  );
+-}
+-
+ export default function ProfilePage() {
+   const { profile } = useProfile();
+   const clearProfile = useProfileStore((s) => s.clearProfile);
+   const router = useRouter();
+   const supabase = useMemo(() => createClientSupabase(), []);
+   const [schoolName, setSchoolName] = useState<string | null>(null);
+-  const [stats, setStats] = useState({ posts: 0, following: 0, followers: 0 });
++  const [stats, setStats] = useState({ posts: 0, following: 0, followers: 0, lessonsCompleted: 0 });
+ 
+   useEffect(() => {
+     if (!profile) return;
+ 
+     async function load() {
+-      const [{ count: posts }, { count: following }, { count: followers }] = await Promise.all([
++      const [{ count: posts }, { count: following }, { count: followers }, { count: lessonsCompleted }] = await Promise.all([
+         supabase.from("posts").select("id", { count: "exact", head: true }).eq("author_id", profile!.id),
+-        supabase
+-          .from("follows")
+-          .select("follower_id", { count: "exact", head: true })
+-          .eq("follower_id", profile!.id),
+-        supabase
+-          .from("follows")
+-          .select("following_id", { count: "exact", head: true })
+-          .eq("following_id", profile!.id),
++        supabase.from("follows").select("follower_id", { count: "exact", head: true }).eq("follower_id", profile!.id),
++        supabase.from("follows").select("following_id", { count: "exact", head: true }).eq("following_id", profile!.id),
++        supabase.from("curriculum_progress").select("id", { count: "exact", head: true }).eq("user_id", profile!.id).eq("completed", true),
+       ]);
+-      setStats({ posts: posts ?? 0, following: following ?? 0, followers: followers ?? 0 });
++      setStats({
++        posts: posts ?? 0,
++        following: following ?? 0,
++        followers: followers ?? 0,
++        lessonsCompleted: lessonsCompleted ?? 0,
++      });
+ 
+       if (profile!.school_id) {
+-        const { data: school } = await supabase
+-          .from("schools")
+-          .select("name")
+-          .eq("id", profile!.school_id)
+-          .maybeSingle();
++        const { data: school } = await supabase.from("schools").select("name").eq("id", profile!.school_id).maybeSingle();
+         setSchoolName(school?.name ?? null);
+       }
+     }
+@@ -75,99 +57,67 @@ export default function ProfilePage() {
+   }
+ 
+   if (!profile) {
+-    return <p className="text-sm font-bold text-text-muted">Loading profile...</p>;
++    return <p className="text-sm text-gray-500">Loading profile...</p>;
+   }
+ 
+-  const schoolLabel =
+-    profile.school_type === "school" ? schoolName : SCHOOL_TYPE_LABEL[profile.school_type ?? ""] ?? null;
++  const schoolLabel = profile.school_type === "school" ? schoolName : SCHOOL_TYPE_LABEL[profile.school_type ?? ""] ?? null;
+ 
+   return (
+-    <div className="flex flex-col gap-6">
+-      <div
+-        className="relative h-24 overflow-hidden rounded-[18px] border-4 border-pink"
+-        style={{ background: "linear-gradient(135deg, #ff6b9d, #a78bfa, #38bdf8)" }}
+-      >
+-        <div
+-          className="absolute inset-0 opacity-20"
+-          style={{ backgroundImage: "repeating-linear-gradient(45deg, #fff 0 2px, transparent 2px 14px)" }}
+-        />
+-      </div>
+-
+-      <div data-tour="profile-header">
+-        <GameCard
+-          borderColor="purple"
+-          glowColor="purple"
+-          className="-mt-16 flex flex-col items-center gap-2 text-center"
+-        >
+-          <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-pink bg-gradient-pink-purple text-4xl font-black text-white shadow-glow-pink">
++    <div className="flex flex-col gap-5">
++      {/* Profile Header */}
++      <Card className="flex flex-col items-center gap-3 text-center">
++        {profile.avatar_url ? (
++          <img src={profile.avatar_url} alt={profile.first_name} className="h-20 w-20 rounded-full object-cover" />
++        ) : (
++          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#FF6B6B] text-3xl font-bold text-white">
+             {profile.first_name.charAt(0).toUpperCase()}
+           </div>
+-          <h1 className="heading-game text-2xl">{profile.first_name}</h1>
+-          <LevelBadge level={profile.level} size="md" interactive />
+-          {profile.headline && <p className="text-sm font-bold text-text-muted">{profile.headline}</p>}
+-          {schoolLabel && <p className="text-xs font-bold text-sky">🏫 {schoolLabel}</p>}
+-          {profile.current_streak > 0 && (
+-            <p className="text-xs font-black text-orange">🔥 {profile.current_streak}-day streak</p>
++        )}
++        <div>
++          <h1 className="text-xl font-bold text-gray-900">{profile.first_name}</h1>
++          {profile.headline && <p className="mt-0.5 text-sm text-gray-500">{profile.headline}</p>}
++          {schoolLabel && (
++            <p className="mt-1 flex items-center justify-center gap-1 text-xs text-gray-400">
++              <MapPin className="h-3 w-3" /> {schoolLabel}
++            </p>
+           )}
++        </div>
+ 
+-          <div className="mt-3 grid w-full grid-cols-4 gap-2 border-t-3 border-border pt-3">
+-            <StatBox label="Posts" value={stats.posts} />
+-            <StatBox label="Following" value={stats.following} />
+-            <StatBox label="Followers" value={stats.followers} />
+-            <StatBox label="XP" value={profile.xp} />
++        <div className="mt-2 grid w-full grid-cols-4 gap-2 border-t border-gray-100 pt-3">
++          <div className="text-center">
++            <p className="text-lg font-bold text-gray-900">{stats.posts}</p>
++            <p className="text-[10px] text-gray-500">Posts</p>
+           </div>
+-        </GameCard>
+-      </div>
+-
+-      <div data-tour="profile-xp">
+-        <GameCard borderColor="yellow" glowColor="yellow">
+-          <p className="mb-2 text-xs font-black uppercase text-text-muted">
+-            Level {profile.level} · {getLevelTitle(profile.level)}
+-          </p>
+-          <XPBar level={profile.level} xp={profile.xp} />
+-        </GameCard>
+-      </div>
+-
+-      <div data-tour="profile-dream">
+-        <GameCard borderColor="pink" glowColor="pink">
+-          <div className="mb-2 flex items-center justify-between">
+-            <span className="text-xs font-black uppercase tracking-wide text-pink">💭 My Dream</span>
+-            <Link href="/profile/settings" className="text-text-muted" aria-label="Edit dream">
+-              <Pencil className="h-4 w-4" />
+-            </Link>
++          <div className="text-center">
++            <p className="text-lg font-bold text-gray-900">{stats.followers}</p>
++            <p className="text-[10px] text-gray-500">Followers</p>
+           </div>
+-          {profile.dream ? (
+-            <>
+-              <p className="mb-3 text-sm font-bold italic text-ink">&ldquo;{profile.dream}&rdquo;</p>
+-              <div className="flex gap-3 text-lg">
+-                <button type="button" className="transition-transform active:scale-125">
+-                  🔥
+-                </button>
+-                <button type="button" className="transition-transform active:scale-125">
+-                  💡
+-                </button>
+-                <button type="button" className="transition-transform active:scale-125">
+-                  ❤️
+-                </button>
+-              </div>
+-            </>
+-          ) : (
+-            <Link href="/profile/settings" className="text-sm font-bold text-text-muted">
+-              Add your dream →
+-            </Link>
+-          )}
+-        </GameCard>
+-      </div>
++          <div className="text-center">
++            <p className="text-lg font-bold text-gray-900">{stats.lessonsCompleted}</p>
++            <p className="text-[10px] text-gray-500">Lessons</p>
++          </div>
++          <div className="text-center">
++            <p className="text-lg font-bold text-gray-900">{profile.current_streak || 0}</p>
++            <p className="text-[10px] text-gray-500">Day Streak</p>
++          </div>
++        </div>
++      </Card>
++
++      {/* Dream / Bio */}
++      {profile.dream && (
++        <Card>
++          <p className="mb-1 text-xs font-semibold text-gray-400">My Dream</p>
++          <p className="text-sm text-gray-700 italic">&ldquo;{profile.dream}&rdquo;</p>
++        </Card>
++      )}
+ 
+-      {profile.interests.length > 0 && (
+-        <div data-tour="profile-interests">
+-          <p className="mb-3 font-black uppercase tracking-wide text-ink">✨ Interests</p>
++      {/* Interests */}
++      {profile.interests && profile.interests.length > 0 && (
++        <div>
++          <p className="mb-2 text-sm font-semibold text-gray-700">Interests</p>
+           <div className="flex flex-wrap gap-2">
+-            {profile.interests.map((tag) => (
+-              <span
+-                key={tag}
+-                className="rounded-full border-3 border-sky px-3 py-1 text-xs font-black uppercase text-sky"
+-              >
++            {profile.interests.map((tag: string) => (
++              <span key={tag} className="rounded-full bg-[#E3F2FD] px-3 py-1 text-xs font-medium text-[#039BE5]">
+                 {tag}
+               </span>
+             ))}
+@@ -175,52 +125,26 @@ export default function ProfilePage() {
+         </div>
+       )}
+ 
+-      <AchievementsGrid userId={profile.id} />
++      {/* Activity */}
+       <ActivityTimeline userId={profile.id} />
+       <PostsGrid userId={profile.id} />
+ 
+-      <div data-tour="profile-shop">
+-        <Link href="/shop">
+-          <GradientButton variant="yellow" className="w-full">
+-            <span className="flex items-center justify-center gap-2">
+-              🛍️ SHOP <span className="text-ink">· 🪙 {profile.link_coins}</span>
+-            </span>
+-          </GradientButton>
+-        </Link>
+-      </div>
+-
+-      <div className="flex gap-2">
+-        <Link href="/premium" className="flex-1">
+-          <GradientButton variant="pink" className="w-full">
+-            ✨ Premium
+-          </GradientButton>
+-        </Link>
+-        <Link href="/profile/flair" className="flex-1">
+-          <GradientButton variant="purple" className="w-full">
+-            🎨 Flair
+-          </GradientButton>
+-        </Link>
+-      </div>
+-
+-      <div data-tour="profile-settings">
+-        <Link href="/profile/settings">
+-          <GradientButton variant="sky" className="w-full">
+-            <span className="flex items-center justify-center gap-2">
+-              <Settings className="h-4 w-4" strokeWidth={3} /> Settings
+-            </span>
+-          </GradientButton>
+-        </Link>
+-      </div>
++      {/* Actions */}
++      <Link href="/profile/settings">
++        <Button variant="ghost-pink" className="w-full">
++          <span className="flex items-center justify-center gap-2">
++            <Settings className="h-4 w-4" /> Settings
++          </span>
++        </Button>
++      </Link>
+ 
+       <button
+         type="button"
+         onClick={handleSignOut}
+-        className="flex items-center justify-center gap-2 rounded-xl border-3 border-border py-2 text-xs font-black uppercase text-text-muted"
++        className="flex items-center justify-center gap-2 rounded-xl border border-gray-200 py-2.5 text-sm text-gray-500 transition-transform active:scale-[0.97]"
+       >
+-        <LogOut className="h-3.5 w-3.5" /> Sign Out
++        <LogOut className="h-4 w-4" /> Sign Out
+       </button>
+-
+-      <TutorialPrompt tourId="profile" />
+     </div>
+   );
+ }
+diff --git a/app/(main)/tasks/page.tsx b/app/(main)/tasks/page.tsx
+index 64a9b1f..de3dc78 100644
+--- a/app/(main)/tasks/page.tsx
++++ b/app/(main)/tasks/page.tsx
+@@ -1,34 +1,17 @@
+ "use client";
+ 
+-import { useState } from "react";
+ import SectionTitle from "@/components/ui/SectionTitle";
+-import LevelUpModal from "@/components/LevelUpModal";
+ import DailyChallengeSection from "@/components/tasks/DailyChallengeSection";
+-import DailySpinSection from "@/components/tasks/DailySpinSection";
+ import WeeklyQuizCard from "@/components/tasks/WeeklyQuizCard";
+ import EventsSection from "@/components/tasks/EventsSection";
+ 
+ export default function TasksPage() {
+-  const [levelUp, setLevelUp] = useState<number | null>(null);
+-  const [spinRefreshKey, setSpinRefreshKey] = useState(0);
+-
+   return (
+     <div className="flex flex-col gap-6">
+-      <SectionTitle emoji="🔥" title="Tasks & Spin" />
+-
+-      <DailyChallengeSection
+-        onLevelUp={setLevelUp}
+-        onTasksChanged={() => setSpinRefreshKey((k) => k + 1)}
+-      />
+-      <DailySpinSection onLevelUp={setLevelUp} refreshKey={spinRefreshKey} />
++      <SectionTitle emoji="🔥" title="Today's Tasks" />
++      <DailyChallengeSection />
+       <WeeklyQuizCard />
+       <EventsSection />
+-
+-      <LevelUpModal
+-        isOpen={levelUp !== null}
+-        newLevel={levelUp ?? 1}
+-        onClose={() => setLevelUp(null)}
+-      />
+     </div>
+   );
+ }
+diff --git a/app/globals.css b/app/globals.css
+index aa11b24..33bd652 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -3,34 +3,20 @@
+ @tailwind utilities;
+ 
+ :root {
+-  /* Core brand identity — bright, fun, gamified */
+-  --pink: #ff6b6b; /* coral */
+-  --sky: #039be5; /* primary bright blue */
+-  --sky-deep: #0288d1; /* deep blue, gradient partner for sky */
+-  --purple: #7c3aed;
+-
+-  /* Base */
+-  --bg: #b3e5fc; /* light sky blue — the app background, everywhere */
+-  --navy: #b3e5fc;
++  --pink: #ff6b6b;
++  --sky: #039be5;
++  --sky-deep: #0288d1;
++
++  --bg: #b3e5fc;
+   --card: #ffffff;
+-  --border: #90caf9;
++  --border: #e5e7eb;
+   --text-muted: #5c7a99;
+-  --ink: #1a1a2e; /* primary dark text, on cards and on the blue bg alike */
+-
+-  /* In-app accents (game mechanics) */
+-  --yellow: #ffd93d; /* sunny yellow */
+-  --green: #4ecdc4; /* mint */
+-  --orange: #ff8a5b;
+-
+-  /* Glow effects — soft colour halo behind badges/buttons on white cards */
+-  --glow-pink: 0 4px 16px rgba(255, 107, 107, 0.35);
+-  --glow-sky: 0 4px 16px rgba(3, 155, 229, 0.35);
+-  --glow-purple: 0 4px 16px rgba(124, 58, 237, 0.3);
+-  --glow-yellow: 0 4px 16px rgba(255, 217, 61, 0.4);
+-  --glow-green: 0 4px 16px rgba(78, 205, 196, 0.35);
+-
+-  /* Standard card shadow */
+-  --shadow-card: 0 4px 15px rgba(13, 27, 42, 0.1);
++  --ink: #1a1a2e;
++
++  --yellow: #ffd93d;
++  --green: #4ecdc4;
++
++  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08);
+ }
+ 
+ * {
+@@ -46,7 +32,7 @@ body {
+ body {
+   color: var(--ink);
+   background: var(--bg);
+-  font-family: var(--font-nunito), sans-serif;
++  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+   min-height: 100vh;
+ }
+ 
+@@ -57,21 +43,20 @@ body {
+ }
+ 
+ @layer components {
+-  /* Chunky game-like buttons */
+-  .btn-primary {
+-    @apply bg-gradient-pink-purple text-white font-black uppercase tracking-wide rounded-2xl border-3 border-pink px-6 py-3 shadow-glow-pink transition-transform active:scale-95;
++  .card {
++    @apply bg-card border border-gray-200 rounded-xl p-4 shadow-sm;
+   }
+ 
+-  .btn-secondary {
+-    @apply bg-gradient-sky-purple text-white font-black uppercase tracking-wide rounded-2xl border-3 border-sky px-6 py-3 shadow-glow-sky transition-transform active:scale-95;
++  .btn-pink {
++    @apply bg-[#FF6B6B] text-white font-bold rounded-xl px-6 py-3 transition-transform active:scale-[0.97];
+   }
+ 
+-  .card-game {
+-    @apply bg-card border-3 border-border rounded-2xl p-4 shadow-card;
++  .btn-green {
++    @apply bg-[#2ECC71] text-white font-bold rounded-xl px-6 py-3 transition-transform active:scale-[0.97];
+   }
+ 
+-  .heading-game {
+-    @apply font-black uppercase tracking-wide text-ink;
++  .btn-yellow {
++    @apply bg-[#FFD93D] text-white font-bold rounded-xl px-6 py-3 transition-transform active:scale-[0.97];
+   }
+ }
+ 
+@@ -93,21 +78,6 @@ body {
+   animation: auth-gradient-shift 15s ease infinite;
+ }
+ 
+-@keyframes float-up-fade {
+-  0% {
+-    transform: translateY(0);
+-    opacity: 1;
+-  }
+-  100% {
+-    transform: translateY(-48px);
+-    opacity: 0;
+-  }
+-}
+-
+-.float-up-fade {
+-  animation: float-up-fade 1.1s ease-out forwards;
+-}
+-
+ @keyframes shimmer {
+   0% {
+     background-position: -400px 0;
+@@ -122,40 +92,3 @@ body {
+   background-size: 800px 100%;
+   animation: shimmer 1.4s linear infinite;
+ }
+-
+-@keyframes chest-shake {
+-  0%,
+-  100% {
+-    transform: rotate(0deg);
+-  }
+-  20% {
+-    transform: rotate(-6deg);
+-  }
+-  40% {
+-    transform: rotate(6deg);
+-  }
+-  60% {
+-    transform: rotate(-4deg);
+-  }
+-  80% {
+-    transform: rotate(4deg);
+-  }
+-}
+-
+-.chest-shake {
+-  animation: chest-shake 0.5s ease-in-out;
+-}
+-
+-@keyframes glow-pulse {
+-  0%,
+-  100% {
+-    box-shadow: 0 0 0 0 rgba(3, 155, 229, 0.5);
+-  }
+-  50% {
+-    box-shadow: 0 0 0 12px rgba(3, 155, 229, 0);
+-  }
+-}
+-
+-.glow-pulse {
+-  animation: glow-pulse 2s ease-in-out infinite;
+-}
+diff --git a/app/layout.tsx b/app/layout.tsx
+index e8f5b18..f1c09a7 100644
+--- a/app/layout.tsx
++++ b/app/layout.tsx
+@@ -1,17 +1,9 @@
+ import type { Metadata, Viewport } from "next";
+-import { Nunito } from "next/font/google";
+ import "./globals.css";
+ 
+-const nunito = Nunito({
+-  subsets: ["latin"],
+-  weight: ["700", "800", "900"],
+-  variable: "--font-nunito",
+-  display: "swap",
+-});
+-
+ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+ const DESCRIPTION =
+-  "LinkY101 is a gamified networking and entrepreneurship platform for young people aged 13-18 — learn, connect, and launch your ideas.";
++  "LinkY101 is the professional network for young entrepreneurs aged 13-19 — learn real skills, connect with mentors, and launch your ideas.";
+ 
+ export const metadata: Metadata = {
+   metadataBase: new URL(SITE_URL),
+@@ -61,14 +53,17 @@ export default function RootLayout({
+   children: React.ReactNode;
+ }>) {
+   return (
+-    <html lang="en" className={nunito.variable}>
++    <html lang="en">
+       <body className="bg-bg font-sans antialiased lg:flex lg:min-h-screen lg:items-center lg:justify-center lg:gap-12 lg:p-8" style={{ background: "linear-gradient(160deg, #64B5F6, #E1F5FE)" }}>
+         <div className="hidden text-center lg:block">
+-          <h1 className="text-5xl font-black uppercase tracking-wide text-white drop-shadow-lg">
++          <h1 className="text-5xl font-bold text-white drop-shadow-lg">
+             Link<span className="text-[#0D1B2A]">Y</span>101
+           </h1>
+-          <p className="mt-2 max-w-xs text-sm font-bold text-white/90">
+-            The gamified app where teen entrepreneurs learn, connect, and launch their ideas.
++          <p className="mt-2 max-w-xs text-sm font-semibold text-white/90">
++            Your professional network, before LinkedIn.
++          </p>
++          <p className="mt-1 max-w-xs text-xs text-white/75">
++            Learn real skills. Connect with mentors. Launch your ideas.
+           </p>
+         </div>
+ 
+diff --git a/components/Confetti.tsx b/components/Confetti.tsx
+index ab899c3..e679491 100644
+--- a/components/Confetti.tsx
++++ b/components/Confetti.tsx
+@@ -1,58 +1,3 @@
+-"use client";
+-
+-import { useMemo } from "react";
+-import { motion } from "framer-motion";
+-
+-const COLORS = ["#ff6b9d", "#38bdf8", "#a78bfa", "#f5c518", "#4ade80"];
+-const PIECE_COUNT = 36;
+-
+-interface ConfettiPiece {
+-  id: number;
+-  left: number;
+-  delay: number;
+-  duration: number;
+-  color: string;
+-  rotate: number;
+-  size: number;
+-}
+-
+-/** Lightweight celebratory confetti — no extra dependency, brand-coloured. */
+ export default function Confetti() {
+-  const pieces = useMemo<ConfettiPiece[]>(
+-    () =>
+-      Array.from({ length: PIECE_COUNT }, (_, id) => ({
+-        id,
+-        left: Math.random() * 100,
+-        delay: Math.random() * 0.5,
+-        duration: 2 + Math.random() * 1.5,
+-        color: COLORS[id % COLORS.length],
+-        rotate: Math.random() * 360,
+-        size: 6 + Math.random() * 6,
+-      })),
+-    []
+-  );
+-
+-  return (
+-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+-      {pieces.map((piece) => (
+-        <motion.span
+-          key={piece.id}
+-          className="absolute top-0 rounded-sm"
+-          style={{
+-            left: `${piece.left}%`,
+-            width: piece.size,
+-            height: piece.size * 0.4,
+-            backgroundColor: piece.color,
+-          }}
+-          initial={{ y: "-10%", opacity: 1, rotate: 0 }}
+-          animate={{ y: "110vh", opacity: [1, 1, 0], rotate: piece.rotate }}
+-          transition={{
+-            duration: piece.duration,
+-            delay: piece.delay,
+-            ease: "easeIn",
+-          }}
+-        />
+-      ))}
+-    </div>
+-  );
++  return null;
+ }
+diff --git a/components/FloatingRewards.tsx b/components/FloatingRewards.tsx
+index 444f1ca..c8db692 100644
+--- a/components/FloatingRewards.tsx
++++ b/components/FloatingRewards.tsx
+@@ -1,28 +1,3 @@
+-"use client";
+-
+-import { AnimatePresence, motion } from "framer-motion";
+-import { useFloatingRewards } from "@/lib/floatingRewards";
+-
+ export default function FloatingRewards() {
+-  const items = useFloatingRewards((s) => s.items);
+-
+-  return (
+-    <div className="pointer-events-none fixed inset-x-0 top-1/3 z-[80] flex flex-col items-center gap-1">
+-      <AnimatePresence>
+-        {items.map((item) => (
+-          <motion.div
+-            key={item.id}
+-            initial={{ opacity: 1, y: 0, scale: 0.8 }}
+-            animate={{ opacity: 0, y: -56, scale: 1.15 }}
+-            exit={{ opacity: 0 }}
+-            transition={{ duration: 1.1, ease: "easeOut" }}
+-            className={`text-2xl font-black drop-shadow-lg ${item.color}`}
+-            style={{ textShadow: "0 2px 8px rgba(0,0,0,0.15)" }}
+-          >
+-            {item.text}
+-          </motion.div>
+-        ))}
+-      </AnimatePresence>
+-    </div>
+-  );
++  return null;
+ }
+diff --git a/components/LevelProgressModal.tsx b/components/LevelProgressModal.tsx
+index 90d2412..abccfc7 100644
+--- a/components/LevelProgressModal.tsx
++++ b/components/LevelProgressModal.tsx
+@@ -1,197 +1,3 @@
+-"use client";
+-
+-import { useEffect, useMemo, useState } from "react";
+-import { AnimatePresence, motion } from "framer-motion";
+-import { X } from "lucide-react";
+-import { useProfile } from "@/hooks/useProfile";
+-import { useLevelModalStore } from "@/lib/levelModalStore";
+-import { createClientSupabase } from "@/lib/supabase/client";
+-import {
+-  getLevelProgress,
+-  getLevelTitle,
+-  getNextLevelXP,
+-  getXPForLevel,
+-  getFeatureForLevel,
+-} from "@/lib/levels";
+-
+-interface XPEvent {
+-  id: string;
+-  label: string;
+-  amount: number;
+-  at: string;
+-}
+-
+-function useCountUp(target: number, active: boolean, durationMs = 900) {
+-  const [value, setValue] = useState(0);
+-  useEffect(() => {
+-    if (!active) {
+-      setValue(0);
+-      return;
+-    }
+-    let raf: number;
+-    const start = performance.now();
+-    function tick(now: number) {
+-      const progress = Math.min(1, (now - start) / durationMs);
+-      setValue(Math.round(target * (1 - Math.pow(1 - progress, 3))));
+-      if (progress < 1) raf = requestAnimationFrame(tick);
+-    }
+-    raf = requestAnimationFrame(tick);
+-    return () => cancelAnimationFrame(raf);
+-    // eslint-disable-next-line react-hooks/exhaustive-deps
+-  }, [target, active]);
+-  return value;
+-}
+-
+ export default function LevelProgressModal() {
+-  const open = useLevelModalStore((s) => s.open);
+-  const hide = useLevelModalStore((s) => s.hide);
+-  const { profile } = useProfile();
+-  const supabase = useMemo(() => createClientSupabase(), []);
+-  const [history, setHistory] = useState<XPEvent[]>([]);
+-
+-  useEffect(() => {
+-    if (!open || !profile) return;
+-
+-    async function loadHistory() {
+-      const [{ data: tasks }, { data: quizzes }] = await Promise.all([
+-        supabase
+-          .from("daily_tasks")
+-          .select("id, description, xp_reward, task_date, updated_at:created_at")
+-          .eq("user_id", profile!.id)
+-          .eq("is_completed", true)
+-          .order("task_date", { ascending: false })
+-          .limit(5),
+-        supabase
+-          .from("quiz_attempts")
+-          .select("id, xp_earned, completed_at, quizzes(title)")
+-          .eq("user_id", profile!.id)
+-          .gt("xp_earned", 0)
+-          .order("completed_at", { ascending: false })
+-          .limit(5),
+-      ]);
+-
+-      const taskEvents: XPEvent[] = (tasks ?? []).map((t) => ({
+-        id: `task-${t.id}`,
+-        label: t.description ?? "Daily task",
+-        amount: t.xp_reward,
+-        at: t.task_date,
+-      }));
+-      const quizEvents: XPEvent[] = (quizzes ?? []).map((q) => ({
+-        id: `quiz-${q.id}`,
+-        label: (q.quizzes as unknown as { title?: string } | null)?.title ?? "Quiz completed",
+-        amount: q.xp_earned,
+-        at: q.completed_at,
+-      }));
+-
+-      const merged = [...taskEvents, ...quizEvents]
+-        .sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime())
+-        .slice(0, 5);
+-      setHistory(merged);
+-    }
+-
+-    loadHistory();
+-  }, [open, profile, supabase]);
+-
+-  const level = profile?.level ?? 1;
+-  const xp = profile?.xp ?? 0;
+-  const floor = getXPForLevel(level);
+-  const ceiling = getNextLevelXP(level);
+-  const progressPct = getLevelProgress(level, xp);
+-  const nextFeature = ceiling !== null ? getFeatureForLevel(level + 1) : null;
+-  const animatedXp = useCountUp(xp - floor, open && !!profile);
+-  const xpSpan = ceiling !== null ? ceiling - floor : 0;
+-
+-  if (!profile) return null;
+-
+-  return (
+-    <AnimatePresence>
+-      {open && (
+-        <motion.div
+-          initial={{ opacity: 0 }}
+-          animate={{ opacity: 1 }}
+-          exit={{ opacity: 0 }}
+-          className="fixed inset-0 z-[110] flex items-end justify-center bg-black/60 sm:items-center"
+-          onClick={hide}
+-        >
+-          <motion.div
+-            initial={{ y: "100%", opacity: 0 }}
+-            animate={{ y: 0, opacity: 1 }}
+-            exit={{ y: "100%", opacity: 0 }}
+-            transition={{ type: "spring", damping: 26, stiffness: 260 }}
+-            onClick={(e) => e.stopPropagation()}
+-            className="w-full max-w-[430px] rounded-t-[28px] border-3 border-b-0 border-sky bg-card p-6 shadow-glow-sky sm:rounded-[28px] sm:border-b-3"
+-          >
+-            <div className="mb-4 flex items-center justify-between">
+-              <span className="text-xs font-black uppercase tracking-widest text-text-muted">
+-                Level Progress
+-              </span>
+-              <button type="button" onClick={hide} aria-label="Close" className="text-text-muted">
+-                <X className="h-5 w-5" strokeWidth={3} />
+-              </button>
+-            </div>
+-
+-            <div className="flex flex-col items-center text-center">
+-              <motion.span
+-                initial={{ scale: 0.8 }}
+-                animate={{ scale: 1 }}
+-                className="glow-pulse mb-3 flex h-20 w-20 items-center justify-center rounded-full border-3 border-sky bg-gradient-primary text-2xl font-black text-white shadow-glow-sky"
+-              >
+-                {level}
+-              </motion.span>
+-              <h2 className="heading-game text-xl text-ink">{getLevelTitle(level)}</h2>
+-
+-              <div className="mt-5 w-full">
+-                <div className="h-4 w-full overflow-hidden rounded-full border-2 border-border bg-navy/50">
+-                  <motion.div
+-                    className="h-full rounded-full bg-gradient-primary"
+-                    initial={{ width: 0 }}
+-                    animate={{ width: `${progressPct}%` }}
+-                    transition={{ duration: 0.9, ease: "easeOut" }}
+-                  />
+-                </div>
+-                <p className="mt-2 text-sm font-black text-ink">
+-                  {ceiling === null ? (
+-                    <span>Max Level Reached! 🎉</span>
+-                  ) : (
+-                    <span>
+-                      {animatedXp} / {xpSpan} XP
+-                    </span>
+-                  )}
+-                </p>
+-              </div>
+-
+-              {nextFeature && (
+-                <div className="mt-4 w-full rounded-2xl border-3 border-purple bg-purple/10 p-3 text-left">
+-                  <p className="text-[10px] font-black uppercase tracking-wide text-purple">Next Up</p>
+-                  <p className="text-sm font-bold text-ink">
+-                    Level {level + 1} unlocks:{" "}
+-                    <span className="text-purple">{nextFeature} 🔓</span>
+-                  </p>
+-                </div>
+-              )}
+-            </div>
+-
+-            {history.length > 0 && (
+-              <div className="mt-5">
+-                <p className="mb-2 text-xs font-black uppercase tracking-wide text-text-muted">
+-                  Recent XP
+-                </p>
+-                <div className="flex flex-col gap-1.5">
+-                  {history.map((h) => (
+-                    <div
+-                      key={h.id}
+-                      className="flex items-center justify-between rounded-xl border border-border bg-navy/30 px-3 py-2"
+-                    >
+-                      <span className="truncate text-xs font-bold text-ink">{h.label}</span>
+-                      <span className="shrink-0 text-xs font-black text-sky">+{h.amount} XP</span>
+-                    </div>
+-                  ))}
+-                </div>
+-              </div>
+-            )}
+-          </motion.div>
+-        </motion.div>
+-      )}
+-    </AnimatePresence>
+-  );
++  return null;
+ }
+diff --git a/components/LevelUpModal.tsx b/components/LevelUpModal.tsx
+index 234563d..291586d 100644
+--- a/components/LevelUpModal.tsx
++++ b/components/LevelUpModal.tsx
+@@ -1,77 +1,11 @@
+-"use client";
+-
+-import { useState } from "react";
+-import { AnimatePresence, motion } from "framer-motion";
+-import { getLevelTitle } from "@/lib/levels";
+-import Confetti from "@/components/Confetti";
+-import LevelBadge from "@/components/ui/LevelBadge";
+-import GradientButton from "@/components/ui/GradientButton";
+-import ShareCard from "@/components/ShareCard";
+-
+ interface LevelUpModalProps {
+-  isOpen: boolean;
+-  newLevel: number;
+-  onClose: () => void;
++  isOpen?: boolean;
++  newLevel?: number;
++  onClose?: () => void;
++  [key: string]: unknown;
+ }
+ 
+-export default function LevelUpModal({ isOpen, newLevel, onClose }: LevelUpModalProps) {
+-  const [showShare, setShowShare] = useState(false);
+-
+-  return (
+-    <AnimatePresence>
+-      {isOpen && (
+-        <motion.div
+-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 px-6"
+-          initial={{ opacity: 0 }}
+-          animate={{ opacity: 1 }}
+-          exit={{ opacity: 0 }}
+-        >
+-          <Confetti />
+-
+-          <motion.div
+-            className="relative flex w-full max-w-[360px] flex-col items-center gap-5 rounded-[18px] border-3 border-pink bg-card p-8 text-center shadow-glow-pink"
+-            initial={{ scale: 0.7, opacity: 0, y: 20 }}
+-            animate={{ scale: 1, opacity: 1, y: 0 }}
+-            exit={{ scale: 0.7, opacity: 0, y: 20 }}
+-            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+-          >
+-            {showShare ? (
+-              <ShareCard
+-                emoji="🎉"
+-                title="Level Up!"
+-                subtitle={`Now a ${getLevelTitle(newLevel)} on LinkY101`}
+-                stat={`LV ${newLevel}`}
+-                accent="pink"
+-                filename={`linky101-level-${newLevel}`}
+-              />
+-            ) : (
+-              <>
+-                <span className="text-4xl">🎉</span>
+-                <h2 className="bg-gradient-pink-purple bg-clip-text text-3xl font-black uppercase tracking-wide text-transparent">
+-                  Level Up!
+-                </h2>
+-                <LevelBadge level={newLevel} size="lg" />
+-                <p className="text-sm font-bold text-text-muted">
+-                  You&apos;re now a <span className="text-ink">{getLevelTitle(newLevel)}</span>
+-                </p>
+-              </>
+-            )}
+-
+-            <div className="flex w-full gap-2">
+-              <button
+-                type="button"
+-                onClick={() => setShowShare((v) => !v)}
+-                className="flex-1 rounded-xl border-3 border-border py-3 text-xs font-black uppercase text-text-muted"
+-              >
+-                {showShare ? "Back" : "Share 📤"}
+-              </button>
+-              <GradientButton variant="pink" size="lg" className="flex-1" onClick={onClose}>
+-                Let&apos;s Go!
+-              </GradientButton>
+-            </div>
+-          </motion.div>
+-        </motion.div>
+-      )}
+-    </AnimatePresence>
+-  );
++export default function LevelUpModal(_props: LevelUpModalProps) {
++  void _props;
++  return null;
+ }
+diff --git a/components/SpinResult.tsx b/components/SpinResult.tsx
+index 13881f7..cd5fc13 100644
+--- a/components/SpinResult.tsx
++++ b/components/SpinResult.tsx
+@@ -1,55 +1,3 @@
+-"use client";
+-
+-import { AnimatePresence, motion } from "framer-motion";
+-import Confetti from "@/components/Confetti";
+-import GradientButton from "@/components/ui/GradientButton";
+-import type { SpinResult as SpinResultType } from "@/lib/spin";
+-
+-interface SpinResultProps {
+-  result: SpinResultType | null;
+-  onClaim: () => void;
+-}
+-
+-// common/uncommon read as a normal prize card; rare gets a glow;
+-// very_rare/legendary get the full confetti celebration.
+-const RARITY_VISUAL: Record<string, { border: string; glow: string; confetti: boolean; label: string }> = {
+-  common: { border: "border-sky", glow: "", confetti: false, label: "Prize!" },
+-  uncommon: { border: "border-purple", glow: "", confetti: false, label: "Nice Find!" },
+-  rare: { border: "border-yellow", glow: "shadow-glow-yellow", confetti: false, label: "Rare Prize!" },
+-  very_rare: { border: "border-pink", glow: "shadow-glow-pink", confetti: true, label: "Very Rare!!" },
+-  legendary: { border: "border-yellow", glow: "shadow-glow-yellow", confetti: true, label: "LEGENDARY!!!" },
+-};
+-
+-export default function SpinResult({ result, onClaim }: SpinResultProps) {
+-  const visual = result ? (RARITY_VISUAL[result.rarity] ?? RARITY_VISUAL.common) : null;
+-
+-  return (
+-    <AnimatePresence>
+-      {result && visual && (
+-        <motion.div
+-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 px-6"
+-          initial={{ opacity: 0 }}
+-          animate={{ opacity: 1 }}
+-          exit={{ opacity: 0 }}
+-        >
+-          {visual.confetti && <Confetti />}
+-
+-          <motion.div
+-            className={`relative flex w-full max-w-[360px] flex-col items-center gap-4 rounded-[18px] border-3 bg-card p-8 text-center ${visual.border} ${visual.glow}`}
+-            initial={{ scale: 0.7, opacity: 0 }}
+-            animate={{ scale: 1, opacity: 1 }}
+-            exit={{ scale: 0.7, opacity: 0 }}
+-            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+-          >
+-            <span className="text-4xl">{visual.confetti ? "🎉" : "🎁"}</span>
+-            <p className="text-xs font-black uppercase tracking-widest text-text-muted">{visual.label}</p>
+-            <h2 className="heading-game text-2xl text-ink">{result.label}</h2>
+-            <GradientButton variant="pink" size="lg" className="w-full" onClick={onClaim}>
+-              Claim!
+-            </GradientButton>
+-          </motion.div>
+-        </motion.div>
+-      )}
+-    </AnimatePresence>
+-  );
++export default function SpinResult() {
++  return null;
+ }
+diff --git a/components/SpinWheel.tsx b/components/SpinWheel.tsx
+index 4a5d54e..485683d 100644
+--- a/components/SpinWheel.tsx
++++ b/components/SpinWheel.tsx
+@@ -1,65 +1,3 @@
+-"use client";
+-
+-import { motion } from "framer-motion";
+-
+-// pink, sky, purple, yellow, green, orange — matches lib/spin.ts's
+-// prize -> segment mapping used by DailySpinSection.
+-const SEGMENTS = [
+-  { color: "#ff6b9d", label: "Mystery" },
+-  { color: "#38bdf8", label: "Boost" },
+-  { color: "#a78bfa", label: "Flair" },
+-  { color: "#f5c518", label: "XP" },
+-  { color: "#4ade80", label: "Bonus" },
+-  { color: "#f97316", label: "Shield" },
+-];
+-
+-interface SpinWheelProps {
+-  /** Target rotation in degrees while spinning — parent computes many full turns + landing angle. */
+-  rotation: number;
+-  spinning: boolean;
+-}
+-
+-export default function SpinWheel({ rotation, spinning }: SpinWheelProps) {
+-  const gradient = `conic-gradient(${SEGMENTS.map(
+-    (s, i) => `${s.color} ${i * 60}deg ${(i + 1) * 60}deg`
+-  ).join(", ")})`;
+-
+-  return (
+-    <div className="relative mx-auto flex h-56 w-56 items-center justify-center">
+-      <div className="absolute -top-1 left-1/2 z-10 -translate-x-1/2">
+-        <div className="h-0 w-0 border-l-[12px] border-r-[12px] border-t-[20px] border-l-transparent border-r-transparent border-t-white" />
+-      </div>
+-
+-      <motion.div
+-        className="relative h-full w-full rounded-full border-4 border-white shadow-glow-purple"
+-        style={{ background: gradient }}
+-        animate={spinning ? { rotate: rotation } : { rotate: 360 }}
+-        transition={
+-          spinning
+-            ? { duration: 2.5, ease: [0.15, 0.8, 0.25, 1] }
+-            : { duration: 8, repeat: Infinity, ease: "linear" }
+-        }
+-      >
+-        {SEGMENTS.map((s, i) => {
+-          const angle = i * 60 + 30;
+-          return (
+-            <span
+-              key={s.label}
+-              className="absolute left-1/2 top-1/2 text-[10px] font-black uppercase text-ink"
+-              style={{
+-                transform: `rotate(${angle}deg) translate(0, -80px) rotate(-${angle}deg) translate(-50%, -50%)`,
+-                transformOrigin: "0 0",
+-              }}
+-            >
+-              {s.label}
+-            </span>
+-          );
+-        })}
+-      </motion.div>
+-
+-      <div className="absolute flex h-14 w-14 items-center justify-center rounded-full border-3 border-purple bg-navy text-xl shadow-glow-purple">
+-        🎡
+-      </div>
+-    </div>
+-  );
++export default function SpinWheel() {
++  return null;
+ }
+diff --git a/components/WelcomeBack.tsx b/components/WelcomeBack.tsx
+index 31a0a62..821f6fa 100644
+--- a/components/WelcomeBack.tsx
++++ b/components/WelcomeBack.tsx
+@@ -1,83 +1,3 @@
+-"use client";
+-
+-import { useEffect, useState } from "react";
+-import { AnimatePresence, motion } from "framer-motion";
+-import { getWelcomeBackSummary, dismissWelcomeBack, type WelcomeBackSummary } from "@/lib/actions/welcomeBack";
+-import GameCard from "@/components/ui/GameCard";
+-import GradientButton from "@/components/ui/GradientButton";
+-import Confetti from "@/components/Confetti";
+-
+-interface WelcomeBackProps {
+-  firstName: string;
+-}
+-
+-export default function WelcomeBack({ firstName }: WelcomeBackProps) {
+-  const [summary, setSummary] = useState<WelcomeBackSummary | null>(null);
+-  const [dismissed, setDismissed] = useState(false);
+-
+-  useEffect(() => {
+-    getWelcomeBackSummary().then(setSummary);
+-  }, []);
+-
+-  if (!summary?.show || dismissed) return null;
+-
+-  function handleDismiss() {
+-    setDismissed(true);
+-    dismissWelcomeBack();
+-  }
+-
+-  return (
+-    <AnimatePresence>
+-      <motion.div
+-        initial={{ opacity: 0 }}
+-        animate={{ opacity: 1 }}
+-        exit={{ opacity: 0 }}
+-        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/95 p-6"
+-      >
+-        <Confetti />
+-        <motion.div
+-          initial={{ scale: 0.85, y: 20, opacity: 0 }}
+-          animate={{ scale: 1, y: 0, opacity: 1 }}
+-          transition={{ type: "spring", damping: 20, stiffness: 260 }}
+-          className="w-full max-w-sm"
+-        >
+-          <GameCard borderColor="pink" glowColor="pink" className="text-center">
+-            <p className="text-5xl">👋</p>
+-            <h1 className="heading-game mt-2 text-2xl">Welcome Back, {firstName}!</h1>
+-            <p className="mt-1 text-sm font-bold text-text-muted">
+-              You&apos;ve been away for {summary.daysAway} day{summary.daysAway === 1 ? "" : "s"}. Here&apos;s what
+-              you missed:
+-            </p>
+-
+-            <div className="mt-4 grid grid-cols-2 gap-3">
+-              <div className="rounded-xl border-3 border-sky bg-navy/40 p-3">
+-                <p className="text-xl font-black text-sky">{summary.newPosts}</p>
+-                <p className="text-[9px] font-bold uppercase text-text-muted">New Posts</p>
+-              </div>
+-              <div className="rounded-xl border-3 border-purple bg-navy/40 p-3">
+-                <p className="text-xl font-black text-purple">{summary.unreadNotifications}</p>
+-                <p className="text-[9px] font-bold uppercase text-text-muted">Notifications</p>
+-              </div>
+-            </div>
+-
+-            <div className="mt-3 rounded-xl border-3 border-orange bg-orange/10 p-3">
+-              {summary.currentStreak > 0 ? (
+-                <p className="text-sm font-black text-orange">
+-                  🔥 Your {summary.currentStreak}-day streak is still going — nice!
+-                </p>
+-              ) : (
+-                <p className="text-sm font-black text-orange">
+-                  Your streak reset while you were away. Complete a task today to start a new one!
+-                </p>
+-              )}
+-            </div>
+-
+-            <GradientButton variant="pink" size="lg" className="mt-5 w-full" onClick={handleDismiss}>
+-              Let&apos;s Go! 🚀
+-            </GradientButton>
+-          </GameCard>
+-        </motion.div>
+-      </motion.div>
+-    </AnimatePresence>
+-  );
++export default function WelcomeBack() {
++  return null;
+ }
+diff --git a/components/home/DailySpinPreview.tsx b/components/home/DailySpinPreview.tsx
+index d434a09..6badbee 100644
+--- a/components/home/DailySpinPreview.tsx
++++ b/components/home/DailySpinPreview.tsx
+@@ -1,143 +1,3 @@
+-"use client";
+-
+-import { useEffect, useMemo, useState, useTransition } from "react";
+-import Link from "next/link";
+-import { AnimatePresence, motion } from "framer-motion";
+-import { Sparkles } from "lucide-react";
+-import { createClientSupabase } from "@/lib/supabase/client";
+-import { useProfile, useProfileStore } from "@/hooks/useProfile";
+-import { performSpin } from "@/lib/actions/spin";
+-import { floatXP, floatCoins } from "@/lib/floatingRewards";
+-import GameCard from "@/components/ui/GameCard";
+-
+-interface DailySpinPreviewProps {
+-  onLevelUp?: (level: number) => void;
+-}
+-
+-type ChestPhase = "idle" | "shaking" | "opened";
+-
+-export default function DailySpinPreview({ onLevelUp }: DailySpinPreviewProps) {
+-  const { profile } = useProfile();
+-  const refreshProfile = useProfileStore((s) => s.refreshProfile);
+-  const supabase = useMemo(() => createClientSupabase(), []);
+-  const [alreadySpun, setAlreadySpun] = useState<boolean | null>(null);
+-  const [prizeLabel, setPrizeLabel] = useState<string | null>(null);
+-  const [phase, setPhase] = useState<ChestPhase>("idle");
+-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+-  const [, startTransition] = useTransition();
+-
+-  useEffect(() => {
+-    if (!profile) return;
+-    const today = new Date().toISOString().slice(0, 10);
+-    supabase
+-      .from("daily_spins")
+-      .select("prize_value")
+-      .eq("user_id", profile.id)
+-      .eq("spin_date", today)
+-      .maybeSingle()
+-      .then(({ data }) => {
+-        setAlreadySpun(!!data);
+-        if (data?.prize_value && typeof data.prize_value === "object") {
+-          setPrizeLabel((data.prize_value as { label?: string }).label ?? null);
+-        }
+-        if (data) setPhase("opened");
+-      });
+-  }, [profile, supabase]);
+-
+-  function handleOpenChest() {
+-    if (phase !== "idle") return;
+-    setErrorMsg(null);
+-    setPhase("shaking");
+-
+-    startTransition(async () => {
+-      try {
+-        const result = await performSpin();
+-        // Let the shake animation play for a beat before the chest "opens".
+-        setTimeout(() => {
+-          setPhase("opened");
+-          setPrizeLabel(result.label);
+-          setAlreadySpun(true);
+-          if (result.amount) floatXP(result.amount);
+-          if (result.coins) floatCoins(result.coins);
+-          refreshProfile();
+-          if (result.leveledUp && result.newLevel && onLevelUp) {
+-            onLevelUp(result.newLevel);
+-          }
+-        }, 500);
+-      } catch (err) {
+-        setPhase("idle");
+-        setErrorMsg(err instanceof Error ? err.message : "Couldn't open the chest right now");
+-      }
+-    });
+-  }
+-
+-  return (
+-    <GameCard borderColor="purple" glowColor="purple">
+-      <div className="mb-3 flex items-center justify-between">
+-        <span className="font-black uppercase tracking-wide text-ink">🎁 Daily Chest</span>
+-        <Link href="/tasks" className="text-xs font-black uppercase tracking-wide text-sky">
+-          See All →
+-        </Link>
+-      </div>
+-
+-      <div className="flex flex-col items-center gap-3 py-2 text-center">
+-        <div className="relative">
+-          <motion.span
+-            animate={
+-              phase === "shaking"
+-                ? { rotate: [0, -8, 8, -6, 6, -3, 3, 0] }
+-                : phase === "opened"
+-                  ? { scale: [1, 1.2, 1] }
+-                  : { y: [0, -4, 0] }
+-            }
+-            transition={
+-              phase === "shaking"
+-                ? { duration: 0.5 }
+-                : phase === "opened"
+-                  ? { duration: 0.4 }
+-                  : { duration: 1.8, repeat: Infinity, ease: "easeInOut" }
+-            }
+-            className="block text-6xl"
+-          >
+-            {phase === "opened" ? "📦" : "🎁"}
+-          </motion.span>
+-          <AnimatePresence>
+-            {phase === "opened" && alreadySpun && (
+-              <motion.span
+-                initial={{ scale: 0, opacity: 1 }}
+-                animate={{ scale: 2.2, opacity: 0 }}
+-                transition={{ duration: 0.7 }}
+-                className="pointer-events-none absolute inset-0 flex items-center justify-center text-yellow"
+-              >
+-                <Sparkles className="h-10 w-10" />
+-              </motion.span>
+-            )}
+-          </AnimatePresence>
+-        </div>
+-
+-        {alreadySpun === null ? (
+-          <p className="text-sm font-bold text-text-muted">Loading...</p>
+-        ) : alreadySpun ? (
+-          <>
+-            <p className="font-black uppercase text-green">Opened for today!</p>
+-            {prizeLabel && <p className="text-xs font-bold text-text-muted">You won {prizeLabel}</p>}
+-            <p className="text-xs font-bold text-text-muted">Come back tomorrow for another.</p>
+-          </>
+-        ) : (
+-          <>
+-            <p className="text-sm font-bold text-text-muted">Complete 2+ tasks to unlock your free daily chest!</p>
+-            <button
+-              type="button"
+-              disabled={phase === "shaking"}
+-              onClick={handleOpenChest}
+-              className="glow-pulse w-full rounded-2xl border-3 border-sky bg-gradient-primary py-3 text-sm font-black uppercase tracking-wide text-white shadow-glow-sky transition-transform active:scale-95 disabled:opacity-60"
+-            >
+-              {phase === "shaking" ? "Opening..." : "Open Daily Chest 🎁"}
+-            </button>
+-          </>
+-        )}
+-        {errorMsg && <p className="text-xs font-bold text-orange">{errorMsg}</p>}
+-      </div>
+-    </GameCard>
+-  );
++export default function DailySpinPreview() {
++  return null;
+ }
+diff --git a/components/home/DailyTasksCard.tsx b/components/home/DailyTasksCard.tsx
+index 6d19f6e..e253304 100644
+--- a/components/home/DailyTasksCard.tsx
++++ b/components/home/DailyTasksCard.tsx
+@@ -1,207 +1,22 @@
+ "use client";
+ 
+-import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+-import Link from "next/link";
+-import { AnimatePresence, motion } from "framer-motion";
+-import { Check, Sparkles } from "lucide-react";
+-import { createClientSupabase } from "@/lib/supabase/client";
+-import { useProfileStore } from "@/hooks/useProfile";
+-import { generateDailyTasks, completeTask } from "@/lib/actions/tasks";
+-import { floatXP, floatCoins } from "@/lib/floatingRewards";
+-import GameCard from "@/components/ui/GameCard";
+-
+-interface DailyTask {
+-  id: string;
+-  description: string;
+-  xp_reward: number;
+-  is_completed: boolean;
+-  task_type: string;
+-}
++import Card from "@/components/ui/GameCard";
+ 
+ interface DailyTasksCardProps {
+-  onLevelUp?: (level: number) => void;
+-}
+-
+-const TASK_ICON: Record<string, string> = {
+-  read_and_react: "📚",
+-  quiz_time: "🧠",
+-  share_story: "✍️",
+-  help_founder: "🤝",
+-  explore_follow: "🔍",
+-  team_spirit: "🏫",
+-  dream_check: "💭",
+-  watch_learn: "🎧",
+-  poll_power: "📊",
+-  discovery_quest: "🧭",
+-};
+-
+-function timeUntilMidnightUTC(): string {
+-  const now = new Date();
+-  const midnight = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0);
+-  const diffMs = midnight - now.getTime();
+-  const hours = Math.floor(diffMs / 3_600_000);
+-  const minutes = Math.floor((diffMs % 3_600_000) / 60_000);
+-  return `${hours}h ${minutes}m`;
++  hasActivity?: boolean;
+ }
+ 
+-export default function DailyTasksCard({ onLevelUp }: DailyTasksCardProps) {
+-  const supabase = useMemo(() => createClientSupabase(), []);
+-  const refreshProfile = useProfileStore((s) => s.refreshProfile);
+-  const [tasks, setTasks] = useState<DailyTask[]>([]);
+-  const [loading, setLoading] = useState(true);
+-  const [countdown, setCountdown] = useState("");
+-  const [toast, setToast] = useState<string | null>(null);
+-  const [sparkleId, setSparkleId] = useState<string | null>(null);
+-  const [, startTransition] = useTransition();
+-
+-  const loadTasks = useCallback(async () => {
+-    const today = new Date().toISOString().slice(0, 10);
+-    const { data } = await supabase
+-      .from("daily_tasks")
+-      .select("id, description, xp_reward, is_completed, task_type")
+-      .eq("task_date", today)
+-      .order("created_at");
+-
+-    if (!data || data.length === 0) {
+-      await generateDailyTasks();
+-      const { data: fresh } = await supabase
+-        .from("daily_tasks")
+-        .select("id, description, xp_reward, is_completed, task_type")
+-        .eq("task_date", today)
+-        .order("created_at");
+-      setTasks(fresh ?? []);
+-    } else {
+-      setTasks(data);
+-    }
+-    setLoading(false);
+-  }, [supabase]);
+-
+-  useEffect(() => {
+-    loadTasks();
+-  }, [loadTasks]);
+-
+-  useEffect(() => {
+-    setCountdown(timeUntilMidnightUTC());
+-    const interval = setInterval(() => setCountdown(timeUntilMidnightUTC()), 60_000);
+-    return () => clearInterval(interval);
+-  }, []);
+-
+-  function handleComplete(taskId: string, xpReward: number) {
+-    setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, is_completed: true } : t)));
+-    setSparkleId(taskId);
+-    setTimeout(() => setSparkleId(null), 700);
+-    floatXP(xpReward);
+-    floatCoins(5);
+-
+-    startTransition(async () => {
+-      try {
+-        const result = await completeTask(taskId);
+-        if (result.alreadyCompleted) return;
+-        refreshProfile();
+-        if (result.tierReached) {
+-          setToast(`🏆 Tier ${result.tierReached} reward! +${result.bonusXp} XP`);
+-          if (result.bonusCoins) floatCoins(result.bonusCoins);
+-          setTimeout(() => setToast(null), 3000);
+-        }
+-        if (result.leveledUp && result.newLevel && onLevelUp) {
+-          onLevelUp(result.newLevel);
+-        }
+-      } catch {
+-        setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, is_completed: false } : t)));
+-      }
+-    });
+-  }
+-
+-  const completedCount = tasks.filter((t) => t.is_completed).length;
+-
++export default function DailyTasksCard({ hasActivity = false }: DailyTasksCardProps) {
+   return (
+-    <GameCard borderColor="pink" glowColor="pink">
+-      <div className="mb-3 flex items-center justify-between">
+-        <span className="font-black uppercase tracking-wide text-ink">🎯 Today&apos;s Quests</span>
+-        <span className="text-xs font-black text-text-muted">Resets in {countdown}</span>
+-      </div>
+-      <Link
+-        href="/tasks"
+-        className="mb-3 block text-right text-xs font-black uppercase tracking-wide text-sky"
+-      >
+-        See All →
+-      </Link>
+-
+-      <div className="mb-3 flex gap-1.5">
+-        {Array.from({ length: 5 }).map((_, i) => (
+-          <motion.span
+-            key={i}
+-            initial={false}
+-            animate={{ scale: i < completedCount ? [1, 1.3, 1] : 1 }}
+-            transition={{ duration: 0.4 }}
+-            className={`h-2 flex-1 rounded-full ${
+-              i < completedCount ? "bg-gradient-primary shadow-glow-sky" : "bg-border"
+-            }`}
+-          />
+-        ))}
+-      </div>
+-
+-      {loading ? (
+-        <div className="flex flex-col gap-2">
+-          {[0, 1, 2].map((i) => (
+-            <div key={i} className="skeleton-shimmer h-14 rounded-xl" />
+-          ))}
+-        </div>
++    <Card>
++      <p className="font-semibold text-gray-900">Today&apos;s Activity</p>
++      {hasActivity ? (
++        <p className="mt-1 text-sm text-gray-500">You&apos;ve been active today!</p>
+       ) : (
+-        <div className="flex flex-col gap-2">
+-          {tasks.map((task) => (
+-            <button
+-              key={task.id}
+-              type="button"
+-              disabled={task.is_completed}
+-              onClick={() => handleComplete(task.id, task.xp_reward)}
+-              className="flex items-center gap-3 rounded-xl border-3 border-border bg-white p-2.5 text-left shadow-card transition-transform active:scale-[0.98] disabled:opacity-70"
+-            >
+-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy/40 text-base">
+-                {TASK_ICON[task.task_type] ?? "🎯"}
+-              </span>
+-              <span
+-                className={`flex-1 text-sm font-bold ${
+-                  task.is_completed ? "text-text-muted line-through" : "text-ink"
+-                }`}
+-              >
+-                {task.description}
+-              </span>
+-              <span className="relative shrink-0">
+-                <span
+-                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-3 transition-colors ${
+-                    task.is_completed ? "border-sky bg-gradient-primary" : "border-border"
+-                  }`}
+-                >
+-                  {task.is_completed && <Check className="h-4 w-4 text-white" strokeWidth={4} />}
+-                </span>
+-                <AnimatePresence>
+-                  {sparkleId === task.id && (
+-                    <motion.span
+-                      initial={{ scale: 0.3, opacity: 1, rotate: 0 }}
+-                      animate={{ scale: 1.8, opacity: 0, rotate: 90 }}
+-                      exit={{ opacity: 0 }}
+-                      transition={{ duration: 0.6 }}
+-                      className="pointer-events-none absolute inset-0 flex items-center justify-center text-yellow"
+-                    >
+-                      <Sparkles className="h-7 w-7" />
+-                    </motion.span>
+-                  )}
+-                </AnimatePresence>
+-              </span>
+-              <span className="shrink-0 rounded-full border-2 border-yellow bg-yellow/15 px-2 py-0.5 text-[10px] font-black text-[#B8860B]">
+-                +{task.xp_reward} XP
+-              </span>
+-            </button>
+-          ))}
+-        </div>
+-      )}
+-
+-      {toast && (
+-        <div className="mt-3 rounded-xl border-3 border-yellow bg-yellow/15 p-2 text-center text-xs font-black text-[#B8860B] shadow-glow-yellow">
+-          {toast}
+-        </div>
++        <p className="mt-1 text-sm text-gray-500">
++          Start your day — complete a lesson or post an idea
++        </p>
+       )}
+-    </GameCard>
++    </Card>
+   );
+ }
+diff --git a/components/home/LeaderboardPreview.tsx b/components/home/LeaderboardPreview.tsx
+index 7f17c74..497d09b 100644
+--- a/components/home/LeaderboardPreview.tsx
++++ b/components/home/LeaderboardPreview.tsx
+@@ -1,71 +1,3 @@
+-"use client";
+-
+-import { useEffect, useMemo, useState } from "react";
+-import Link from "next/link";
+-import { createClientSupabase } from "@/lib/supabase/client";
+-import { useProfile } from "@/hooks/useProfile";
+-import GameCard from "@/components/ui/GameCard";
+-
+-interface LeaderRow {
+-  id: string;
+-  first_name: string;
+-  level: number;
+-  xp: number;
+-}
+-
+ export default function LeaderboardPreview() {
+-  const { profile } = useProfile();
+-  const supabase = useMemo(() => createClientSupabase(), []);
+-  const [rows, setRows] = useState<LeaderRow[]>([]);
+-  const [loading, setLoading] = useState(true);
+-
+-  useEffect(() => {
+-    supabase
+-      .from("profiles")
+-      .select("id, first_name, level, xp")
+-      .order("xp", { ascending: false })
+-      .limit(5)
+-      .then(({ data }) => {
+-        setRows(data ?? []);
+-        setLoading(false);
+-      });
+-  }, [supabase]);
+-
+-  return (
+-    <GameCard borderColor="pink" glowColor="pink">
+-      <div className="mb-3 flex items-center justify-between">
+-        <span className="font-black uppercase tracking-wide text-ink">🏆 Leaderboard</span>
+-        <Link href="/leaderboard" className="text-xs font-black uppercase tracking-wide text-sky">
+-          See Full Rankings →
+-        </Link>
+-      </div>
+-
+-      {loading ? (
+-        <p className="text-sm font-bold text-text-muted">Loading...</p>
+-      ) : (
+-        <div className="flex flex-col gap-2">
+-          {rows.map((row, i) => {
+-            const isMe = row.id === profile?.id;
+-            return (
+-              <div
+-                key={row.id}
+-                className={`flex items-center gap-3 rounded-xl border-3 p-2 ${
+-                  isMe ? "border-pink bg-pink/10" : "border-border bg-navy/40"
+-                }`}
+-              >
+-                <span className="w-5 shrink-0 text-center font-black text-yellow">{i + 1}</span>
+-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-3 border-pink bg-gradient-pink-purple text-xs font-black text-white">
+-                  {row.first_name?.charAt(0).toUpperCase() ?? "?"}
+-                </span>
+-                <span className="flex-1 truncate text-sm font-bold text-ink">
+-                  {row.first_name} {isMe && <span className="text-pink">(You)</span>}
+-                </span>
+-                <span className="shrink-0 text-xs font-black text-yellow">{row.xp} XP</span>
+-              </div>
+-            );
+-          })}
+-        </div>
+-      )}
+-    </GameCard>
+-  );
++  return null;
+ }
+diff --git a/components/home/LevelRoadmapCard.tsx b/components/home/LevelRoadmapCard.tsx
+index d2c6bdf..599abba 100644
+--- a/components/home/LevelRoadmapCard.tsx
++++ b/components/home/LevelRoadmapCard.tsx
+@@ -1,133 +1,3 @@
+-"use client";
+-
+-import { useState } from "react";
+-import Link from "next/link";
+-import { Lock } from "lucide-react";
+-import {
+-  FEATURE_UNLOCKS,
+-  getXPForLevel,
+-  getXPToNextLevel,
+-  type FeatureUnlock,
+-} from "@/lib/levels";
+-import GameCard from "@/components/ui/GameCard";
+-
+-type Node =
+-  | { kind: "completed"; level: number; feature: string }
+-  | { kind: "current" }
+-  | { kind: "locked"; level: number; feature: string };
+-
+-interface LevelRoadmapCardProps {
+-  level: number;
+-  xp: number;
+-}
+-
+-function buildNodes(level: number): Node[] {
+-  const completed: FeatureUnlock[] = FEATURE_UNLOCKS.filter((f) => level >= f.level).slice(-2);
+-  const upcoming: FeatureUnlock[] = FEATURE_UNLOCKS.filter((f) => level < f.level).slice(0, 3);
+-
+-  return [
+-    ...[...upcoming].reverse().map((f): Node => ({ kind: "locked", level: f.level, feature: f.feature })),
+-    { kind: "current" },
+-    ...[...completed].reverse().map((f): Node => ({ kind: "completed", level: f.level, feature: f.feature })),
+-  ];
+-}
+-
+-export default function LevelRoadmapCard({ level, xp }: LevelRoadmapCardProps) {
+-  const nodes = buildNodes(level);
+-  const [toast, setToast] = useState<string | null>(null);
+-
+-  const xpToNext = getXPToNextLevel(level, xp);
+-
+-  function handleLockedTap(nodeLevel: number) {
+-    const needed = Math.max(0, getXPForLevel(nodeLevel) - xp);
+-    setToast(`Keep going! You need ${needed} more XP`);
+-    setTimeout(() => setToast(null), 2500);
+-  }
+-
+-  return (
+-    <GameCard borderColor="purple" glowColor="purple">
+-      <div className="mb-4 flex items-center justify-between">
+-        <span className="font-black uppercase tracking-wide text-ink">🗺️ Level Roadmap</span>
+-        <Link href="/roadmap" className="text-xs font-black uppercase tracking-wide text-sky">
+-          View All →
+-        </Link>
+-      </div>
+-
+-      <div className="flex flex-col">
+-        {nodes.map((node, i) => {
+-          const isLast = i === nodes.length - 1;
+-          const segmentColor =
+-            node.kind === "locked" ? "bg-border" : node.kind === "current" ? "bg-yellow" : "bg-green";
+-
+-          return (
+-            <div key={i} className="flex gap-3">
+-              <div className="flex flex-col items-center">
+-                {node.kind === "completed" && (
+-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-green to-sky text-lg font-black text-ink shadow-glow-green">
+-                    ✓
+-                  </div>
+-                )}
+-                {node.kind === "current" && (
+-                  <div className="flex h-10 w-10 shrink-0 animate-pulse items-center justify-center rounded-full bg-gradient-yellow-orange text-lg shadow-glow-yellow">
+-                    📍
+-                  </div>
+-                )}
+-                {node.kind === "locked" && (
+-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-3 border-border bg-navy/60">
+-                    <Lock className="h-4 w-4 text-text-muted" strokeWidth={3} />
+-                  </div>
+-                )}
+-                {!isLast && <div className={`min-h-[20px] w-1 flex-1 rounded-full ${segmentColor}`} />}
+-              </div>
+-
+-              <div className="flex-1 pb-4">
+-                {node.kind === "completed" && (
+-                  <>
+-                    <p className="text-xs font-black uppercase tracking-wide text-green">
+-                      Level {node.level}
+-                    </p>
+-                    <p className="text-sm font-bold text-text-muted">🎁 Unlocked: {node.feature}</p>
+-                  </>
+-                )}
+-
+-                {node.kind === "current" && (
+-                  <>
+-                    <span className="inline-block rounded-full border-3 border-yellow bg-navy/60 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-yellow">
+-                      📍 You Are Here
+-                    </span>
+-                    <p className="mt-1 text-sm font-black text-pink">
+-                      {xpToNext === null
+-                        ? "🔥 Max level reached!"
+-                        : `🔥 ${xpToNext} XP to Level ${level + 1}`}
+-                    </p>
+-                  </>
+-                )}
+-
+-                {node.kind === "locked" && (
+-                  <button
+-                    type="button"
+-                    onClick={() => handleLockedTap(node.level)}
+-                    className="text-left"
+-                  >
+-                    <p className="text-xs font-black uppercase tracking-wide text-text-muted">
+-                      Level {node.level}
+-                    </p>
+-                    <p className="text-sm font-bold text-text-muted opacity-70">
+-                      🔒 Unlock: {node.feature}
+-                    </p>
+-                  </button>
+-                )}
+-              </div>
+-            </div>
+-          );
+-        })}
+-      </div>
+-
+-      {toast && (
+-        <div className="rounded-xl border-3 border-purple bg-navy/60 p-2 text-center text-xs font-black text-purple shadow-glow-purple">
+-          {toast}
+-        </div>
+-      )}
+-    </GameCard>
+-  );
++export default function LevelRoadmapCard() {
++  return null;
+ }
+diff --git a/components/home/SchoolTeamPreview.tsx b/components/home/SchoolTeamPreview.tsx
+index 2c85d0c..e8836cd 100644
+--- a/components/home/SchoolTeamPreview.tsx
++++ b/components/home/SchoolTeamPreview.tsx
+@@ -1,88 +1,3 @@
+-"use client";
+-
+-import { useEffect, useMemo, useState } from "react";
+-import Link from "next/link";
+-import { createClientSupabase } from "@/lib/supabase/client";
+-import { useProfile } from "@/hooks/useProfile";
+-import GameCard from "@/components/ui/GameCard";
+-
+-interface SchoolInfo {
+-  name: string;
+-  team_xp: number;
+-  rank: number;
+-  memberCount: number;
+-}
+-
+ export default function SchoolTeamPreview() {
+-  const { profile } = useProfile();
+-  const supabase = useMemo(() => createClientSupabase(), []);
+-  const [school, setSchool] = useState<SchoolInfo | null>(null);
+-  const [loading, setLoading] = useState(true);
+-
+-  useEffect(() => {
+-    if (!profile) return;
+-    if (!profile.school_id) {
+-      setLoading(false);
+-      return;
+-    }
+-
+-    async function load() {
+-      const schoolId = profile!.school_id!;
+-      const [{ data: allSchools }, { count: memberCount }] = await Promise.all([
+-        supabase.from("schools").select("id, name, team_xp").order("team_xp", { ascending: false }),
+-        supabase
+-          .from("profiles")
+-          .select("id", { count: "exact", head: true })
+-          .eq("school_id", schoolId),
+-      ]);
+-
+-      const mySchool = allSchools?.find((s) => s.id === schoolId);
+-      const rank = allSchools ? allSchools.findIndex((s) => s.id === schoolId) + 1 : 0;
+-
+-      if (mySchool) {
+-        setSchool({ name: mySchool.name, team_xp: mySchool.team_xp, rank, memberCount: memberCount ?? 0 });
+-      }
+-      setLoading(false);
+-    }
+-
+-    load();
+-  }, [profile, supabase]);
+-
+-  if (loading) return null;
+-
+-  return (
+-    <GameCard borderColor="sky" glowColor="sky">
+-      <div className="mb-3 flex items-center justify-between">
+-        <span className="font-black uppercase tracking-wide text-ink">🏫 Your Team</span>
+-        <Link href="/teams" className="text-xs font-black uppercase tracking-wide text-sky">
+-          View Team →
+-        </Link>
+-      </div>
+-
+-      {school ? (
+-        <>
+-          <div className="mb-2 flex items-center justify-between">
+-            <div>
+-              <p className="font-black uppercase text-ink">{school.name}</p>
+-              <p className="text-xs font-bold text-text-muted">{school.memberCount} members</p>
+-            </div>
+-            <span className="rounded-full border-3 border-sky bg-navy/60 px-3 py-1 text-xs font-black text-sky">
+-              Rank #{school.rank}
+-            </span>
+-          </div>
+-          <div className="h-3 w-full overflow-hidden rounded-full bg-border">
+-            <div
+-              className="h-full rounded-full bg-gradient-sky-purple shadow-glow-sky"
+-              style={{ width: `${Math.min(100, (school.team_xp % 1000) / 10)}%` }}
+-            />
+-          </div>
+-          <p className="mt-1 text-right text-xs font-bold text-text-muted">{school.team_xp} Team XP</p>
+-        </>
+-      ) : (
+-        <p className="text-sm font-bold text-text-muted">
+-          Add your school in your profile to join a team.
+-        </p>
+-      )}
+-    </GameCard>
+-  );
++  return null;
+ }
+diff --git a/components/learn/LessonPath.tsx b/components/learn/LessonPath.tsx
+index d139de5..6d94819 100644
+--- a/components/learn/LessonPath.tsx
++++ b/components/learn/LessonPath.tsx
+@@ -2,26 +2,20 @@
+ 
+ import { useEffect, useMemo, useState } from "react";
+ import { useRouter } from "next/navigation";
+-import { Lock, Check } from "lucide-react";
++import { ChevronRight } from "lucide-react";
+ import { createClientSupabase } from "@/lib/supabase/client";
+ import { useProfile } from "@/hooks/useProfile";
+ import { CURRICULUM_CATEGORIES, CURRICULUM_COLOR_CLASSES } from "@/lib/curriculum";
+ 
+-interface LessonRow {
+-  id: string;
+-  category: string;
+-  order_index: number;
+-  title: string;
+-  emoji: string;
+-}
+-
+ interface ProgressRow {
+   lesson_id: string;
+   completed: boolean;
+ }
+ 
+-// Zigzag offsets for the Duolingo-style path — cycles every 4 nodes.
+-const OFFSETS = ["justify-center", "justify-end pr-6", "justify-center", "justify-start pl-6"];
++interface LessonRow {
++  id: string;
++  category: string;
++}
+ 
+ export default function LessonPath() {
+   const { profile } = useProfile();
+@@ -30,14 +24,12 @@ export default function LessonPath() {
+   const [lessons, setLessons] = useState<LessonRow[]>([]);
+   const [progress, setProgress] = useState<Record<string, boolean>>({});
+   const [loading, setLoading] = useState(true);
+-  const [toast, setToast] = useState<string | null>(null);
+ 
+   useEffect(() => {
+     if (!profile) return;
+-
+     async function load() {
+       const [{ data: lessonRows }, { data: progressRows }] = await Promise.all([
+-        supabase.from("curriculum_lessons").select("id, category, order_index, title, emoji").order("order_index"),
++        supabase.from("curriculum_lessons").select("id, category").order("order_index"),
+         supabase.from("curriculum_progress").select("lesson_id, completed").eq("user_id", profile!.id),
+       ]);
+       setLessons((lessonRows as LessonRow[]) ?? []);
+@@ -49,112 +41,51 @@ export default function LessonPath() {
+       setLoading(false);
+     }
+     load();
+-    // eslint-disable-next-line react-hooks/exhaustive-deps
+-  }, [profile?.id]);
+-
+-  function showLockedToast(message: string) {
+-    setToast(message);
+-    setTimeout(() => setToast(null), 2200);
+-  }
++  }, [profile?.id, profile, supabase]);
+ 
+   if (!profile || loading) {
+     return (
+-      <div className="flex flex-col gap-4">
++      <div className="flex flex-col gap-3">
+         {[0, 1, 2].map((i) => (
+-          <div key={i} className="skeleton-shimmer h-48 rounded-[20px]" />
++          <div key={i} className="skeleton-shimmer h-20 rounded-xl" />
+         ))}
+       </div>
+     );
+   }
+ 
+   return (
+-    <div className="relative flex flex-col gap-10 pb-24">
+-      {CURRICULUM_CATEGORIES.map((category, catIndex) => {
++    <div className="flex flex-col gap-3">
++      {CURRICULUM_CATEGORIES.map((category) => {
+         const colors = CURRICULUM_COLOR_CLASSES[category.color];
+-        const categoryUnlocked = profile.level >= category.levelUnlock;
+-        const categoryLessons = lessons
+-          .filter((l) => l.category === category.slug)
+-          .sort((a, b) => a.order_index - b.order_index);
+-
+-        let currentAssigned = false;
++        const categoryLessons = lessons.filter((l) => l.category === category.slug);
++        const completedCount = categoryLessons.filter((l) => progress[l.id]).length;
++        const totalCount = categoryLessons.length || category.lessonTitles.length;
++        const pct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+ 
+         return (
+-          <div key={category.slug} className="flex flex-col gap-4">
+-            <div
+-              className={`flex items-center gap-3 rounded-2xl border-3 bg-card p-3 shadow-card ${
+-                categoryUnlocked ? colors.border : "border-border opacity-60"
+-              }`}
+-            >
++          <button
++            key={category.slug}
++            type="button"
++            onClick={() => router.push(`/learn/topic/${category.slug}`)}
++            className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-transform active:scale-[0.98] text-left"
++          >
++            <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${colors.bgLight}`}>
+               <span className="text-2xl">{category.emoji}</span>
+-              <div className="flex-1">
+-                <p className={`text-sm font-black uppercase tracking-wide ${categoryUnlocked ? colors.text : "text-text-muted"}`}>
+-                  {category.title}
+-                </p>
+-                <p className="text-[10px] font-bold uppercase tracking-wide text-text-muted">
+-                  {categoryUnlocked ? `Level ${category.levelUnlock}` : `🔒 Unlocks at Level ${category.levelUnlock}`}
+-                </p>
+-              </div>
+             </div>
+-
+-            {categoryLessons.length === 0 ? (
+-              <div className="skeleton-shimmer h-16 rounded-[18px]" />
+-            ) : (
+-              <div className="flex flex-col gap-4">
+-                {categoryLessons.map((lesson, i) => {
+-                  const completed = !!progress[lesson.id];
+-                  const isCurrent = categoryUnlocked && !completed && !currentAssigned;
+-                  if (isCurrent) currentAssigned = true;
+-                  const locked = !categoryUnlocked || (!completed && !isCurrent);
+-                  const offsetClass = OFFSETS[(catIndex * 4 + i) % OFFSETS.length];
+-
+-                  function handleTap() {
+-                    if (!categoryUnlocked) {
+-                      showLockedToast(`🔒 Reach Level ${category.levelUnlock} to unlock ${category.title}!`);
+-                      return;
+-                    }
+-                    if (locked) {
+-                      showLockedToast("🔒 Finish the lesson above first!");
+-                      return;
+-                    }
+-                    router.push(`/learn/lesson/${lesson.id}`);
+-                  }
+-
+-                  return (
+-                    <div key={lesson.id} className={`flex ${offsetClass}`}>
+-                      <button
+-                        type="button"
+-                        onClick={handleTap}
+-                        className="flex w-24 flex-col items-center gap-1 transition-transform active:scale-95"
+-                      >
+-                        <div
+-                          className={`flex h-16 w-16 items-center justify-center rounded-full border-3 text-2xl ${
+-                            completed
+-                              ? `${colors.border} ${colors.bg} ${colors.glow} text-white`
+-                              : isCurrent
+-                                ? `${colors.border} bg-card ${colors.glow} glow-pulse`
+-                                : "border-border bg-card opacity-50"
+-                          }`}
+-                        >
+-                          {completed ? <Check className="h-7 w-7" strokeWidth={4} /> : locked ? <Lock className="h-6 w-6 text-text-muted" strokeWidth={3} /> : lesson.emoji}
+-                        </div>
+-                        <p className={`text-center text-[10px] font-black leading-tight ${locked ? "text-text-muted" : "text-ink"}`}>
+-                          {lesson.title}
+-                        </p>
+-                      </button>
+-                    </div>
+-                  );
+-                })}
++            <div className="min-w-0 flex-1">
++              <p className="font-semibold text-gray-900">{category.title}</p>
++              <p className="text-xs text-gray-500">{completedCount}/{totalCount} lessons completed</p>
++              <div className="mt-1.5 h-1.5 w-full rounded-full bg-gray-100">
++                <div
++                  className={`h-1.5 rounded-full ${colors.bg} transition-all`}
++                  style={{ width: `${pct}%` }}
++                />
+               </div>
+-            )}
+-          </div>
++            </div>
++            <ChevronRight className="h-5 w-5 shrink-0 text-gray-400" />
++          </button>
+         );
+       })}
+-
+-      {toast && (
+-        <div className="fixed inset-x-0 bottom-24 z-[70] mx-auto w-fit max-w-[90%] rounded-full border-3 border-sky bg-card px-4 py-2 text-sm font-black text-ink shadow-glow-sky">
+-          {toast}
+-        </div>
+-      )}
+     </div>
+   );
+ }
+diff --git a/components/tasks/DailySpinSection.tsx b/components/tasks/DailySpinSection.tsx
+index b5ad944..75f8900 100644
+--- a/components/tasks/DailySpinSection.tsx
++++ b/components/tasks/DailySpinSection.tsx
+@@ -1,134 +1,3 @@
+-"use client";
+-
+-import { useEffect, useState, useTransition } from "react";
+-import { performSpin, getSpinStatus, type SpinResult as SpinResultType } from "@/lib/actions/spin";
+-import { PRIZE_TABLE } from "@/lib/spinPrizes";
+-import { useProfileStore } from "@/hooks/useProfile";
+-import GameCard from "@/components/ui/GameCard";
+-import GradientButton from "@/components/ui/GradientButton";
+-import SpinWheel from "@/components/SpinWheel";
+-import SpinResult from "@/components/SpinResult";
+-
+-interface DailySpinSectionProps {
+-  onLevelUp?: (level: number) => void;
+-  refreshKey?: number;
+-}
+-
+-const PRIZE_SEGMENT: Record<string, number> = {
+-  xp_25: 3,
+-  xp_50: 3,
+-  coins_50: 5,
+-  coins_200: 5,
+-  streak_shield: 5,
+-  bonus_task: 4,
+-  flair: 2,
+-  team_boost: 1,
+-  level_skip: 0,
+-  mystery_box: 0,
+-};
+-
+-function computeRotation(segmentIndex: number): number {
+-  const spins = 5;
+-  const segmentAngle = 60;
+-  const target = 360 - (segmentIndex * segmentAngle + segmentAngle / 2);
+-  return spins * 360 + target;
+-}
+-
+-type SpinStatus = Awaited<ReturnType<typeof getSpinStatus>>;
+-
+-export default function DailySpinSection({ onLevelUp, refreshKey }: DailySpinSectionProps) {
+-  const refreshProfile = useProfileStore((s) => s.refreshProfile);
+-  const [status, setStatus] = useState<SpinStatus | null>(null);
+-  const [rotation, setRotation] = useState(0);
+-  const [spinning, setSpinning] = useState(false);
+-  const [result, setResult] = useState<SpinResultType | null>(null);
+-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+-  const [, startTransition] = useTransition();
+-
+-  useEffect(() => {
+-    getSpinStatus()
+-      .then(setStatus)
+-      .catch(() => setStatus(null));
+-  }, [refreshKey]);
+-
+-  function handleSpin() {
+-    if (!status?.eligible || spinning) return;
+-    setErrorMsg(null);
+-    setSpinning(true);
+-
+-    startTransition(async () => {
+-      try {
+-        const prizeResult = await performSpin();
+-        const segment = PRIZE_SEGMENT[prizeResult.type] ?? 0;
+-        setRotation((prev) => prev + computeRotation(segment));
+-
+-        setTimeout(() => {
+-          setSpinning(false);
+-          setResult(prizeResult);
+-          refreshProfile();
+-          getSpinStatus()
+-            .then(setStatus)
+-            .catch(() => {});
+-          if (prizeResult.leveledUp && prizeResult.newLevel && onLevelUp) {
+-            onLevelUp(prizeResult.newLevel);
+-          }
+-        }, 2500);
+-      } catch (err) {
+-        setSpinning(false);
+-        setErrorMsg(err instanceof Error ? err.message : "Couldn't spin right now");
+-      }
+-    });
+-  }
+-
+-  const tasksLeft = status ? Math.max(0, status.tasksRequired - status.tasksCompleted) : 0;
+-
+-  return (
+-    <GameCard borderColor="purple" glowColor="purple">
+-      <div className="mb-3 flex items-center justify-between">
+-        <span className="font-black uppercase tracking-wide text-ink">🎡 Daily Spin</span>
+-        {status && (
+-          <span className="text-xs font-black text-text-muted">
+-            {status.spinsRemaining} spin{status.spinsRemaining === 1 ? "" : "s"} left
+-          </span>
+-        )}
+-      </div>
+-
+-      <SpinWheel rotation={rotation} spinning={spinning} />
+-
+-      <div className="mt-4 grid grid-cols-4 gap-1.5">
+-        {PRIZE_TABLE.map((p) => (
+-          <div key={p.type + p.label} className="rounded-lg border-2 border-border bg-navy/40 p-1.5 text-center">
+-            <p className="truncate text-[9px] font-black text-ink">{p.label}</p>
+-            <p className="text-[9px] font-bold text-text-muted">{p.weight}%</p>
+-          </div>
+-        ))}
+-      </div>
+-
+-      {status && !status.eligible && tasksLeft > 0 && (
+-        <p className="mt-3 text-center text-xs font-bold text-text-muted">
+-          Complete {tasksLeft} more task{tasksLeft === 1 ? "" : "s"} to unlock your spin.
+-        </p>
+-      )}
+-
+-      {status && !status.eligible && tasksLeft === 0 && (
+-        <p className="mt-3 text-center text-xs font-bold text-text-muted">
+-          You&apos;ve used today&apos;s spin{status.maxSpins > 1 ? "s" : ""} — come back tomorrow!
+-        </p>
+-      )}
+-
+-      {errorMsg && <p className="mt-2 text-center text-xs font-bold text-orange">{errorMsg}</p>}
+-
+-      <GradientButton
+-        variant="purple"
+-        size="lg"
+-        className="mt-4 w-full"
+-        disabled={!status?.eligible || spinning}
+-        onClick={handleSpin}
+-      >
+-        {spinning ? "Spinning..." : "Spin!"}
+-      </GradientButton>
+-
+-      <SpinResult result={result} onClaim={() => setResult(null)} />
+-    </GameCard>
+-  );
++export default function DailySpinSection() {
++  return null;
+ }
+diff --git a/components/ui/GameCard.tsx b/components/ui/GameCard.tsx
+index 2d3f3e6..7e37374 100644
+--- a/components/ui/GameCard.tsx
++++ b/components/ui/GameCard.tsx
+@@ -1,53 +1,27 @@
+ import type { HTMLAttributes, ReactNode } from "react";
+ 
+-export type GameCardColor =
+-  | "border"
+-  | "pink"
+-  | "sky"
+-  | "purple"
+-  | "yellow"
+-  | "green"
+-  | "orange";
++export type GameCardColor = string;
+ 
+-const BORDER_CLASSES: Record<GameCardColor, string> = {
+-  border: "border-border",
+-  pink: "border-pink",
+-  sky: "border-sky",
+-  purple: "border-purple",
+-  yellow: "border-yellow",
+-  green: "border-green",
+-  orange: "border-orange",
+-};
+-
+-const GLOW_CLASSES: Record<Exclude<GameCardColor, "border" | "orange">, string> = {
+-  pink: "shadow-glow-pink",
+-  sky: "shadow-glow-sky",
+-  purple: "shadow-glow-purple",
+-  yellow: "shadow-glow-yellow",
+-  green: "shadow-glow-green",
+-};
+-
+-interface GameCardProps extends HTMLAttributes<HTMLDivElement> {
+-  borderColor?: GameCardColor;
+-  glowColor?: GameCardColor;
++interface CardProps extends HTMLAttributes<HTMLDivElement> {
+   children: ReactNode;
++  /** @deprecated kept for backward compat — ignored */
++  borderColor?: string;
++  /** @deprecated kept for backward compat — ignored */
++  glowColor?: string;
+ }
+ 
+ export default function GameCard({
+-  borderColor = "border",
+-  glowColor,
+   children,
+   className = "",
++  // eslint-disable-next-line @typescript-eslint/no-unused-vars
++  borderColor,
++  // eslint-disable-next-line @typescript-eslint/no-unused-vars
++  glowColor,
+   ...rest
+-}: GameCardProps) {
+-  const glowClass =
+-    glowColor && glowColor !== "border" && glowColor !== "orange"
+-      ? GLOW_CLASSES[glowColor]
+-      : "";
+-
++}: CardProps) {
+   return (
+     <div
+-      className={`rounded-[18px] border-3 bg-card p-4 ${BORDER_CLASSES[borderColor]} ${glowClass} ${className}`}
++      className={`rounded-xl border border-gray-200 bg-white p-4 shadow-sm ${className}`}
+       {...rest}
+     >
+       {children}
+diff --git a/components/ui/GradientButton.tsx b/components/ui/GradientButton.tsx
+index 27a79e9..9672566 100644
+--- a/components/ui/GradientButton.tsx
++++ b/components/ui/GradientButton.tsx
+@@ -1,24 +1,26 @@
+ import type { ButtonHTMLAttributes, ReactNode } from "react";
+ 
+-export type GradientButtonVariant = "pink" | "yellow" | "green" | "sky" | "purple";
++export type GradientButtonVariant = "pink" | "green" | "yellow" | "ghost-pink" | "ghost-green" | "ghost-yellow" | "sky" | "purple";
+ export type GradientButtonSize = "sm" | "md" | "lg";
+ 
+ const VARIANT_CLASSES: Record<GradientButtonVariant, string> = {
+-  pink: "bg-gradient-pink-purple border-pink shadow-glow-pink",
+-  purple: "bg-gradient-purple-pink border-purple shadow-glow-purple",
+-  sky: "bg-gradient-sky-purple border-sky shadow-glow-sky",
+-  yellow: "bg-gradient-yellow-orange border-yellow shadow-glow-yellow text-ink",
+-  green: "bg-gradient-green-sky border-green shadow-glow-green",
++  pink: "bg-[#FF6B6B] text-white",
++  green: "bg-[#2ECC71] text-white",
++  yellow: "bg-[#FFD93D] text-gray-900",
++  sky: "bg-[#039BE5] text-white",
++  purple: "bg-[#7C3AED] text-white",
++  "ghost-pink": "bg-transparent text-[#FF6B6B] border border-[#FF6B6B]",
++  "ghost-green": "bg-transparent text-[#2ECC71] border border-[#2ECC71]",
++  "ghost-yellow": "bg-transparent text-[#FFD93D] border border-[#FFD93D]",
+ };
+ 
+ const SIZE_CLASSES: Record<GradientButtonSize, string> = {
+-  sm: "px-4 py-2 text-xs rounded-xl",
+-  md: "px-6 py-3 text-sm rounded-2xl",
+-  lg: "px-8 py-4 text-base rounded-2xl",
++  sm: "px-4 py-2 text-xs rounded-lg",
++  md: "px-6 py-3 text-sm rounded-xl",
++  lg: "px-8 py-4 text-base rounded-xl",
+ };
+ 
+-interface GradientButtonProps
+-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className"> {
++interface GradientButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className"> {
+   variant?: GradientButtonVariant;
+   size?: GradientButtonSize;
+   children: ReactNode;
+@@ -38,7 +40,7 @@ export default function GradientButton({
+     <button
+       type={type}
+       disabled={disabled}
+-      className={`border-3 font-black uppercase tracking-wide text-ink transition-transform active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100 ${VARIANT_CLASSES[variant]} ${SIZE_CLASSES[size]} ${className}`}
++      className={`font-bold transition-transform active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100 ${VARIANT_CLASSES[variant]} ${SIZE_CLASSES[size]} ${className}`}
+       {...rest}
+     >
+       {children}
+diff --git a/components/ui/LevelBadge.tsx b/components/ui/LevelBadge.tsx
+index 062ce60..dbf1082 100644
+--- a/components/ui/LevelBadge.tsx
++++ b/components/ui/LevelBadge.tsx
+@@ -1,64 +1,11 @@
+-"use client";
+-
+-import { getLevelTitle } from "@/lib/levels";
+-import { useLevelModalStore } from "@/lib/levelModalStore";
+-
+-export type LevelBadgeSize = "sm" | "md" | "lg";
+-
+-const SIZE_CLASSES: Record<LevelBadgeSize, { pill: string; level: string; title: string }> = {
+-  sm: { pill: "px-2 py-0.5 gap-1", level: "text-[10px]", title: "text-[10px]" },
+-  md: { pill: "px-3 py-1 gap-1.5", level: "text-xs", title: "text-xs" },
+-  lg: { pill: "px-5 py-2 gap-2", level: "text-lg", title: "text-sm" },
+-};
+-
+ interface LevelBadgeProps {
+-  level: number;
+-  size?: LevelBadgeSize;
+-  showTitle?: boolean;
+-  className?: string;
+-  /** When true, renders as a tappable button that opens the current user's Level Progress modal. */
++  level?: number;
++  size?: string;
+   interactive?: boolean;
++  [key: string]: unknown;
+ }
+ 
+-export default function LevelBadge({
+-  level,
+-  size = "md",
+-  showTitle = true,
+-  className = "",
+-  interactive = false,
+-}: LevelBadgeProps) {
+-  const classes = SIZE_CLASSES[size];
+-  const title = getLevelTitle(level);
+-  const showLevelModal = useLevelModalStore((s) => s.show);
+-
+-  const content = (
+-    <>
+-      <span className={classes.level}>LV {level}</span>
+-      {showTitle && (
+-        <>
+-          <span className="opacity-60">·</span>
+-          <span className={classes.title}>{title}</span>
+-        </>
+-      )}
+-    </>
+-  );
+-
+-  const pillClass = `inline-flex items-center rounded-full border-3 border-sky bg-gradient-primary font-black uppercase text-white shadow-glow-sky ${
+-    size === "lg" ? "glow-pulse" : ""
+-  } ${classes.pill} ${className}`;
+-
+-  if (interactive) {
+-    return (
+-      <button
+-        type="button"
+-        onClick={showLevelModal}
+-        aria-label="View level progress"
+-        className={`${pillClass} transition-transform active:scale-95`}
+-      >
+-        {content}
+-      </button>
+-    );
+-  }
+-
+-  return <span className={pillClass}>{content}</span>;
++export default function LevelBadge(_props: LevelBadgeProps) {
++  void _props;
++  return null;
+ }
+diff --git a/components/ui/LockedFeature.tsx b/components/ui/LockedFeature.tsx
+index afea320..c7e9265 100644
+--- a/components/ui/LockedFeature.tsx
++++ b/components/ui/LockedFeature.tsx
+@@ -1,22 +1,12 @@
+ import type { ReactNode } from "react";
+-import { Lock } from "lucide-react";
+ 
+ interface LockedFeatureProps {
+-  level: number;
+-  children: ReactNode;
+-  className?: string;
++  level?: number;
++  children?: ReactNode;
++  [key: string]: unknown;
+ }
+ 
+-export default function LockedFeature({ level, children, className = "" }: LockedFeatureProps) {
+-  return (
+-    <div className={`relative overflow-hidden rounded-[18px] ${className}`}>
+-      <div className="pointer-events-none select-none blur-sm opacity-40">{children}</div>
+-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-navy/60">
+-        <Lock className="h-6 w-6 text-ink" strokeWidth={3} />
+-        <span className="rounded-full border-3 border-purple bg-card px-3 py-1 text-xs font-black uppercase tracking-wide text-ink shadow-glow-purple">
+-          Unlock at Level {level}
+-        </span>
+-      </div>
+-    </div>
+-  );
++export default function LockedFeature({ children }: LockedFeatureProps) {
++  // No longer locked — everything is unlocked from day one
++  return <>{children}</>;
+ }
+diff --git a/components/ui/SectionTitle.tsx b/components/ui/SectionTitle.tsx
+index e59bbc9..08aba63 100644
+--- a/components/ui/SectionTitle.tsx
++++ b/components/ui/SectionTitle.tsx
+@@ -17,14 +17,14 @@ export default function SectionTitle({
+ }: SectionTitleProps) {
+   return (
+     <div className={`flex items-center justify-between ${className}`}>
+-      <h2 className="flex items-center gap-2 font-black uppercase tracking-wide text-ink">
++      <h2 className="flex items-center gap-2 font-bold text-lg text-gray-900">
+         {emoji && <span>{emoji}</span>}
+         <span>{title}</span>
+       </h2>
+       {actionLabel && actionHref && (
+         <Link
+           href={actionHref}
+-          className="text-xs font-black uppercase tracking-wide text-sky"
++          className="text-xs font-semibold text-sky"
+         >
+           {actionLabel} &rsaquo;
+         </Link>
+diff --git a/components/ui/XPBar.tsx b/components/ui/XPBar.tsx
+index 289914b..540bd31 100644
+--- a/components/ui/XPBar.tsx
++++ b/components/ui/XPBar.tsx
+@@ -1,40 +1,11 @@
+-"use client";
+-
+-import { motion } from "framer-motion";
+-import { getLevelProgress, getNextLevelXP, getXPForLevel } from "@/lib/levels";
+-
+ interface XPBarProps {
+-  level: number;
+-  xp: number;
++  level?: number;
++  xp?: number;
+   showLabel?: boolean;
+-  className?: string;
++  [key: string]: unknown;
+ }
+ 
+-export default function XPBar({ level, xp, showLabel = true, className = "" }: XPBarProps) {
+-  const progress = getLevelProgress(level, xp);
+-  const nextLevelXP = getNextLevelXP(level);
+-  const floor = getXPForLevel(level);
+-
+-  return (
+-    <div className={className}>
+-      {showLabel && (
+-        <div className="mb-1 flex items-center justify-between text-[10px] font-black uppercase tracking-wide text-text-muted">
+-          <span>Lv {level}</span>
+-          <span>
+-            {nextLevelXP === null
+-              ? "Max Level"
+-              : `${xp - floor} / ${nextLevelXP - floor} XP`}
+-          </span>
+-        </div>
+-      )}
+-      <div className="h-3 w-full overflow-hidden rounded-full bg-border">
+-        <motion.div
+-          className="h-full rounded-full bg-gradient-yellow-orange shadow-glow-yellow"
+-          initial={{ width: 0 }}
+-          animate={{ width: `${progress}%` }}
+-          transition={{ duration: 0.6, ease: "easeOut" }}
+-        />
+-      </div>
+-    </div>
+-  );
++export default function XPBar(_props: XPBarProps) {
++  void _props;
++  return null;
+ }
+diff --git a/lib/curriculum.ts b/lib/curriculum.ts
+index 439a46d..bdb296c 100644
+--- a/lib/curriculum.ts
++++ b/lib/curriculum.ts
+@@ -3,18 +3,15 @@ export type CurriculumColor = "sky" | "pink" | "green" | "orange" | "yellow" | "
+ export interface CurriculumCategory {
+   slug: string;
+   title: string;
+-  levelUnlock: number;
+   emoji: string;
+   color: CurriculumColor;
+   lessonTitles: string[];
+ }
+ 
+-/** Must stay in sync with the `category`/`order_index` values seeded in 020_curriculum_seed.sql. */
+ export const CURRICULUM_CATEGORIES: CurriculumCategory[] = [
+   {
+     slug: "business_basics",
+     title: "Business Basics",
+-    levelUnlock: 1,
+     emoji: "🏢",
+     color: "sky",
+     lessonTitles: ["What IS a Business?", "Finding Your Idea", "Who's Your Customer?", "Your First Sale"],
+@@ -22,7 +19,6 @@ export const CURRICULUM_CATEGORIES: CurriculumCategory[] = [
+   {
+     slug: "brand_building",
+     title: "Brand Building",
+-    levelUnlock: 2,
+     emoji: "🎨",
+     color: "pink",
+     lessonTitles: ["Choosing a Business Name", "Design Your Brand", "Your Brand Story", "Social Media Setup"],
+@@ -30,7 +26,6 @@ export const CURRICULUM_CATEGORIES: CurriculumCategory[] = [
+   {
+     slug: "making_money",
+     title: "Making Money",
+-    levelUnlock: 3,
+     emoji: "💰",
+     color: "green",
+     lessonTitles: ["Pricing Your Product", "Selling Online", "Selling In Person", "Getting Your First 10 Customers"],
+@@ -38,7 +33,6 @@ export const CURRICULUM_CATEGORIES: CurriculumCategory[] = [
+   {
+     slug: "pitch_perfect",
+     title: "Pitch Perfect",
+-    levelUnlock: 4,
+     emoji: "🎤",
+     color: "orange",
+     lessonTitles: ["What is a Pitch?", "Building a Pitch Deck", "Presenting with Confidence", "Pitching to Investors"],
+@@ -46,7 +40,6 @@ export const CURRICULUM_CATEGORIES: CurriculumCategory[] = [
+   {
+     slug: "money_management",
+     title: "Money Management",
+-    levelUnlock: 5,
+     emoji: "📒",
+     color: "yellow",
+     lessonTitles: ["Tracking Your Money", "Profit vs Revenue", "Saving & Reinvesting", "Taxes for Teens"],
+@@ -54,7 +47,6 @@ export const CURRICULUM_CATEGORIES: CurriculumCategory[] = [
+   {
+     slug: "grow_scale",
+     title: "Grow & Scale",
+-    levelUnlock: 7,
+     emoji: "🚀",
+     color: "purple",
+     lessonTitles: ["Hiring Help", "Customer Service", "Marketing on a Budget", "Partnerships & Collabs"],
+@@ -62,7 +54,6 @@ export const CURRICULUM_CATEGORIES: CurriculumCategory[] = [
+   {
+     slug: "advanced",
+     title: "Advanced",
+-    levelUnlock: 10,
+     emoji: "🏆",
+     color: "sky-deep",
+     lessonTitles: ["Building a Website", "Email Marketing", "Analytics & Data", "Scaling Your Business"],
+@@ -71,15 +62,15 @@ export const CURRICULUM_CATEGORIES: CurriculumCategory[] = [
+ 
+ export const CURRICULUM_COLOR_CLASSES: Record<
+   CurriculumColor,
+-  { border: string; bg: string; text: string; glow: string }
++  { bg: string; bgLight: string; text: string }
+ > = {
+-  sky: { border: "border-sky", bg: "bg-sky", text: "text-sky", glow: "shadow-glow-sky" },
+-  pink: { border: "border-pink", bg: "bg-pink", text: "text-pink", glow: "shadow-glow-pink" },
+-  green: { border: "border-green", bg: "bg-green", text: "text-green", glow: "shadow-glow-green" },
+-  orange: { border: "border-orange", bg: "bg-orange", text: "text-orange", glow: "shadow-glow-sky" },
+-  yellow: { border: "border-yellow", bg: "bg-yellow", text: "text-yellow", glow: "shadow-glow-yellow" },
+-  purple: { border: "border-purple", bg: "bg-purple", text: "text-purple", glow: "shadow-glow-purple" },
+-  "sky-deep": { border: "border-sky-deep", bg: "bg-sky-deep", text: "text-sky-deep", glow: "shadow-glow-sky" },
++  sky: { bg: "bg-[#039BE5]", bgLight: "bg-[#E3F2FD]", text: "text-[#039BE5]" },
++  pink: { bg: "bg-[#FF6B6B]", bgLight: "bg-[#FFF0F0]", text: "text-[#FF6B6B]" },
++  green: { bg: "bg-[#2ECC71]", bgLight: "bg-[#E8F5E9]", text: "text-[#2ECC71]" },
++  orange: { bg: "bg-[#F5A623]", bgLight: "bg-[#FFF8E1]", text: "text-[#F5A623]" },
++  yellow: { bg: "bg-[#FFD93D]", bgLight: "bg-[#FFFDE7]", text: "text-[#FFD93D]" },
++  purple: { bg: "bg-[#7C3AED]", bgLight: "bg-[#F3E8FF]", text: "text-[#7C3AED]" },
++  "sky-deep": { bg: "bg-[#0288D1]", bgLight: "bg-[#E1F5FE]", text: "text-[#0288D1]" },
+ };
+ 
+ export function getCategoryBySlug(slug: string): CurriculumCategory | undefined {
+diff --git a/package-lock.json b/package-lock.json
+index cac835b..8377173 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -344,9 +344,6 @@
+       "cpu": [
+         "arm64"
+       ],
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -363,9 +360,6 @@
+       "cpu": [
+         "arm64"
+       ],
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -382,9 +376,6 @@
+       "cpu": [
+         "x64"
+       ],
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -401,9 +392,6 @@
+       "cpu": [
+         "x64"
+       ],
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -1098,9 +1086,6 @@
+         "arm64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -1115,9 +1100,6 @@
+         "arm64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -1132,9 +1114,6 @@
+         "loong64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -1149,9 +1128,6 @@
+         "loong64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -1166,9 +1142,6 @@
+         "ppc64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -1183,9 +1156,6 @@
+         "riscv64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -1200,9 +1170,6 @@
+         "riscv64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -1217,9 +1184,6 @@
+         "s390x"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -1234,9 +1198,6 @@
+         "x64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -1251,9 +1212,6 @@
+         "x64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+diff --git a/tailwind.config.ts b/tailwind.config.ts
+index a25a297..811c948 100644
+--- a/tailwind.config.ts
++++ b/tailwind.config.ts
+@@ -10,45 +10,23 @@ const config: Config = {
+   theme: {
+     extend: {
+       colors: {
+-        // Core brand identity
+         pink: "var(--pink)",
+         sky: "var(--sky)",
+         "sky-deep": "var(--sky-deep)",
+-        purple: "var(--purple)",
+-        // Base
+         bg: "var(--bg)",
+-        navy: "var(--navy)",
+         card: "var(--card)",
+         border: "var(--border)",
+         "text-muted": "var(--text-muted)",
+         ink: "var(--ink)",
+-        // In-app accents (game mechanics only)
+         yellow: "var(--yellow)",
+         green: "var(--green)",
+-        orange: "var(--orange)",
+       },
+       fontFamily: {
+-        sans: ["var(--font-nunito)", "sans-serif"],
++        sans: ["-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
+       },
+       boxShadow: {
+-        "glow-pink": "var(--glow-pink)",
+-        "glow-sky": "var(--glow-sky)",
+-        "glow-purple": "var(--glow-purple)",
+-        "glow-yellow": "var(--glow-yellow)",
+-        "glow-green": "var(--glow-green)",
+         card: "var(--shadow-card)",
+       },
+-      backgroundImage: {
+-        "gradient-pink-purple": "linear-gradient(135deg, var(--pink), var(--purple))",
+-        "gradient-sky-purple": "linear-gradient(135deg, var(--sky), var(--sky-deep))",
+-        "gradient-purple-pink": "linear-gradient(135deg, var(--purple), var(--pink))",
+-        "gradient-yellow-orange": "linear-gradient(135deg, var(--yellow), var(--orange))",
+-        "gradient-green-sky": "linear-gradient(135deg, var(--green), var(--sky))",
+-        "gradient-primary": "linear-gradient(135deg, var(--sky), var(--sky-deep))",
+-      },
+-      borderWidth: {
+-        3: "3px",
+-      },
+     },
+   },
+   plugins: [],
+-- 
+2.43.0
+
