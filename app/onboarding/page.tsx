@@ -71,13 +71,23 @@ export default function OnboardingPage() {
     // first. If the network is slow, the save keeps running in the
     // background and the store updates whenever it lands.
     const work = (async () => {
-      await updateProfile({
-        interests,
-        dream: dream.trim() ? dream.trim() : null,
-        onboarding_completed: true,
-      });
+      try {
+        await updateProfile({
+          interests,
+          dream: dream.trim() ? dream.trim() : null,
+          onboarding_completed: true,
+        });
 
-      await fetchProfile();
+        await fetchProfile();
+      } catch (err) {
+        // Never trap someone on the final onboarding screen. If the save
+        // fails — a column missing after a schema change, a dropped
+        // connection — let them into the app anyway and let them fill the
+        // profile in later. An unhandled rejection here would reject the
+        // race below, skip the redirect, and leave the button stuck on
+        // "Getting ready..." with no way forward.
+        console.error("Onboarding save failed", err);
+      }
     })();
 
     await Promise.race([work, new Promise((resolve) => setTimeout(resolve, 1500))]);
