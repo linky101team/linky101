@@ -51,7 +51,7 @@ export default function MentorGrid({ mentors }: MentorGridProps) {
 
   return (
     <div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {(mentors as MentorDetail[]).map((m, i) => (
           <Reveal key={m.id} index={i} className="h-full">
             <LiftCard className="h-full">

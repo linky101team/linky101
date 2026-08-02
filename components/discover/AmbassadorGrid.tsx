@@ -46,13 +46,13 @@ export default function AmbassadorGrid({
   return (
     <div>
       {showFilters && (
-        <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
+        <div className="mb-4 flex flex-wrap gap-2">
           {filters.map((f) => (
             <button
               key={f}
               type="button"
               onClick={() => setFilter(f)}
-              className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-xs font-bold transition-all ${
+              className={`whitespace-nowrap rounded-full border px-3.5 py-1.5 text-xs font-bold transition-all ${
                 filter === f
                   ? "grad-brand border-transparent text-white"
                   : "border-gray-200 bg-white text-gray-600 hover:border-[#7C3AED] hover:text-[#7C3AED]"
@@ -64,7 +64,7 @@ export default function AmbassadorGrid({
         </div>
       )}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {visible.map((a, i) => (
           <Reveal key={a.id} index={i} className="h-full">
             <LiftCard className="h-full">

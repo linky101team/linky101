@@ -46,7 +46,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <div className="min-h-screen bg-bg lg:flex">
+    <div className="min-h-screen overflow-x-hidden bg-bg lg:flex">
       {profile && <NotificationPermissionModal pushEnabled={!!profile.notification_settings?.push_enabled} />}
 
       <Sidebar profile={profile} hasUnread={hasUnread} />
@@ -56,7 +56,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         <TopBar profile={profile} hasUnread={hasUnread} />
 
         <div className="flex-1 lg:mx-auto lg:flex lg:w-full lg:max-w-[1440px] lg:gap-10 lg:px-10 lg:py-8">
-          <main className="flex-1 px-4 py-4 lg:min-w-0 lg:max-w-3xl lg:px-0 lg:py-0">{children}</main>
+          <main className="min-w-0 flex-1 px-4 py-4 lg:max-w-4xl lg:px-0 lg:py-0">{children}</main>
           <RightRail profile={profile} />
         </div>
 

@@ -52,7 +52,7 @@ export default function RightRail({ profile }: RightRailProps) {
   const spotlightAmbassador = AMBASSADORS[0];
 
   return (
-    <aside className="hidden w-80 shrink-0 flex-col gap-4 lg:flex">
+    <aside className="hidden w-80 shrink-0 flex-col gap-4 xl:flex">
       <Reveal>
         <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
           <div className="flex items-center gap-3">
