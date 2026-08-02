@@ -264,7 +264,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section id="features" className="scroll-mt-20 border-y border-white/70 bg-[#C9DBF7] py-20">
+      <section id="features" className="scroll-mt-20 border-y border-white/70 bg-[#B9D1F5] py-20">
         <div className="mx-auto max-w-6xl px-5">
           <FadeIn>
             <h2 className="max-w-2xl text-3xl font-extrabold tracking-tight text-[#1E1B4B] sm:text-4xl">
@@ -370,7 +370,7 @@ export default function LandingPage() {
       </section>
 
       {/* Safety — the section a parent or safeguarding lead is looking for */}
-      <section id="safety" className="scroll-mt-20 border-y border-white/70 bg-[#C9DBF7] py-20">
+      <section id="safety" className="scroll-mt-20 border-y border-white/70 bg-[#B9D1F5] py-20">
         <div className="mx-auto grid max-w-6xl gap-10 px-5 lg:grid-cols-[1fr_1.2fr]">
           <FadeIn from="left">
             <span className="inline-block rounded-full bg-[#D1FAE5] px-3.5 py-1.5 text-xs font-extrabold uppercase tracking-wide text-[#047857]">
