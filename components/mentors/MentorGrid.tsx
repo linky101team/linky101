@@ -53,8 +53,8 @@ export default function MentorGrid({ mentors }: MentorGridProps) {
     <div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {(mentors as MentorDetail[]).map((m, i) => (
-          <Reveal key={m.id} index={i}>
-            <LiftCard>
+          <Reveal key={m.id} index={i} className="h-full">
+            <LiftCard className="h-full">
               <div className="flex h-full flex-col items-center rounded-2xl border border-gray-200 bg-white p-5 text-center shadow-sm">
                 <span className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-[#10B981] text-lg font-extrabold text-white ring-2 ring-[#10B981]/30">
                   {m.avatar_url ? (
@@ -88,13 +88,13 @@ export default function MentorGrid({ mentors }: MentorGridProps) {
                 )}
 
                 {m.bio && (
-                  <p className="mt-2 line-clamp-3 flex-1 text-xs leading-relaxed text-gray-500">
+                  <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-gray-500">
                     {m.bio.split("\n")[0]}
                   </p>
                 )}
 
                 {m.location && (
-                  <span className="mt-3 flex items-center gap-1 rounded-full bg-[#FEF3C7] px-3 py-1 text-[11px] font-bold text-[#92400E]">
+                  <span className="mb-4 mt-3 flex items-center gap-1 rounded-full bg-[#FEF3C7] px-3 py-1 text-[11px] font-bold text-[#92400E]">
                     <MapPin className="h-3 w-3" strokeWidth={2.5} />
                     {m.location}
                   </span>
@@ -103,7 +103,7 @@ export default function MentorGrid({ mentors }: MentorGridProps) {
                 <button
                   type="button"
                   onClick={() => setSelected(m)}
-                  className="mt-4 w-full rounded-full border-2 border-[#1E1B4B] py-2.5 text-sm font-extrabold text-[#1E1B4B] transition-colors hover:bg-[#1E1B4B] hover:text-white"
+                  className="mt-auto w-full rounded-full border-2 border-[#1E1B4B] pt-2.5 pb-2.5 text-sm font-extrabold text-[#1E1B4B] transition-colors hover:bg-[#1E1B4B] hover:text-white"
                 >
                   View profile →
                 </button>

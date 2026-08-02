@@ -66,8 +66,8 @@ export default function AmbassadorGrid({
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {visible.map((a, i) => (
-          <Reveal key={a.id} index={i}>
-            <LiftCard>
+          <Reveal key={a.id} index={i} className="h-full">
+            <LiftCard className="h-full">
               <div className="flex h-full flex-col items-center rounded-2xl border border-gray-200 bg-white p-5 text-center shadow-sm">
                 {/* Real photo, cropped from the LinkedIn banner they supplied.
                     Initials only ever show if the image fails to load. */}
@@ -94,11 +94,11 @@ export default function AmbassadorGrid({
 
                 <p className="mt-2 text-xs font-semibold text-gray-500">{a.role}</p>
 
-                <p className="mt-2 line-clamp-3 flex-1 text-xs leading-relaxed text-gray-500">
+                <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-gray-500">
                   {a.bio[0]}
                 </p>
 
-                <span className="mt-3 flex items-center gap-1 rounded-full bg-[#FEF3C7] px-3 py-1 text-[11px] font-bold text-[#92400E]">
+                <span className="mb-4 mt-3 flex items-center gap-1 rounded-full bg-[#FEF3C7] px-3 py-1 text-[11px] font-bold text-[#92400E]">
                   <MapPin className="h-3 w-3" strokeWidth={2.5} />
                   {a.region ?? a.location}
                 </span>
@@ -111,7 +111,7 @@ export default function AmbassadorGrid({
                 <button
                   type="button"
                   onClick={() => (onSelect ? onSelect(a) : setSelected(a))}
-                  className="mt-4 w-full rounded-full border-2 border-[#1E1B4B] py-2.5 text-sm font-extrabold text-[#1E1B4B] transition-colors hover:bg-[#1E1B4B] hover:text-white"
+                  className="mt-auto w-full rounded-full border-2 border-[#1E1B4B] pt-2.5 pb-2.5 text-sm font-extrabold text-[#1E1B4B] transition-colors hover:bg-[#1E1B4B] hover:text-white"
                 >
                   View profile →
                 </button>
