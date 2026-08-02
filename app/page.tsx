@@ -264,7 +264,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section id="features" className="scroll-mt-20 border-t border-white/70 py-20">
+      <section id="features" className="scroll-mt-20 border-y border-white/70 bg-[#C9DBF7] py-20">
         <div className="mx-auto max-w-6xl px-5">
           <FadeIn>
             <h2 className="max-w-2xl text-3xl font-extrabold tracking-tight text-[#1E1B4B] sm:text-4xl">
@@ -406,7 +406,7 @@ export default function LandingPage() {
       </section>
 
       {/* Schools */}
-      <section id="schools" className="scroll-mt-20 border-t border-white/70 py-20">
+      <section id="schools" className="scroll-mt-20 border-t border-white/70 bg-[#DBE7FB] py-20">
         <div className="mx-auto max-w-4xl px-5">
           <FadeIn>
           <div className="rounded-3xl border border-[#F59E0B]/30 bg-[#FFFBEB] p-9 text-center">
