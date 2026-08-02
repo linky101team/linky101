@@ -31,28 +31,42 @@ export const metadata: Metadata = {
     "Learn how business actually works, hear real founder stories, and ask DBS-checked mentors the things you're stuck on. Free for 13–19 year olds across the UK.",
 };
 
+// Each card gets its own colour family. Four identical white boxes is the
+// definition of a boring feature grid.
 const FEATURES = [
   {
     emoji: "📚",
-    tint: "bg-[#FCE7F3]",
+    card: "bg-[#FDF2F8] border-[#FBCFE8]",
+    chip: "bg-[#EC4899]",
+    heading: "text-[#9D174D]",
+    body_class: "text-[#9F1239]/80",
     title: "Lessons that don't waste your time",
     body: "Finding an idea, first customer, pricing, money. Short, card-by-card, written for someone who's fifteen.",
   },
   {
     emoji: "🛡️",
-    tint: "bg-[#D1FAE5]",
+    card: "bg-[#ECFDF5] border-[#A7F3D0]",
+    chip: "bg-[#10B981]",
+    heading: "text-[#065F46]",
+    body_class: "text-[#047857]/85",
     title: "Ask people who've actually done it",
     body: "One question goes to five DBS-checked adults — a principal, a careers lead, business owners. They answer properly.",
   },
   {
     emoji: "🎙️",
-    tint: "bg-[#CFFAFE]",
+    card: "bg-[#ECFEFF] border-[#A5F3FC]",
+    chip: "bg-[#06B6D4]",
+    heading: "text-[#155E75]",
+    body_class: "text-[#0E7490]/85",
     title: "Founder stories, not highlight reels",
     body: "The first £100, the thing that flopped, what they'd do differently. Listen on the way to school.",
   },
   {
     emoji: "💡",
-    tint: "bg-[#FEF3C7]",
+    card: "bg-[#FFFBEB] border-[#FDE68A]",
+    chip: "bg-[#F59E0B]",
+    heading: "text-[#92400E]",
+    body_class: "text-[#B45309]/90",
     title: "Somewhere to put the idea",
     body: "Post it on the Dream Wall, get it validated, and see what other people your age are building.",
   },
@@ -250,7 +264,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section id="features" className="scroll-mt-20 bg-white py-20">
+      <section id="features" className="scroll-mt-20 py-20">
         <div className="mx-auto max-w-6xl px-5">
           <FadeIn>
             <h2 className="max-w-2xl text-3xl font-extrabold tracking-tight text-[#1E1B4B] sm:text-4xl">
@@ -264,12 +278,14 @@ export default function LandingPage() {
           <div className="mt-10 grid gap-5 sm:grid-cols-2">
             {FEATURES.map((f, i) => (
               <FadeIn key={f.title} index={i}>
-              <HoverLift className="h-full rounded-2xl border border-[#E4EBF7] bg-white p-6 transition-shadow hover:shadow-lg">
-                <span className={`flex h-11 w-11 items-center justify-center rounded-xl text-2xl ${f.tint}`}>
+              <HoverLift className={`h-full rounded-3xl border-2 p-7 transition-shadow hover:shadow-xl ${f.card}`}>
+                <span
+                  className={`flex h-14 w-14 items-center justify-center rounded-2xl text-3xl shadow-sm ${f.chip}`}
+                >
                   {f.emoji}
                 </span>
-                <p className="mt-4 text-lg font-extrabold text-[#1E1B4B]">{f.title}</p>
-                <p className="mt-1.5 text-sm leading-relaxed text-gray-600">{f.body}</p>
+                <p className={`mt-5 text-xl font-extrabold leading-tight ${f.heading}`}>{f.title}</p>
+                <p className={`mt-2 text-sm font-medium leading-relaxed ${f.body_class}`}>{f.body}</p>
               </HoverLift>
               </FadeIn>
             ))}
@@ -354,7 +370,7 @@ export default function LandingPage() {
       </section>
 
       {/* Safety — the section a parent or safeguarding lead is looking for */}
-      <section id="safety" className="scroll-mt-20 bg-white py-20">
+      <section id="safety" className="scroll-mt-20 border-y border-white bg-[#DDE9FD] py-20">
         <div className="mx-auto grid max-w-6xl gap-10 px-5 lg:grid-cols-[1fr_1.2fr]">
           <FadeIn from="left">
             <span className="inline-block rounded-full bg-[#D1FAE5] px-3.5 py-1.5 text-xs font-extrabold uppercase tracking-wide text-[#047857]">
@@ -377,7 +393,7 @@ export default function LandingPage() {
           <ul className="flex flex-col gap-3">
             {SAFETY.map((line, i) => (
               <FadeIn key={line} index={i} from="right">
-              <li className="flex gap-3.5 rounded-2xl border border-[#D6E4FB] bg-[#F7FAFF] p-4">
+              <li className="flex gap-3.5 rounded-2xl border-2 border-white bg-white p-4 shadow-sm">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#10B981] text-[11px] font-bold text-white">
                   ✓
                 </span>
