@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ShieldCheck } from "lucide-react";
+import { Plus, ShieldCheck } from "lucide-react";
 import { createClientSupabase } from "@/lib/supabase/client";
 import { useProfile } from "@/hooks/useProfile";
 import { questionsLeftThisWeek } from "@/lib/actions/mentors";
@@ -91,15 +91,23 @@ export default function AskPage() {
         <button
           type="button"
           onClick={() => setShowAsk(true)}
-          className="grad-brand w-full rounded-2xl p-5 text-left transition-transform active:scale-[0.99]"
+          className="grad-brand flex w-full items-center gap-4 rounded-2xl p-5 text-left transition-transform active:scale-[0.99]"
         >
-          <p className="text-lg font-extrabold text-white">Ask all our mentors</p>
-          <p className="mt-0.5 text-sm text-white/80">
-            {questionsLeft > 90
-              ? "Unlimited questions"
-              : `${questionsLeft} of ${WEEKLY_QUESTION_LIMIT} left this week`}
-            {waitingCount > 0 && ` · ${waitingCount} waiting`}
-          </p>
+          <span className="min-w-0 flex-1">
+            <span className="block text-lg font-extrabold text-white">
+              Ask all our mentors
+            </span>
+            <span className="mt-0.5 block text-sm text-white/80">
+              {questionsLeft > 90
+                ? "Unlimited questions"
+                : `${questionsLeft} of ${WEEKLY_QUESTION_LIMIT} left this week`}
+              {waitingCount > 0 && ` · ${waitingCount} waiting`}
+            </span>
+          </span>
+          <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-white px-4 py-2.5 text-sm font-extrabold text-[#7C3AED]">
+            <Plus className="h-4 w-4" strokeWidth={3} />
+            Ask
+          </span>
         </button>
       </Reveal>
 
@@ -168,6 +176,19 @@ export default function AskPage() {
           </span>
         </Link>
       </Reveal>
+
+      <div className="pointer-events-none fixed inset-x-0 bottom-24 z-30 lg:hidden">
+        <div className="mx-auto max-w-[520px] px-5">
+          <button
+            type="button"
+            onClick={() => setShowAsk(true)}
+            aria-label="Ask a question"
+            className="grad-brand pointer-events-auto ml-auto flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform active:scale-90"
+          >
+            <Plus className="h-6 w-6" strokeWidth={3} />
+          </button>
+        </div>
+      </div>
 
       <AskQuestionModal
         isOpen={showAsk}
