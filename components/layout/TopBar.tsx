@@ -1,10 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Bell, Flame, X, MessageCircleQuestion, Mic, Rocket, Trophy } from "lucide-react";
+import { createClientSupabase } from "@/lib/supabase/client";
 import type { Profile } from "@/hooks/useProfile";
+
+/** A real notification aimed at this person, e.g. "your question was answered". */
+interface PersonalNotification {
+  id: string;
+  title: string;
+  body: string | null;
+  link: string | null;
+  is_read: boolean;
+  created_at: string;
+}
 
 interface TopBarProps {
   profile: Profile | null;
@@ -77,10 +88,38 @@ function buildUpdates(streak: number, longest: number): Update[] {
 
 export default function TopBar({ profile, hasUnread }: TopBarProps) {
   const [open, setOpen] = useState(false);
+  const supabase = useMemo(() => createClientSupabase(), []);
+  // Things that happened TO this person, as opposed to the platform
+  // announcements below. These used to only exist on /notifications, so
+  // "your question was answered" never reached the bell — which is the one
+  // place anyone actually looks.
+  const [personal, setPersonal] = useState<PersonalNotification[]>([]);
   const initial = profile?.first_name?.charAt(0).toUpperCase() ?? "?";
   const streak = profile?.current_streak ?? 0;
   const longest = profile?.longest_streak ?? 0;
   const updates = buildUpdates(streak, longest);
+
+  const loadPersonal = useCallback(async () => {
+    if (!profile) return;
+    const { data } = await supabase
+      .from("notifications")
+      .select("id, title, body, link, is_read, created_at")
+      .eq("user_id", profile.id)
+      .order("created_at", { ascending: false })
+      .limit(10);
+    setPersonal((data ?? []) as PersonalNotification[]);
+  }, [profile, supabase]);
+
+  useEffect(() => {
+    loadPersonal();
+  }, [loadPersonal]);
+
+  const unreadCount = personal.filter((n) => !n.is_read).length;
+
+  async function markRead(id: string) {
+    setPersonal((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)));
+    await supabase.from("notifications").update({ is_read: true }).eq("id", id);
+  }
 
   return (
     <>
@@ -104,8 +143,14 @@ export default function TopBar({ profile, hasUnread }: TopBarProps) {
             className="relative flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-gray-100"
           >
             <Bell className="h-5 w-5 text-[#1E1B4B]" strokeWidth={2} />
-            {(hasUnread || updates.length > 0) && (
-              <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-[#EC4899]" />
+            {unreadCount > 0 ? (
+              <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#EC4899] px-1 text-[10px] font-bold text-white">
+                {unreadCount}
+              </span>
+            ) : (
+              (hasUnread || updates.length > 0) && (
+                <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-[#EC4899]" />
+              )
             )}
           </button>
 
@@ -144,7 +189,7 @@ export default function TopBar({ profile, hasUnread }: TopBarProps) {
               className="max-h-[75vh] w-full max-w-md overflow-y-auto rounded-3xl bg-white p-5 shadow-2xl"
             >
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-lg font-extrabold text-[#1E1B4B]">What&apos;s new</h2>
+                <h2 className="text-lg font-extrabold text-[#1E1B4B]">Notifications</h2>
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
@@ -154,6 +199,43 @@ export default function TopBar({ profile, hasUnread }: TopBarProps) {
                   <X className="h-5 w-5" strokeWidth={2.5} />
                 </button>
               </div>
+
+              {personal.length > 0 && (
+                <div className="mb-4 flex flex-col gap-2">
+                  {personal.map((n) => (
+                    <Link
+                      key={n.id}
+                      href={n.link ?? "/notifications"}
+                      onClick={() => {
+                        markRead(n.id);
+                        setOpen(false);
+                      }}
+                      className={`flex items-start gap-3 rounded-2xl border p-3 transition-colors ${
+                        n.is_read
+                          ? "border-gray-100 hover:bg-gray-50"
+                          : "border-[#7C3AED]/30 bg-[#F5F3FF]"
+                      }`}
+                    >
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#D1FAE5]">
+                        <MessageCircleQuestion className="h-5 w-5 text-[#047857]" strokeWidth={2.25} />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-sm font-bold text-[#1E1B4B]">{n.title}</span>
+                        {n.body && (
+                          <span className="block text-xs leading-relaxed text-gray-500">{n.body}</span>
+                        )}
+                      </span>
+                      {!n.is_read && (
+                        <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-[#7C3AED]" />
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              )}
+
+              <p className="mb-2 text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                What&apos;s new
+              </p>
 
               <div className="flex flex-col gap-2">
                 {updates.map((u) => (
