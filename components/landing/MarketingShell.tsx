@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { BTN_YELLOW, MENTOR_MAILTO } from "./marketingStyles";
+import { BTN_YELLOW, AMBASSADOR_MAILTO } from "./marketingStyles";
 
 /**
  * The public shell — the nav and footer every signed-out page shares.
@@ -24,7 +24,7 @@ import { BTN_YELLOW, MENTOR_MAILTO } from "./marketingStyles";
  */
 const NAV_LINKS = [
   { href: "/founders", label: "For Founders" },
-  { href: "/for-mentors", label: "For Mentors" },
+  { href: "/become-an-ambassador", label: "Ambassadors" },
   { href: "/schools", label: "For Schools" },
   { href: "/safeguarding", label: "Safety" },
   { href: "/about", label: "About" },
@@ -144,7 +144,7 @@ export function MarketingFooter() {
           </p>
           {[
             { href: "/founders", label: "For Founders" },
-            { href: "/for-mentors", label: "For Mentors" },
+            { href: "/become-an-ambassador", label: "Ambassadors" },
             { href: "/schools", label: "For Schools" },
             { href: "/about", label: "About" },
           ].map((l) => (
@@ -169,10 +169,10 @@ export function MarketingFooter() {
             Safeguarding
           </Link>
           <a
-            href={MENTOR_MAILTO}
+            href={AMBASSADOR_MAILTO}
             className="mb-2.5 block text-sm font-semibold text-[#475569] hover:text-[#0F172A]"
           >
-            Become a mentor
+            Become an ambassador
           </a>
           <a
             href="mailto:linky101team@gmail.com"

@@ -10,7 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [
     "",
     "/founders",
-    "/for-mentors",
+    "/become-an-ambassador",
     "/schools",
     "/safeguarding",
     "/about",

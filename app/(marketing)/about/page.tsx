@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { AMBASSADORS } from "@/lib/ambassadors";
 import { FadeIn } from "@/components/landing/Animate";
 import { MarketingNav, MarketingFooter } from "@/components/landing/MarketingShell";
-import { CARD, BTN_DARK, MENTOR_MAILTO } from "@/components/landing/marketingStyles";
+import { CARD, BTN_DARK, AMBASSADOR_MAILTO } from "@/components/landing/marketingStyles";
 
 /**
  * The story page.
@@ -149,10 +149,10 @@ export default function AboutPage() {
               Join LinkY101 →
             </Link>
             <a
-              href={MENTOR_MAILTO}
+              href={AMBASSADOR_MAILTO}
               className="inline-block rounded-full border-[2.5px] border-[#0F172A] bg-white px-6 py-4 text-[15.5px] font-extrabold text-[#0F172A] transition-transform hover:-translate-y-0.5"
             >
-              I&apos;d like to mentor
+              I&apos;d like to help
             </a>
           </div>
         </FadeIn>

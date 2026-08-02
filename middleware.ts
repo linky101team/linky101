@@ -19,14 +19,15 @@ const PUBLIC_ROUTES = ["/signup", "/login", "/verify"];
  */
 const MARKETING_ROUTES = new Set([
   "/founders",
-  "/for-mentors",
+  "/become-an-ambassador",
   "/schools",
   "/safeguarding",
   "/about",
-  // Retired lanes, kept public so their redirect to /founders still works for
-  // anyone following an old link.
+  // Retired routes, kept public so their redirects still work for anyone
+  // following an old link.
   "/young-founder",
   "/rising-founder",
+  "/for-mentors",
 ]);
 
 // The landing page. Matched exactly rather than by prefix — "/" is a prefix of

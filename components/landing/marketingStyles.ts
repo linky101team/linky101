@@ -25,14 +25,19 @@ export const BTN_OUTLINE =
   "inline-block rounded-full border-[2.5px] border-[#0F172A] bg-white px-6 py-4 text-[15.5px] font-extrabold text-[#0F172A] transition-transform hover:-translate-y-0.5";
 
 /**
- * Where a would-be mentor or a school goes.
+ * Where a would-be ambassador or a school goes.
  *
  * Neither of them is going to create a member account to get in touch — they
  * email. The subject line is pre-filled so the two kinds of enquiry are easy
  * to tell apart in the inbox at a glance.
+ *
+ * Note this is the AMBASSADOR route, not the mentor one. Ambassadors put
+ * themselves forward; mentors are hand-picked, DBS-checked and invited
+ * directly, so there is deliberately no public "apply to be a mentor" form
+ * anywhere on the site.
  */
-export const MENTOR_MAILTO =
-  "mailto:linky101team@gmail.com?subject=Becoming%20a%20LinkY101%20mentor&body=Hi%20LinkY101%2C%0A%0AI%27d%20like%20to%20find%20out%20about%20mentoring%20on%20LinkY101.%0A%0AName%3A%0AWhat%20I%20do%3A%0ALinkedIn%3A%0A";
+export const AMBASSADOR_MAILTO =
+  "mailto:linky101team@gmail.com?subject=Becoming%20a%20LinkY101%20ambassador&body=Hi%20LinkY101%2C%0A%0AI%27d%20like%20to%20find%20out%20about%20becoming%20an%20ambassador.%0A%0AName%3A%0AWhat%20I%20do%3A%0ALinkedIn%3A%0A";
 
 export const SCHOOL_MAILTO =
   "mailto:linky101team@gmail.com?subject=LinkY101%20school%20pilot&body=Hi%20LinkY101%2C%0A%0AI%27d%20like%20to%20find%20out%20more%20about%20running%20a%20pilot%20at%20our%20school.%0A%0ASchool%3A%0AMy%20role%3A%0A";

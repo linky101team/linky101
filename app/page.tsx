@@ -27,8 +27,10 @@ import {
  * job is the one most teen platforms skip, and it's the one a school checks
  * first.
  *
- * Three lanes, not four. LinkY101 has founders (13–19) and mentors (checked
- * adults) — there is no separate "rising founder" tier.
+ * Three lanes, not four: founders (13–19), ambassadors, and schools. There is
+ * no separate "rising founder" tier, and no public route to become a mentor —
+ * mentors are DBS-checked and invited directly, ambassadors put themselves
+ * forward. Those two must never be blurred together on a public page.
  *
  * Signed-in visitors never see this — middleware sends them straight to /home.
  */
@@ -51,13 +53,13 @@ const LANES = [
     external: false,
   },
   {
-    href: "/for-mentors",
+    href: "/become-an-ambassador",
     banner: "bg-[#FEF08A]",
     emoji: "🎓",
     badge: "VERIFIED · 18+",
-    title: "Mentor",
-    body: "Founders and business owners paying it forward. Written answers, a few minutes a week, whenever it suits you.",
-    cta: "See what mentoring involves →",
+    title: "Ambassador",
+    body: "Founders and business owners paying it forward. One honest piece of advice, public, under your own name.",
+    cta: "See what it involves →",
     external: false,
   },
   {
@@ -190,8 +192,8 @@ export default function LandingPage() {
                 <Link href="/signup" className={BTN_DARK}>
                   Create your profile →
                 </Link>
-                <Link href="/for-mentors" className={BTN_OUTLINE}>
-                  Become a mentor
+                <Link href="/become-an-ambassador" className={BTN_OUTLINE}>
+                  Become an ambassador
                 </Link>
               </div>
             </FadeIn>
