@@ -3,60 +3,62 @@ import type { Metadata } from "next";
 import { AMBASSADORS, ambassadorAvatar } from "@/lib/ambassadors";
 import { FadeIn, FloatIn, HoverLift } from "@/components/landing/Animate";
 import { MarketingNav, MarketingFooter } from "@/components/landing/MarketingShell";
-import { CARD, BTN_DARK, BTN_OUTLINE, MENTOR_MAILTO } from "@/components/landing/marketingStyles";
+import {
+  CARD,
+  BTN_DARK,
+  BTN_OUTLINE,
+  SCHOOL_MAILTO,
+  WHATS_INSIDE,
+  SAFETY_POINTS,
+} from "@/components/landing/marketingStyles";
 
 /**
  * The front door.
  *
- * This is the LinkY101 waitlist design rebuilt as the real thing rather than a
- * copy sitting in a folder: same soft blue ground, navy outlines and hard
- * shadows, but every button goes somewhere real and the people on it are the
- * actual ambassadors from `lib/ambassadors.ts`, so it stays current as more
- * join instead of drifting into a page full of invented names.
+ * The waitlist design, rebuilt as the real thing: same soft blue ground, navy
+ * outlines and hard shadows, but every button goes somewhere real and the
+ * people on it come from `lib/ambassadors.ts`, so the page stays current as
+ * more join instead of drifting into a list of invented names.
  *
- * It does two jobs at once: convince a fifteen-year-old this is for them, and
- * convince the adult standing behind them that it's safe. The second job is
- * the one most teen platforms skip, and it's the one a school checks first.
+ * It carries the full product detail rather than a teaser — what's actually
+ * inside, who it's for, how safeguarding works, and how a school gets a pilot.
+ * The page does two jobs at once: convince a fifteen-year-old this is for
+ * them, and convince the adult standing behind them that it's safe. The second
+ * job is the one most teen platforms skip, and it's the one a school checks
+ * first.
  *
- * Signed-in visitors never see it — middleware sends them straight to /home.
+ * Three lanes, not four. LinkY101 has founders (13–19) and mentors (checked
+ * adults) — there is no separate "rising founder" tier.
+ *
+ * Signed-in visitors never see this — middleware sends them straight to /home.
  */
 
 export const metadata: Metadata = {
   title: "LinkY101 — your professional network, before LinkedIn",
   description:
-    "The UK network for young people aged 13–19. Build a real profile, share what you're building, and ask DBS-checked mentors the things you're stuck on.",
+    "The UK network for young people aged 13–19. Build a real profile, share what you're building, and ask checked mentors the things you're stuck on. Free across the UK.",
 };
 
 const LANES = [
   {
-    href: "/young-founder",
+    href: "/founders",
     banner: "bg-[#FECDD3]",
     emoji: "🚀",
-    badge: "AGES 13–15",
-    title: "Young Founder",
-    body: "School-age builders with an idea and the drive to build it — in a safe, verified space.",
-    cta: "Join as a teen →",
+    badge: "AGES 13–19",
+    title: "Founder",
+    body: "Anyone 13–19 with an idea and the drive to build it — at school, at college, or homeschooled and signing up on your own.",
+    cta: "Create your profile →",
     external: false,
   },
   {
-    href: "/rising-founder",
-    banner: "bg-[#BBF7D0]",
-    emoji: "💼",
-    badge: "AGES 16–19",
-    title: "Rising Founder",
-    body: "Sixth form, college and first-job builders turning an idea into something real.",
-    cta: "Join as a young pro →",
-    external: false,
-  },
-  {
-    href: MENTOR_MAILTO,
+    href: "/for-mentors",
     banner: "bg-[#FEF08A]",
     emoji: "🎓",
     badge: "VERIFIED · 18+",
     title: "Mentor",
-    body: "Founders and business owners paying it forward. A few minutes a week, answered when it suits you.",
-    cta: "Become a mentor →",
-    external: true,
+    body: "Founders and business owners paying it forward. Written answers, a few minutes a week, whenever it suits you.",
+    cta: "See what mentoring involves →",
+    external: false,
   },
   {
     href: "/schools",
@@ -178,8 +180,8 @@ export default function LandingPage() {
             <FadeIn index={2}>
               <p className="mt-6 max-w-[490px] text-[17px] leading-relaxed text-[#475569]">
                 Build a real profile, share what you&apos;re building, and get answers
-                from DBS-checked mentors and founders — in a network built only for
-                young people.
+                from checked mentors and founders — in a network built only for young
+                people.
               </p>
             </FadeIn>
 
@@ -188,9 +190,9 @@ export default function LandingPage() {
                 <Link href="/signup" className={BTN_DARK}>
                   Create your profile →
                 </Link>
-                <a href={MENTOR_MAILTO} className={BTN_OUTLINE}>
+                <Link href="/for-mentors" className={BTN_OUTLINE}>
                   Become a mentor
-                </a>
+                </Link>
               </div>
             </FadeIn>
 
@@ -223,6 +225,37 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* WHAT'S INSIDE — the actual product, not a promise about it */}
+      <section className="border-t border-[#0F172A]/15 px-5 py-24 lg:px-12">
+        <div className="mx-auto max-w-6xl">
+          <FadeIn>
+            <span className="mb-6 inline-block rounded-[20px] border-[2.5px] border-[#0F172A] bg-[#BBF7D0] px-5 py-2 text-[12.5px] font-extrabold tracking-wide">
+              WHAT&apos;S INSIDE
+            </span>
+            <h2 className="max-w-[720px] text-[30px] font-extrabold tracking-tight sm:text-[42px]">
+              Everything you need to start something, in one place
+            </h2>
+            <p className="mt-4 max-w-[560px] text-[16.5px] leading-relaxed text-[#475569]">
+              No jargon, no forty-minute videos, nothing aimed at people twice your age.
+            </p>
+          </FadeIn>
+
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
+            {WHATS_INSIDE.map((f, i) => (
+              <FadeIn key={f.title} index={i}>
+                <HoverLift className="h-full">
+                  <div className={`h-full px-8 py-8 ${f.tone} ${CARD}`}>
+                    <p className="mb-4 text-[30px]">{f.emoji}</p>
+                    <h3 className="text-[21px] font-extrabold leading-snug">{f.title}</h3>
+                    <p className="mt-3 text-[14.5px] leading-relaxed text-[#1E293B]">{f.body}</p>
+                  </div>
+                </HoverLift>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* LANES */}
       <section className="border-t border-[#0F172A]/15 px-5 py-24 text-center lg:px-12">
         <div className="mx-auto max-w-6xl">
@@ -231,7 +264,7 @@ export default function LandingPage() {
               Pick your lane
             </span>
             <h2 className="text-[32px] font-extrabold tracking-tight sm:text-[42px]">
-              One network. <span className="text-[#F5C518]">Four ways in.</span>
+              One network. <span className="text-[#F5C518]">Three ways in.</span>
             </h2>
             <p className="mx-auto mt-4 max-w-[620px] text-[16.5px] leading-relaxed text-[#475569]">
               Every mentor is checked before they can answer anything. Nothing on
@@ -239,7 +272,7 @@ export default function LandingPage() {
             </p>
           </FadeIn>
 
-          <div className="mx-auto mt-14 grid max-w-[980px] gap-6 text-left md:grid-cols-2">
+          <div className="mx-auto mt-14 grid max-w-[1080px] gap-6 text-left md:grid-cols-3">
             {LANES.map((lane, i) => {
               const inner = (
                 <>
@@ -318,26 +351,76 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* SAFETY STRIP — the line an adult is scanning for */}
-      <section className="border-y-[2.5px] border-[#0F172A] bg-[#BBF7D0] px-5 py-16 lg:px-12">
-        <FadeIn>
-          <div className={`mx-auto max-w-3xl bg-white px-8 py-9 text-center ${CARD}`}>
-            <p className="text-[26px]">🛡️</p>
-            <h2 className="mt-3 text-[26px] font-extrabold tracking-tight sm:text-[32px]">
-              No direct messages. Anywhere.
+      {/* SAFETY — the section a parent or safeguarding lead is looking for */}
+      <section className="border-y-[2.5px] border-[#0F172A] bg-[#BBF7D0] px-5 py-24 lg:px-12">
+        <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_1.15fr]">
+          <FadeIn from="left">
+            <span className="mb-6 inline-block rounded-[20px] border-[2.5px] border-[#0F172A] bg-white px-5 py-2 text-[12.5px] font-extrabold tracking-wide">
+              FOR PARENTS &amp; SAFEGUARDING LEADS
+            </span>
+            <h2 className="text-[30px] font-extrabold tracking-tight sm:text-[40px]">
+              How we keep young people safe
             </h2>
-            <p className="mt-4 text-[15.5px] leading-relaxed text-[#475569]">
-              There is nowhere on LinkY101 for an adult to message a young person
-              privately. Questions go to the whole mentor panel, every answer is read
-              by a named adult before it&apos;s published, and anything shared publicly
-              has the asker&apos;s name removed.
+            <p className="mt-5 text-[16px] leading-relaxed text-[#1E293B]">
+              These are design decisions, not promises, and they aren&apos;t going to
+              change as we grow.
+            </p>
+            <p className="mt-4 text-[14.5px] leading-relaxed text-[#334155]">
+              LinkY101 is not a support service. If a young person raises something
+              that needs real help, we say so plainly and point them to Childline and
+              Shout rather than pretending we can handle it.
             </p>
             <Link
               href="/safeguarding"
               className="mt-7 inline-block rounded-full border-[2.5px] border-[#0F172A] bg-[#F5C518] px-7 py-3.5 text-[15px] font-extrabold text-[#0F172A] shadow-[3px_3px_0_#0F172A] transition-transform hover:-translate-y-0.5"
             >
-              How safeguarding works →
+              Read the full safeguarding page →
             </Link>
+          </FadeIn>
+
+          <ul className="flex flex-col gap-3.5">
+            {SAFETY_POINTS.map((line, i) => (
+              <FadeIn key={line} index={i} from="right">
+                <li className="flex gap-3.5 rounded-2xl border-[2.5px] border-[#0F172A] bg-white p-5 shadow-[3px_3px_0_#0F172A]">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0F172A] text-[11px] font-bold text-[#BBF7D0]">
+                    ✓
+                  </span>
+                  <span className="text-[14.5px] leading-relaxed text-[#1E293B]">{line}</span>
+                </li>
+              </FadeIn>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* SCHOOLS */}
+      <section className="px-5 py-24 lg:px-12">
+        <FadeIn>
+          <div className={`mx-auto max-w-3xl bg-[#FEF08A] px-9 py-10 text-center ${CARD}`}>
+            <p className="text-[30px]">🏫</p>
+            <h2 className="mt-3 text-[28px] font-extrabold tracking-tight sm:text-[34px]">
+              Run a free pilot at your school
+            </h2>
+            <p className="mx-auto mt-4 max-w-[560px] text-[15.5px] leading-relaxed text-[#1E293B]">
+              Your students get the lessons, the podcast, the ambassadors and the
+              mentor Q&amp;A. You get something for enterprise and careers that
+              doesn&apos;t need planning, marking or a subscription.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3.5">
+              <a
+                href={SCHOOL_MAILTO}
+                className="inline-block rounded-full border-[2.5px] border-[#0F172A] bg-[#0F172A] px-7 py-3.5 text-[15px] font-extrabold text-[#F5C518] transition-transform hover:-translate-y-0.5"
+              >
+                Email us →
+              </a>
+              <Link
+                href="/schools"
+                className="inline-block rounded-full border-[2.5px] border-[#0F172A] bg-white px-7 py-3.5 text-[15px] font-extrabold text-[#0F172A] transition-transform hover:-translate-y-0.5"
+              >
+                What a pilot involves
+              </Link>
+            </div>
+            <p className="mt-5 text-sm font-bold text-[#92400E]">linky101team@gmail.com</p>
           </div>
         </FadeIn>
       </section>

@@ -18,11 +18,15 @@ const PUBLIC_ROUTES = ["/signup", "/login", "/verify"];
  * member opening the safeguarding page to show a parent.
  */
 const MARKETING_ROUTES = new Set([
-  "/young-founder",
-  "/rising-founder",
+  "/founders",
+  "/for-mentors",
   "/schools",
   "/safeguarding",
   "/about",
+  // Retired lanes, kept public so their redirect to /founders still works for
+  // anyone following an old link.
+  "/young-founder",
+  "/rising-founder",
 ]);
 
 // The landing page. Matched exactly rather than by prefix — "/" is a prefix of

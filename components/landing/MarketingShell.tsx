@@ -16,9 +16,15 @@ import { BTN_YELLOW, MENTOR_MAILTO } from "./marketingStyles";
  * needs JavaScript, and the pages that use it stay server-rendered.
  */
 
+/**
+ * There are two kinds of person on LinkY101: founders (13–19) and mentors
+ * (checked adults). There is no separate "rising founder" tier — one network,
+ * one member type, and homeschooled or self-taught builders signing up on
+ * their own sit inside the founder bracket like everyone else.
+ */
 const NAV_LINKS = [
-  { href: "/young-founder", label: "Young Founder" },
-  { href: "/rising-founder", label: "Rising Founder" },
+  { href: "/founders", label: "For Founders" },
+  { href: "/for-mentors", label: "For Mentors" },
   { href: "/schools", label: "For Schools" },
   { href: "/safeguarding", label: "Safety" },
   { href: "/about", label: "About" },
@@ -137,8 +143,8 @@ export function MarketingFooter() {
             Platform
           </p>
           {[
-            { href: "/young-founder", label: "Young Founder" },
-            { href: "/rising-founder", label: "Rising Founder" },
+            { href: "/founders", label: "For Founders" },
+            { href: "/for-mentors", label: "For Mentors" },
             { href: "/schools", label: "For Schools" },
             { href: "/about", label: "About" },
           ].map((l) => (
