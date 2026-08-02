@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, Home, BookOpen, Mic, Compass, User, Star, ShieldCheck, Sparkles, Wrench, Trophy, Crown } from "lucide-react";
+import { Bell, Home, BookOpen, Mic, Compass, User, Star, ShieldCheck, MessageCircleQuestion, Sparkles, Wrench, Trophy, Crown } from "lucide-react";
 import type { Profile } from "@/hooks/useProfile";
 
 const PRIMARY = [
@@ -19,6 +19,7 @@ const SECONDARY = [
   // them into one link hid that difference from members and from parents.
   { href: "/ambassadors", icon: Star, color: "#F59E0B", tint: "#FEF3C7", label: "Ambassadors" },
   { href: "/mentors", icon: ShieldCheck, color: "#10B981", tint: "#D1FAE5", label: "Mentors" },
+  { href: "/ask", icon: MessageCircleQuestion, color: "#7C3AED", tint: "#F3E8FF", label: "Ask" },
   { href: "/dreams", icon: Sparkles, color: "#EC4899", tint: "#FCE7F3", label: "Dream Wall" },
   { href: "/tools", icon: Wrench, color: "#06B6D4", tint: "#CFFAFE", label: "Founder Tools" },
 ];
