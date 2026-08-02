@@ -28,8 +28,18 @@ export async function askQuestion(questionText: string) {
   const moderation = moderateContent(trimmed);
   if (!moderation.approved) throw new Error(moderation.reason ?? "This question isn't allowed.");
 
+  // Admins aren't capped. They're running the thing — testing the flow,
+  // seeding the first questions, answering as the team — and a two-a-week
+  // limit on the person who has to keep the queue alive makes no sense.
+  const { data: me } = await supabase
+    .from("profiles")
+    .select("is_admin")
+    .eq("id", user.id)
+    .maybeSingle();
+  const isAdmin = !!me?.is_admin;
+
   const { data: used } = await supabase.rpc("questions_asked_this_week", { p_user_id: user.id });
-  if ((used ?? 0) >= WEEKLY_QUESTION_LIMIT) {
+  if (!isAdmin && (used ?? 0) >= WEEKLY_QUESTION_LIMIT) {
     throw new Error(
       `You've used both your questions this week. They reset seven days after you asked — worth saving the next one for something you really want to know.`
     );
@@ -60,6 +70,15 @@ export async function questionsLeftThisWeek(): Promise<number> {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return 0;
+
+  const { data: me } = await supabase
+    .from("profiles")
+    .select("is_admin")
+    .eq("id", user.id)
+    .maybeSingle();
+  // Big number rather than Infinity so the counter still renders as a number.
+  if (me?.is_admin) return 99;
+
   const { data } = await supabase.rpc("questions_asked_this_week", { p_user_id: user.id });
   return Math.max(0, WEEKLY_QUESTION_LIMIT - (data ?? 0));
 }

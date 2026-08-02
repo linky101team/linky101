@@ -115,7 +115,9 @@ export default function AskQuestionModal({
         />
         <div className="mb-3 flex items-center justify-between text-xs font-semibold">
           <span className={outOfQuestions ? "text-[#DC2626]" : "text-gray-400"}>
-            {questionsLeft} question{questionsLeft === 1 ? "" : "s"} left this week
+            {questionsLeft > 90
+              ? "Unlimited questions (admin)"
+              : `${questionsLeft} question${questionsLeft === 1 ? "" : "s"} left this week`}
           </span>
           <span className="text-gray-400">
             {text.length}/{QUESTION_MAX}
