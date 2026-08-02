@@ -157,8 +157,8 @@ export default function LandingPage() {
   const faces = AMBASSADORS.slice(0, 7);
 
   return (
-    <main className="min-h-screen bg-[#E8F0FE]">
-      <header className="sticky top-0 z-40 border-b border-white bg-[#E8F0FE]/90 backdrop-blur">
+    <main className="min-h-screen bg-[#DBE7FB]">
+      <header className="sticky top-0 z-40 border-b border-white bg-[#DBE7FB]/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
           <span className="text-xl font-extrabold tracking-tight text-[#111111]">
             LinkY<span className="text-[#F5B301]">101</span>
@@ -370,7 +370,7 @@ export default function LandingPage() {
       </section>
 
       {/* Safety — the section a parent or safeguarding lead is looking for */}
-      <section id="safety" className="scroll-mt-20 border-y border-white bg-[#DDE9FD] py-20">
+      <section id="safety" className="scroll-mt-20 border-y border-white bg-[#C9DBF7] py-20">
         <div className="mx-auto grid max-w-6xl gap-10 px-5 lg:grid-cols-[1fr_1.2fr]">
           <FadeIn from="left">
             <span className="inline-block rounded-full bg-[#D1FAE5] px-3.5 py-1.5 text-xs font-extrabold uppercase tracking-wide text-[#047857]">
@@ -449,7 +449,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <footer className="border-t border-white bg-[#E8F0FE] py-10">
+      <footer className="border-t border-white bg-[#DBE7FB] py-10">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 px-5 text-center">
           <span className="text-lg font-extrabold tracking-tight text-[#111111]">
             LinkY<span className="text-[#F5B301]">101</span>
