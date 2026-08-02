@@ -418,12 +418,18 @@ export default function LandingPage() {
               mentor Q&amp;A. You get something for enterprise and careers that
               doesn&apos;t need planning, marking or a subscription.
             </p>
-            <Link
-              href="/signup"
+            {/* A school won't create a member account to enquire — they email.
+                Opens their mail app with the subject already filled in so
+                pilot enquiries are easy to spot in the inbox. */}
+            <a
+              href="mailto:linky101team@gmail.com?subject=LinkY101%20school%20pilot&body=Hi%20LinkY101%2C%0A%0AI%27d%20like%20to%20find%20out%20more%20about%20running%20a%20pilot%20at%20our%20school.%0A%0ASchool%3A%0AMy%20role%3A%0A"
               className="mt-7 inline-block rounded-full bg-[#1E1B4B] px-8 py-3.5 text-base font-extrabold text-white transition-transform hover:-translate-y-0.5"
             >
-              Get in touch →
-            </Link>
+              Email us →
+            </a>
+            <p className="mt-4 text-sm font-semibold text-[#92400E]">
+              linky101team@gmail.com
+            </p>
           </div>
           </FadeIn>
         </div>
