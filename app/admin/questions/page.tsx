@@ -69,10 +69,16 @@ export default function AdminQuestionsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Default to LinkY101 Team, never to whoever happens to be first
+  // alphabetically. Posting an answer under a real mentor's name by accident
+  // is the one mistake this screen must not make easy.
+  const defaultMentorId =
+    mentors.find((m) => m.display_name.toLowerCase().includes("linky101"))?.id ?? "";
+
   function draftFor(q: Question) {
     return (
       drafts[q.id] ?? {
-        mentorId: q.answered_by ?? mentors[0]?.id ?? "",
+        mentorId: q.answered_by ?? defaultMentorId,
         text: q.answer_text ?? "",
         publish: q.is_published,
       }

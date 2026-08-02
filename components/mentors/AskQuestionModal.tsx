@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Lock, X } from "lucide-react";
+import { Check, Lock, X } from "lucide-react";
 import { askQuestion } from "@/lib/actions/mentors";
 
 const QUESTION_MAX = 500;
@@ -29,6 +29,7 @@ export default function AskQuestionModal({
   onSubmitted,
 }: AskQuestionModalProps) {
   const [text, setText] = useState("");
+  const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [, startTransition] = useTransition();
@@ -40,6 +41,7 @@ export default function AskQuestionModal({
   function reset() {
     setText("");
     setErrorMsg(null);
+    setSent(false);
     onClose();
   }
 
@@ -54,7 +56,7 @@ export default function AskQuestionModal({
       try {
         await askQuestion(text);
         onSubmitted();
-        reset();
+        setSent(true);
       } catch (err) {
         setErrorMsg(err instanceof Error ? err.message : "Couldn't send your question");
       } finally {
@@ -66,6 +68,26 @@ export default function AskQuestionModal({
   return (
     <div className="fixed inset-0 z-[90] flex items-end justify-center bg-black/50 sm:items-center">
       <div className="max-h-[85vh] w-full max-w-[460px] overflow-y-auto rounded-t-3xl bg-white p-5 shadow-xl sm:rounded-3xl">
+        {sent ? (
+          <div className="py-6 text-center">
+            <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#D1FAE5]">
+              <Check className="h-8 w-8 text-[#047857]" strokeWidth={3} />
+            </span>
+            <p className="mt-4 text-lg font-extrabold text-[#1E1B4B]">Sent to the mentors</p>
+            <p className="mx-auto mt-1.5 max-w-xs text-sm leading-relaxed text-gray-500">
+              It&apos;s in the queue. You&apos;ll get a notification the moment someone
+              answers — usually within a week.
+            </p>
+            <button
+              type="button"
+              onClick={reset}
+              className="grad-brand mt-5 w-full rounded-full py-3.5 text-sm font-extrabold text-white transition-transform active:scale-[0.98]"
+            >
+              Done
+            </button>
+          </div>
+        ) : (
+        <>
         <div className="mb-1 flex items-start justify-between">
           <div>
             <h2 className="text-lg font-extrabold text-[#1E1B4B]">Ask all our mentors</h2>
@@ -132,6 +154,8 @@ export default function AskQuestionModal({
               ? "Sending..."
               : "Send to the mentors"}
         </button>
+        </>
+        )}
       </div>
     </div>
   );

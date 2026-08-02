@@ -64,11 +64,6 @@ export default function QuestionCard({
         <span className="text-xs font-bold text-gray-500">
           {anonymous ? "A member asked" : "You asked"}
         </span>
-        {!anonymous && !answered && (
-          <span className="rounded-full bg-[#FEF3C7] px-2.5 py-0.5 text-[10px] font-bold text-[#92400E]">
-            Waiting for a mentor
-          </span>
-        )}
         {!anonymous && question.asked_by && (
           <ReportButton reportedType="profile" reportedId={question.asked_by} />
         )}
