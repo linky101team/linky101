@@ -3,6 +3,10 @@ import { createServerClient } from "@supabase/auth-helpers-nextjs";
 
 const PUBLIC_ROUTES = ["/signup", "/login", "/verify"];
 
+// The landing page. Matched exactly rather than by prefix — "/" is a prefix of
+// every path, so a startsWith check here would make the whole app public.
+const LANDING_ROUTE = "/";
+
 // Static/metadata assets fetched directly by the browser or crawlers —
 // PWA manifest, service worker, offline fallback, and SEO routes. These
 // must never redirect to /login: a 307 breaks manifest parsing, service
@@ -42,7 +46,8 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
-  const isPublicRoute = PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
+  const isPublicRoute =
+    pathname === LANDING_ROUTE || PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
 
   if (!user) {
     if (isPublicRoute) return response;
