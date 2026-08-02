@@ -2,151 +2,149 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { AMBASSADORS, ambassadorAvatar } from "@/lib/ambassadors";
 import { FadeIn, FloatIn, HoverLift } from "@/components/landing/Animate";
+import { MarketingNav, MarketingFooter } from "@/components/landing/MarketingShell";
+import { CARD, BTN_DARK, BTN_OUTLINE, MENTOR_MAILTO } from "@/components/landing/marketingStyles";
 
 /**
  * The front door.
  *
- * Everything used to sit behind the sign-up wall, which meant a teacher, a
- * parent or an ambassador you'd asked for their time hit a login box and had
- * no way of finding out what LinkY101 even was. This page does two jobs at
- * once: convince a fifteen-year-old this is for them, and convince the adult
- * standing behind them that it's safe. The second job is the one most teen
- * platforms skip, and it's the one a school checks first.
+ * This is the LinkY101 waitlist design rebuilt as the real thing rather than a
+ * copy sitting in a folder: same soft blue ground, navy outlines and hard
+ * shadows, but every button goes somewhere real and the people on it are the
+ * actual ambassadors from `lib/ambassadors.ts`, so it stays current as more
+ * join instead of drifting into a page full of invented names.
  *
- * Built the way product sites are built rather than like a poster: a preview
- * of the actual app beside the headline, and colour used as accent. A
- * full-bleed gradient reads as a flyer — showing the thing working is what
- * makes someone believe it exists.
- *
- * The soft blue ground is LinkY101's, carried over from the original design.
- * Bands alternate blue and white so the page has rhythm rather than being one
- * flat colour top to bottom.
+ * It does two jobs at once: convince a fifteen-year-old this is for them, and
+ * convince the adult standing behind them that it's safe. The second job is
+ * the one most teen platforms skip, and it's the one a school checks first.
  *
  * Signed-in visitors never see it — middleware sends them straight to /home.
  */
 
 export const metadata: Metadata = {
-  title: "LinkY101 — the UK network for young founders, 13–19",
+  title: "LinkY101 — your professional network, before LinkedIn",
   description:
-    "Learn how business actually works, hear real founder stories, and ask DBS-checked mentors the things you're stuck on. Free for 13–19 year olds across the UK.",
+    "The UK network for young people aged 13–19. Build a real profile, share what you're building, and ask DBS-checked mentors the things you're stuck on.",
 };
 
-// Each card gets its own colour family. Four identical white boxes is the
-// definition of a boring feature grid.
-const FEATURES = [
+const LANES = [
   {
-    emoji: "📚",
-    card: "bg-[#FDF2F8] border-[#FBCFE8]",
-    chip: "bg-[#EC4899]",
-    heading: "text-[#9D174D]",
-    body_class: "text-[#9F1239]/80",
-    title: "Lessons that don't waste your time",
-    body: "Finding an idea, first customer, pricing, money. Short, card-by-card, written for someone who's fifteen.",
+    href: "/young-founder",
+    banner: "bg-[#FECDD3]",
+    emoji: "🚀",
+    badge: "AGES 13–15",
+    title: "Young Founder",
+    body: "School-age builders with an idea and the drive to build it — in a safe, verified space.",
+    cta: "Join as a teen →",
+    external: false,
   },
   {
-    emoji: "🛡️",
-    card: "bg-[#ECFDF5] border-[#A7F3D0]",
-    chip: "bg-[#10B981]",
-    heading: "text-[#065F46]",
-    body_class: "text-[#047857]/85",
-    title: "Ask people who've actually done it",
-    body: "One question goes to five DBS-checked adults — a principal, a careers lead, business owners. They answer properly.",
+    href: "/rising-founder",
+    banner: "bg-[#BBF7D0]",
+    emoji: "💼",
+    badge: "AGES 16–19",
+    title: "Rising Founder",
+    body: "Sixth form, college and first-job builders turning an idea into something real.",
+    cta: "Join as a young pro →",
+    external: false,
   },
   {
-    emoji: "🎙️",
-    card: "bg-[#ECFEFF] border-[#A5F3FC]",
-    chip: "bg-[#06B6D4]",
-    heading: "text-[#155E75]",
-    body_class: "text-[#0E7490]/85",
-    title: "Founder stories, not highlight reels",
-    body: "The first £100, the thing that flopped, what they'd do differently. Listen on the way to school.",
+    href: MENTOR_MAILTO,
+    banner: "bg-[#FEF08A]",
+    emoji: "🎓",
+    badge: "VERIFIED · 18+",
+    title: "Mentor",
+    body: "Founders and business owners paying it forward. A few minutes a week, answered when it suits you.",
+    cta: "Become a mentor →",
+    external: true,
   },
   {
-    emoji: "💡",
-    card: "bg-[#FFFBEB] border-[#FDE68A]",
-    chip: "bg-[#F59E0B]",
-    heading: "text-[#92400E]",
-    body_class: "text-[#B45309]/90",
-    title: "Somewhere to put the idea",
-    body: "Post it on the Dream Wall, get it validated, and see what other people your age are building.",
+    href: "/schools",
+    banner: "bg-[#A5F3FC]",
+    emoji: "🏫",
+    badge: "SCHOOLS & COLLEGES",
+    title: "School / College",
+    body: "Enterprise and careers provision students actually open. Free pilots running this term.",
+    cta: "Partner with us →",
+    external: false,
   },
-];
-
-const SAFETY = [
-  "No direct messages. Nowhere on LinkY101 can an adult message a young person privately.",
-  "Every mentor answer is read by a named adult before anyone sees it.",
-  "Mentors are DBS-checked. Ambassadors share their story publicly and never contact members.",
-  "13–19 only, and nothing is visible to the public internet — it all sits behind a login.",
-  "Questions are private by default. Anything shared publicly has the asker's name removed.",
 ];
 
 /**
- * A small, honest mock of the real Ask screen. Not a screenshot — a screenshot
- * would need a logged-in session to produce and would go stale — but it uses
- * the product's own colours and components so what you see here is what you
- * get when you sign up.
+ * The hero preview.
+ *
+ * The waitlist version used two invented members. Everyone on this one is
+ * real: the spotlight is a genuine ambassador with their own photo, and the
+ * question card is the Ask screen as it actually behaves — one question goes
+ * to the whole mentor panel, and the answer comes back from a named adult.
  */
-function AppPreview() {
+function HeroPreview() {
+  const spotlight =
+    AMBASSADORS.find((a) => a.id === "damian-hughes") ?? AMBASSADORS[0];
+
   return (
-    <div className="rounded-3xl border border-white bg-white p-3 shadow-2xl">
-      <div className="rounded-2xl bg-[#F5F3FF] p-4">
-        <div className="mb-3 flex items-center justify-between">
-          <span className="text-sm font-extrabold tracking-tight text-[#111111]">
-            LinkY<span className="text-[#F5B301]">101</span>
-          </span>
-          <span className="flex items-center gap-1 rounded-full bg-[#FFF7ED] px-2.5 py-1 text-[11px] font-extrabold text-[#C2410C]">
-            🔥 12
-          </span>
-        </div>
-
-        <div className="grad-brand flex items-center gap-3 rounded-2xl p-4">
-          <span className="min-w-0 flex-1">
-            <span className="block text-sm font-extrabold text-white">
-              Ask all our mentors
-            </span>
-            <span className="block text-[11px] text-white/80">2 left this week</span>
-          </span>
-          <span className="rounded-full bg-white px-3 py-1.5 text-[11px] font-extrabold text-[#7C3AED]">
-            + Ask
-          </span>
-        </div>
-
-        <div className="mt-3 overflow-hidden rounded-2xl border border-gray-200 bg-white">
-          <div className="flex items-center gap-2.5 border-b border-gray-100 p-3">
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#D1FAE5] text-xs font-bold text-[#047857]">
-              ✓
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block truncate text-xs font-bold text-[#1E1B4B]">
-                How do I get my first customer?
-              </span>
-              <span className="block text-[10px] font-semibold text-gray-400">
-                Mark Webb replied
-              </span>
-            </span>
+    <div className="space-y-6">
+      <div className="relative rounded-[22px] bg-white shadow-[0_20px_45px_rgba(15,23,42,0.12)]">
+        <div className="h-20 rounded-t-[22px] bg-gradient-to-r from-[#FDA4AF] via-[#FDE68A] to-[#86EFAC]" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={ambassadorAvatar(spotlight.id)}
+          alt={spotlight.name}
+          className="absolute left-6 top-14 h-16 w-16 rounded-full border-4 border-white object-cover"
+        />
+        <span className="absolute right-5 top-[92px] rounded-full bg-[#0F172A] px-4 py-2 text-[13px] font-extrabold text-[#F5C518]">
+          Ambassador
+        </span>
+        <div className="px-6 pb-6 pt-11">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[17px] font-extrabold text-[#0F172A]">{spotlight.name}</span>
+            <span className="text-[15px] text-[#F5C518]">✔</span>
           </div>
-          <div className="flex items-center gap-2.5 p-3">
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#FEF3C7] text-xs">
-              ⏳
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block truncate text-xs font-bold text-[#1E1B4B]">
-                Can I run a business at 15?
+          <p className="mt-3 border-t border-[#0F172A]/10 pt-3 text-[15px] leading-snug text-[#334155]">
+            {spotlight.role}
+          </p>
+          <div className="mt-3.5 flex flex-wrap gap-2 border-t border-[#0F172A]/10 pt-3.5">
+            {spotlight.tags.slice(0, 4).map((t) => (
+              <span
+                key={t}
+                className="rounded-2xl bg-[#DBEAFE] px-3 py-1.5 text-[12.5px] font-bold text-[#1E3A5F]"
+              >
+                {t}
               </span>
-              <span className="block text-[10px] font-semibold text-gray-400">
-                Waiting for a mentor
-              </span>
-            </span>
+            ))}
           </div>
         </div>
+      </div>
 
-        <div className="mt-3 rounded-2xl bg-[#ECFDF5] p-3">
-          <p className="text-[11px] font-extrabold text-[#047857]">Mark Webb answered</p>
-          <p className="mt-1 text-[11px] leading-relaxed text-gray-600">
+      <div className="relative rounded-[22px] bg-white p-6 shadow-[0_20px_45px_rgba(15,23,42,0.10)]">
+        <div className="flex items-start gap-3">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FECDD3] text-lg">
+            💡
+          </span>
+          <div>
+            <p className="text-[14.5px] font-extrabold text-[#0F172A]">
+              Asked by a member{" "}
+              <span className="font-semibold text-[#64748B]">· Year 11</span>
+            </p>
+            <p className="mt-0.5 text-[12.5px] text-[#64748B]">Sent to every mentor · 2h</p>
+          </div>
+        </div>
+        <p className="mt-4 text-[15px] leading-relaxed text-[#334155]">
+          I&apos;ve made 40 of something and nobody&apos;s bought one. How do I get
+          my first actual customer?
+        </p>
+        <div className="mt-4 rounded-2xl bg-[#ECFDF5] p-4">
+          <p className="text-[12px] font-extrabold uppercase tracking-wide text-[#047857]">
+            Answered by a mentor
+          </p>
+          <p className="mt-1.5 text-[13.5px] leading-relaxed text-[#334155]">
             Ask ten people you already know. One of them says yes, and that&apos;s
             your first customer — it really is that unglamorous.
           </p>
         </div>
+        <span className="absolute -bottom-4 right-6 rounded-2xl bg-[#F5C518] px-4 py-2 text-[13px] font-extrabold text-[#0F172A] shadow-[0_6px_16px_rgba(0,0,0,0.12)]">
+          ⭐ Rated helpful
+        </span>
       </div>
     </div>
   );
@@ -154,331 +152,214 @@ function AppPreview() {
 
 export default function LandingPage() {
   // Real faces, not stock photography. Proof beats promises on a page like this.
-  const faces = AMBASSADORS.slice(0, 7);
+  const faces = AMBASSADORS.slice(0, 5);
 
   return (
-    <main className="min-h-screen bg-[#DBE7FB]">
-      <header className="sticky top-0 z-40 border-b border-white bg-[#DBE7FB]/90 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-          <span className="text-xl font-extrabold tracking-tight text-[#111111]">
-            LinkY<span className="text-[#F5B301]">101</span>
-          </span>
+    <main className="min-h-screen bg-[#DBEAFE] text-[#0F172A]">
+      <MarketingNav />
 
-          <nav className="hidden items-center gap-7 md:flex">
-            <Link href="#features" className="text-sm font-bold text-gray-600 hover:text-[#7C3AED]">
-              What it is
-            </Link>
-            <Link href="#safety" className="text-sm font-bold text-gray-600 hover:text-[#7C3AED]">
-              For parents
-            </Link>
-            <Link href="#schools" className="text-sm font-bold text-gray-600 hover:text-[#7C3AED]">
-              For schools
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-2">
-            <Link
-              href="/login"
-              className="rounded-full px-4 py-2 text-sm font-bold text-[#1E1B4B] hover:bg-white/70"
-            >
-              Log in
-            </Link>
-            <Link
-              href="/signup"
-              className="grad-brand rounded-full px-5 py-2.5 text-sm font-extrabold text-white transition-transform hover:-translate-y-0.5"
-            >
-              Join free
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* Hero — text left, product right. The standard for a reason: it shows
-          what you're signing up to instead of describing it. */}
-      <section className="mx-auto max-w-6xl px-5 pb-16 pt-14 lg:pt-20">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
+      {/* HERO — copy left, the product itself on the right. */}
+      <section className="relative overflow-hidden bg-[radial-gradient(circle_at_8%_0%,#F3E3FA_0%,#DBEAFE_42%)] px-5 pb-20 pt-14 lg:px-12">
+        <div className="mx-auto grid max-w-6xl items-start gap-14 lg:grid-cols-[1.05fr_1fr]">
           <div>
             <FadeIn>
-              <span className="inline-flex items-center gap-2 rounded-full border border-white bg-white px-3.5 py-1.5 text-xs font-extrabold text-[#7C3AED]">
-                🇬🇧 Free for 13–19 year olds in the UK
+              <span className="mb-7 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[13.5px] font-bold text-[#334155] shadow-[0_2px_10px_rgba(15,23,42,0.06)]">
+                ✨ The professional network for ages 13–19
               </span>
             </FadeIn>
 
             <FadeIn index={1}>
-            <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-[#1E1B4B] sm:text-5xl lg:text-[3.4rem]">
-              You don&apos;t need permission.
-              <br />
-              You need a <span className="text-grad">first customer</span>.
-            </h1>
+              <h1 className="text-[40px] font-extrabold leading-[1.08] tracking-tight sm:text-[52px] lg:text-[58px]">
+                Your <span className="text-[#F5C518]">professional network</span>
+                <br />— <span className="italic">before</span> LinkedIn.
+              </h1>
             </FadeIn>
 
             <FadeIn index={2}>
-              <p className="mt-5 max-w-lg text-lg leading-relaxed text-gray-600">
-                LinkY101 is where young people who want to build something learn how
-                business actually works — and ask the people who&apos;ve already done it.
+              <p className="mt-6 max-w-[490px] text-[17px] leading-relaxed text-[#475569]">
+                Build a real profile, share what you&apos;re building, and get answers
+                from DBS-checked mentors and founders — in a network built only for
+                young people.
               </p>
             </FadeIn>
 
             <FadeIn index={3}>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Link
-                href="/signup"
-                className="grad-brand rounded-full px-7 py-3.5 text-base font-extrabold text-white shadow-lg shadow-purple-200 transition-transform hover:-translate-y-0.5"
-              >
-                Join free →
-              </Link>
-              <Link
-                href="#safety"
-                className="rounded-full border-2 border-white bg-white/60 px-7 py-3.5 text-base font-extrabold text-[#1E1B4B] transition-colors hover:bg-white"
-              >
-                For parents &amp; schools
-              </Link>
-            </div>
+              <div className="mt-8 flex flex-wrap gap-3.5">
+                <Link href="/signup" className={BTN_DARK}>
+                  Create your profile →
+                </Link>
+                <a href={MENTOR_MAILTO} className={BTN_OUTLINE}>
+                  Become a mentor
+                </a>
+              </div>
             </FadeIn>
 
             <FadeIn index={4}>
-            <div className="mt-9 flex flex-wrap items-center gap-3">
-              <div className="flex -space-x-2.5">
-                {faces.map((a) => (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img
-                    key={a.id}
-                    src={ambassadorAvatar(a.id)}
-                    alt={a.name}
-                    className="h-9 w-9 rounded-full object-cover ring-2 ring-white"
-                  />
-                ))}
+              <div className="mt-9 flex flex-wrap items-center gap-3.5">
+                <div className="flex">
+                  {faces.map((a, i) => (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      key={a.id}
+                      src={ambassadorAvatar(a.id)}
+                      alt={a.name}
+                      className={`h-9 w-9 rounded-full border-[3px] border-[#DBEAFE] object-cover ${
+                        i === 0 ? "" : "-ml-2.5"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <p className="text-[14.5px] text-[#334155]">
+                  <b className="text-[#0F172A]">{AMBASSADORS.length} founding ambassadors</b> and
+                  6 mentors already on board.
+                </p>
               </div>
-              <p className="text-sm font-semibold text-gray-500">
-                <span className="text-[#1E1B4B]">{AMBASSADORS.length} founding ambassadors</span>{" "}
-                and 5 DBS-checked mentors already on board
-              </p>
-            </div>
             </FadeIn>
           </div>
 
-          <FloatIn className="lg:pl-6">
-            <AppPreview />
+          <FloatIn>
+            <HeroPreview />
           </FloatIn>
         </div>
       </section>
 
-      {/* Features */}
-      <section id="features" className="scroll-mt-20 border-y border-white/70 bg-[#B9D1F5] py-20">
-        <div className="mx-auto max-w-6xl px-5">
+      {/* LANES */}
+      <section className="border-t border-[#0F172A]/15 px-5 py-24 text-center lg:px-12">
+        <div className="mx-auto max-w-6xl">
           <FadeIn>
-            <h2 className="max-w-2xl text-3xl font-extrabold tracking-tight text-[#1E1B4B] sm:text-4xl">
-              Everything you need to start something, in one place
-            </h2>
-            <p className="mt-3 max-w-xl text-gray-600">
-              No jargon, no forty-minute videos, nothing aimed at people twice your age.
-            </p>
-          </FadeIn>
-
-          <div className="mt-10 grid gap-5 sm:grid-cols-2">
-            {FEATURES.map((f, i) => (
-              <FadeIn key={f.title} index={i}>
-              <HoverLift className={`h-full rounded-3xl border-2 p-7 transition-shadow hover:shadow-xl ${f.card}`}>
-                <span
-                  className={`flex h-14 w-14 items-center justify-center rounded-2xl text-3xl shadow-sm ${f.chip}`}
-                >
-                  {f.emoji}
-                </span>
-                <p className={`mt-5 text-xl font-extrabold leading-tight ${f.heading}`}>{f.title}</p>
-                <p className={`mt-2 text-sm font-medium leading-relaxed ${f.body_class}`}>{f.body}</p>
-              </HoverLift>
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Which one are you */}
-      <section className="border-t border-white/70 py-20">
-        <div className="mx-auto max-w-6xl px-5">
-          <FadeIn>
-            <h2 className="text-3xl font-extrabold tracking-tight text-[#1E1B4B] sm:text-4xl">
-              Which one are you?
-            </h2>
-          </FadeIn>
-
-          <div className="mt-9 grid gap-5 md:grid-cols-3">
-            <FadeIn index={0}>
-            <HoverLift>
-            <Link
-              href="/signup"
-              className="block overflow-hidden rounded-2xl border border-[#D6E4FB] bg-white transition-shadow hover:shadow-lg"
-            >
-              <div className="grad-brand h-1.5" />
-              <div className="p-6">
-                <p className="text-xl font-extrabold text-[#1E1B4B]">I&apos;m 13–19</p>
-                <p className="mt-2 text-sm leading-relaxed text-gray-600">
-                  You&apos;ve got an idea, or you just want to know how people start.
-                  Everything unlocks on day one.
-                </p>
-                <span className="mt-4 inline-block text-sm font-extrabold text-[#7C3AED]">
-                  Create an account →
-                </span>
-              </div>
-            </Link>
-            </HoverLift>
-            </FadeIn>
-
-            <FadeIn index={1}>
-            <HoverLift>
-            <Link
-              href="#safety"
-              className="block overflow-hidden rounded-2xl border border-[#D6E4FB] bg-white transition-shadow hover:shadow-lg"
-            >
-              <div className="h-1.5 bg-[#10B981]" />
-              <div className="p-6">
-                <p className="text-xl font-extrabold text-[#1E1B4B]">I&apos;m a parent</p>
-                <p className="mt-2 text-sm leading-relaxed text-gray-600">
-                  You want to know who your child is talking to and what happens to
-                  what they write. Straight answers, no waffle.
-                </p>
-                <span className="mt-4 inline-block text-sm font-extrabold text-[#047857]">
-                  How we keep it safe →
-                </span>
-              </div>
-            </Link>
-            </HoverLift>
-            </FadeIn>
-
-            <FadeIn index={2}>
-            <HoverLift>
-            <Link
-              href="#schools"
-              className="block overflow-hidden rounded-2xl border border-[#D6E4FB] bg-white transition-shadow hover:shadow-lg"
-            >
-              <div className="h-1.5 bg-[#F59E0B]" />
-              <div className="p-6">
-                <p className="text-xl font-extrabold text-[#1E1B4B]">I&apos;m a school</p>
-                <p className="mt-2 text-sm leading-relaxed text-gray-600">
-                  Enterprise and careers provision students will actually open. Free
-                  pilots running this term.
-                </p>
-                <span className="mt-4 inline-block text-sm font-extrabold text-[#B45309]">
-                  Email us →
-                </span>
-              </div>
-            </Link>
-            </HoverLift>
-            </FadeIn>
-          </div>
-        </div>
-      </section>
-
-      {/* Safety — the section a parent or safeguarding lead is looking for */}
-      <section id="safety" className="scroll-mt-20 border-y border-white/70 bg-[#B9D1F5] py-20">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 lg:grid-cols-[1fr_1.2fr]">
-          <FadeIn from="left">
-            <span className="inline-block rounded-full bg-[#D1FAE5] px-3.5 py-1.5 text-xs font-extrabold uppercase tracking-wide text-[#047857]">
-              For parents &amp; safeguarding leads
+            <span className="mb-7 inline-block rounded-full bg-white px-5 py-2.5 text-[13.5px] font-bold text-[#334155] shadow-[0_2px_10px_rgba(15,23,42,0.06)]">
+              Pick your lane
             </span>
-            <h2 className="mt-5 text-3xl font-extrabold tracking-tight text-[#1E1B4B] sm:text-4xl">
-              How we keep young people safe
+            <h2 className="text-[32px] font-extrabold tracking-tight sm:text-[42px]">
+              One network. <span className="text-[#F5C518]">Four ways in.</span>
             </h2>
-            <p className="mt-4 leading-relaxed text-gray-600">
-              These are design decisions, not promises, and they aren&apos;t going to
-              change as we grow.
-            </p>
-            <p className="mt-4 text-sm leading-relaxed text-gray-500">
-              LinkY101 is not a support service. If a young person raises something
-              that needs real help, we say so plainly and point them to Childline and
-              Shout rather than pretending we can handle it.
+            <p className="mx-auto mt-4 max-w-[620px] text-[16.5px] leading-relaxed text-[#475569]">
+              Every mentor is checked before they can answer anything. Nothing on
+              LinkY101 is visible to the public internet.
             </p>
           </FadeIn>
 
-          <ul className="flex flex-col gap-3">
-            {SAFETY.map((line, i) => (
-              <FadeIn key={line} index={i} from="right">
-              <li className="flex gap-3.5 rounded-2xl border-2 border-white bg-white p-4 shadow-sm">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#10B981] text-[11px] font-bold text-white">
-                  ✓
-                </span>
-                <span className="text-sm leading-relaxed text-gray-700">{line}</span>
-              </li>
-              </FadeIn>
-            ))}
-          </ul>
+          <div className="mx-auto mt-14 grid max-w-[980px] gap-6 text-left md:grid-cols-2">
+            {LANES.map((lane, i) => {
+              const inner = (
+                <>
+                  <div className={`relative h-24 border-b border-[#0F172A]/15 ${lane.banner}`}>
+                    <span className="absolute right-5 top-4 text-[22px]">{lane.emoji}</span>
+                    <span className="absolute left-6 top-[60px] flex h-[52px] w-[52px] items-center justify-center rounded-2xl border-4 border-white bg-[#0F172A] text-[22px]">
+                      {lane.emoji}
+                    </span>
+                  </div>
+                  <div className="px-7 pb-8 pt-12">
+                    <p className="mb-2 text-[12px] font-extrabold uppercase tracking-wide text-[#B45309]">
+                      {lane.badge}
+                    </p>
+                    <h3 className="text-[22px] font-extrabold">{lane.title}</h3>
+                    <p className="mt-2.5 text-[14.5px] leading-relaxed text-[#475569]">{lane.body}</p>
+                    <span className="mt-4 inline-block text-[14.5px] font-extrabold text-[#0F172A]">
+                      {lane.cta}
+                    </span>
+                  </div>
+                </>
+              );
+
+              const shell =
+                "block h-full overflow-hidden rounded-3xl bg-white shadow-[0_10px_30px_rgba(15,23,42,0.06)] transition-shadow hover:shadow-[0_18px_40px_rgba(15,23,42,0.14)]";
+
+              return (
+                <FadeIn key={lane.title} index={i}>
+                  <HoverLift className="h-full">
+                    {lane.external ? (
+                      <a href={lane.href} className={shell}>
+                        {inner}
+                      </a>
+                    ) : (
+                      <Link href={lane.href} className={shell}>
+                        {inner}
+                      </Link>
+                    )}
+                  </HoverLift>
+                </FadeIn>
+              );
+            })}
+          </div>
         </div>
       </section>
 
-      {/* Schools */}
-      <section id="schools" className="scroll-mt-20 border-t border-white/70 bg-[#DBE7FB] py-20">
-        <div className="mx-auto max-w-4xl px-5">
-          <FadeIn>
-          <div className="rounded-3xl border border-[#F59E0B]/30 bg-[#FFFBEB] p-9 text-center">
-            <h2 className="text-3xl font-extrabold tracking-tight text-[#1E1B4B]">
-              Run a free pilot at your school
+      {/* THE SPARK */}
+      <section className="relative overflow-hidden bg-[#0F172A] px-5 py-24 text-white lg:px-12">
+        <div className="mx-auto grid max-w-6xl gap-14 lg:grid-cols-2">
+          <FadeIn from="left">
+            <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2.5 text-[13px] font-bold">
+              THE SPARK ✨
+            </span>
+            <h2 className="text-[32px] font-extrabold leading-tight tracking-tight sm:text-[42px]">
+              One 14-year-old with a business idea and{" "}
+              <span className="text-[#F5C518]">nowhere to go.</span>
             </h2>
-            <p className="mx-auto mt-4 max-w-xl leading-relaxed text-gray-600">
-              Your students get the lessons, the podcast, the ambassadors and the
-              mentor Q&amp;A. You get something for enterprise and careers that
-              doesn&apos;t need planning, marking or a subscription.
+          </FadeIn>
+
+          <FadeIn from="right">
+            <p className="text-[16px] leading-[1.7] text-[#CBD5E1]">
+              Our founder hit this wall at 14. She had the idea and the drive — but{" "}
+              <b className="text-white">no platform existed that was built for her.</b>{" "}
+              LinkedIn starts at 16 and is written for people with a career behind
+              them. Everything else is either a social feed or a classroom.
             </p>
-            {/* A school won't create a member account to enquire — they email.
-                Opens their mail app with the subject already filled in so
-                pilot enquiries are easy to spot in the inbox. */}
-            <a
-              href="mailto:linky101team@gmail.com?subject=LinkY101%20school%20pilot&body=Hi%20LinkY101%2C%0A%0AI%27d%20like%20to%20find%20out%20more%20about%20running%20a%20pilot%20at%20our%20school.%0A%0ASchool%3A%0AMy%20role%3A%0A"
-              className="mt-7 inline-block rounded-full bg-[#1E1B4B] px-8 py-3.5 text-base font-extrabold text-white transition-transform hover:-translate-y-0.5"
+            <p className="mt-5 text-[16px] leading-[1.7] text-[#CBD5E1]">
+              The country isn&apos;t short on young entrepreneurial talent. It&apos;s
+              short on the professional scaffolding to hold it up — which is what
+              this is.
+            </p>
+            <div className="mt-6 rounded-[20px] rounded-bl-[4px] bg-[#F5C518] px-7 py-6 text-[16.5px] font-bold leading-snug text-[#0F172A]">
+              💛 &ldquo;LinkY101 is where you become someone. LinkedIn is where you
+              show everyone you already are.&rdquo;
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* SAFETY STRIP — the line an adult is scanning for */}
+      <section className="border-y-[2.5px] border-[#0F172A] bg-[#BBF7D0] px-5 py-16 lg:px-12">
+        <FadeIn>
+          <div className={`mx-auto max-w-3xl bg-white px-8 py-9 text-center ${CARD}`}>
+            <p className="text-[26px]">🛡️</p>
+            <h2 className="mt-3 text-[26px] font-extrabold tracking-tight sm:text-[32px]">
+              No direct messages. Anywhere.
+            </h2>
+            <p className="mt-4 text-[15.5px] leading-relaxed text-[#475569]">
+              There is nowhere on LinkY101 for an adult to message a young person
+              privately. Questions go to the whole mentor panel, every answer is read
+              by a named adult before it&apos;s published, and anything shared publicly
+              has the asker&apos;s name removed.
+            </p>
+            <Link
+              href="/safeguarding"
+              className="mt-7 inline-block rounded-full border-[2.5px] border-[#0F172A] bg-[#F5C518] px-7 py-3.5 text-[15px] font-extrabold text-[#0F172A] shadow-[3px_3px_0_#0F172A] transition-transform hover:-translate-y-0.5"
             >
-              Email us →
-            </a>
-            <p className="mt-4 text-sm font-semibold text-[#92400E]">
-              linky101team@gmail.com
-            </p>
+              How safeguarding works →
+            </Link>
           </div>
-          </FadeIn>
-        </div>
+        </FadeIn>
       </section>
 
-      {/* One coloured band, at the end, where it earns its place */}
-      <section className="grad-hero py-16">
-        <div className="mx-auto max-w-3xl px-5 text-center">
-          <FadeIn>
-          <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-            Start before you&apos;re ready.
+      {/* FINAL CTA */}
+      <section className="bg-[radial-gradient(circle_at_0%_0%,#F3D9E8_0%,#DBEAFE_40%,#D3F5DF_100%)] px-5 py-24 text-center lg:px-12">
+        <FadeIn>
+          <h2 className="text-[32px] font-extrabold leading-tight tracking-tight sm:text-[46px]">
+            Ready to{" "}
+            <mark className="bg-[#F5C518] px-2 text-[#0F172A]">become someone?</mark>{" "}
+            🚀
           </h2>
-          <p className="mx-auto mt-3 max-w-md leading-relaxed text-white/90">
-            Ready is something you become. Joining takes about a minute.
+          <p className="mt-5 text-[16px] text-[#475569]">
+            Free for 13&ndash;19 year olds across the UK. Joining takes about a minute.
           </p>
-          <Link
-            href="/signup"
-            className="mt-7 inline-block rounded-full bg-white px-9 py-3.5 text-base font-extrabold text-[#7C3AED] shadow-lg transition-transform hover:-translate-y-0.5"
-          >
-            Join LinkY101
+          <Link href="/signup" className={`${BTN_DARK} mt-8`}>
+            Join LinkY101 →
           </Link>
-          </FadeIn>
-        </div>
+        </FadeIn>
       </section>
 
-      <footer className="border-t border-white/70 bg-[#DBE7FB] py-10">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 px-5 text-center">
-          <span className="text-lg font-extrabold tracking-tight text-[#111111]">
-            LinkY<span className="text-[#F5B301]">101</span>
-          </span>
-          <p className="text-xs text-gray-500">
-            The UK network for young entrepreneurs aged 13–19.
-          </p>
-          <div className="mt-2 flex gap-5 text-xs font-bold text-gray-500">
-            <Link href="/login" className="hover:text-[#7C3AED]">
-              Log in
-            </Link>
-            <Link href="/signup" className="hover:text-[#7C3AED]">
-              Join free
-            </Link>
-            <Link href="#safety" className="hover:text-[#7C3AED]">
-              Safety
-            </Link>
-            <a href="mailto:linky101team@gmail.com" className="hover:text-[#7C3AED]">
-              Contact
-            </a>
-          </div>
-        </div>
-      </footer>
+      <MarketingFooter />
     </main>
   );
 }
