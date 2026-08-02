@@ -13,10 +13,14 @@ import { FadeIn, FloatIn, HoverLift } from "@/components/landing/Animate";
  * standing behind them that it's safe. The second job is the one most teen
  * platforms skip, and it's the one a school checks first.
  *
- * Built the way product sites are built rather than like a poster: white
- * ground, a preview of the actual app beside the headline, and colour used as
- * accent. A full-bleed gradient reads as a flyer — showing the thing working
- * is what makes someone believe it exists.
+ * Built the way product sites are built rather than like a poster: a preview
+ * of the actual app beside the headline, and colour used as accent. A
+ * full-bleed gradient reads as a flyer — showing the thing working is what
+ * makes someone believe it exists.
+ *
+ * The soft blue ground is LinkY101's, carried over from the original design.
+ * Bands alternate blue and white so the page has rhythm rather than being one
+ * flat colour top to bottom.
  *
  * Signed-in visitors never see it — middleware sends them straight to /home.
  */
@@ -70,7 +74,7 @@ const SAFETY = [
  */
 function AppPreview() {
   return (
-    <div className="rounded-3xl border border-gray-200 bg-white p-3 shadow-2xl">
+    <div className="rounded-3xl border border-white bg-white p-3 shadow-2xl">
       <div className="rounded-2xl bg-[#F5F3FF] p-4">
         <div className="mb-3 flex items-center justify-between">
           <span className="text-sm font-extrabold tracking-tight text-[#111111]">
@@ -139,8 +143,8 @@ export default function LandingPage() {
   const faces = AMBASSADORS.slice(0, 7);
 
   return (
-    <main className="min-h-screen bg-white">
-      <header className="sticky top-0 z-40 border-b border-gray-100 bg-white/90 backdrop-blur">
+    <main className="min-h-screen bg-[#E8F0FE]">
+      <header className="sticky top-0 z-40 border-b border-white bg-[#E8F0FE]/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
           <span className="text-xl font-extrabold tracking-tight text-[#111111]">
             LinkY<span className="text-[#F5B301]">101</span>
@@ -161,7 +165,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-2">
             <Link
               href="/login"
-              className="rounded-full px-4 py-2 text-sm font-bold text-[#1E1B4B] hover:bg-gray-50"
+              className="rounded-full px-4 py-2 text-sm font-bold text-[#1E1B4B] hover:bg-white/70"
             >
               Log in
             </Link>
@@ -181,7 +185,7 @@ export default function LandingPage() {
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div>
             <FadeIn>
-              <span className="inline-flex items-center gap-2 rounded-full border border-[#E9E5F5] bg-[#F5F3FF] px-3.5 py-1.5 text-xs font-extrabold text-[#7C3AED]">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white bg-white px-3.5 py-1.5 text-xs font-extrabold text-[#7C3AED]">
                 🇬🇧 Free for 13–19 year olds in the UK
               </span>
             </FadeIn>
@@ -211,7 +215,7 @@ export default function LandingPage() {
               </Link>
               <Link
                 href="#safety"
-                className="rounded-full border-2 border-gray-200 px-7 py-3.5 text-base font-extrabold text-[#1E1B4B] transition-colors hover:border-[#1E1B4B]"
+                className="rounded-full border-2 border-white bg-white/60 px-7 py-3.5 text-base font-extrabold text-[#1E1B4B] transition-colors hover:bg-white"
               >
                 For parents &amp; schools
               </Link>
@@ -246,7 +250,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section id="features" className="scroll-mt-20 border-t border-gray-100 bg-[#FAFAFF] py-20">
+      <section id="features" className="scroll-mt-20 bg-white py-20">
         <div className="mx-auto max-w-6xl px-5">
           <FadeIn>
             <h2 className="max-w-2xl text-3xl font-extrabold tracking-tight text-[#1E1B4B] sm:text-4xl">
@@ -260,7 +264,7 @@ export default function LandingPage() {
           <div className="mt-10 grid gap-5 sm:grid-cols-2">
             {FEATURES.map((f, i) => (
               <FadeIn key={f.title} index={i}>
-              <HoverLift className="h-full rounded-2xl border border-gray-200 bg-white p-6 transition-shadow hover:shadow-lg">
+              <HoverLift className="h-full rounded-2xl border border-[#E4EBF7] bg-white p-6 transition-shadow hover:shadow-lg">
                 <span className={`flex h-11 w-11 items-center justify-center rounded-xl text-2xl ${f.tint}`}>
                   {f.emoji}
                 </span>
@@ -287,7 +291,7 @@ export default function LandingPage() {
             <HoverLift>
             <Link
               href="/signup"
-              className="block overflow-hidden rounded-2xl border border-gray-200 transition-shadow hover:shadow-lg"
+              className="block overflow-hidden rounded-2xl border border-[#D6E4FB] bg-white transition-shadow hover:shadow-lg"
             >
               <div className="grad-brand h-1.5" />
               <div className="p-6">
@@ -308,7 +312,7 @@ export default function LandingPage() {
             <HoverLift>
             <Link
               href="#safety"
-              className="block overflow-hidden rounded-2xl border border-gray-200 transition-shadow hover:shadow-lg"
+              className="block overflow-hidden rounded-2xl border border-[#D6E4FB] bg-white transition-shadow hover:shadow-lg"
             >
               <div className="h-1.5 bg-[#10B981]" />
               <div className="p-6">
@@ -329,7 +333,7 @@ export default function LandingPage() {
             <HoverLift>
             <Link
               href="#schools"
-              className="block overflow-hidden rounded-2xl border border-gray-200 transition-shadow hover:shadow-lg"
+              className="block overflow-hidden rounded-2xl border border-[#D6E4FB] bg-white transition-shadow hover:shadow-lg"
             >
               <div className="h-1.5 bg-[#F59E0B]" />
               <div className="p-6">
@@ -350,7 +354,7 @@ export default function LandingPage() {
       </section>
 
       {/* Safety — the section a parent or safeguarding lead is looking for */}
-      <section id="safety" className="scroll-mt-20 border-y border-gray-100 bg-[#F6FEFA] py-20">
+      <section id="safety" className="scroll-mt-20 bg-white py-20">
         <div className="mx-auto grid max-w-6xl gap-10 px-5 lg:grid-cols-[1fr_1.2fr]">
           <FadeIn from="left">
             <span className="inline-block rounded-full bg-[#D1FAE5] px-3.5 py-1.5 text-xs font-extrabold uppercase tracking-wide text-[#047857]">
@@ -373,7 +377,7 @@ export default function LandingPage() {
           <ul className="flex flex-col gap-3">
             {SAFETY.map((line, i) => (
               <FadeIn key={line} index={i} from="right">
-              <li className="flex gap-3.5 rounded-2xl border border-gray-200 bg-white p-4">
+              <li className="flex gap-3.5 rounded-2xl border border-[#D6E4FB] bg-[#F7FAFF] p-4">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#10B981] text-[11px] font-bold text-white">
                   ✓
                 </span>
@@ -429,7 +433,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <footer className="border-t border-gray-100 py-10">
+      <footer className="border-t border-white bg-[#E8F0FE] py-10">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 px-5 text-center">
           <span className="text-lg font-extrabold tracking-tight text-[#111111]">
             LinkY<span className="text-[#F5B301]">101</span>
