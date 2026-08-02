@@ -8,6 +8,8 @@ import type { Mentor } from "@/components/mentors/MentorCard";
 import MentorGrid from "@/components/mentors/MentorGrid";
 import QuestionCard, { type MentorQuestion } from "@/components/mentors/QuestionCard";
 import AskQuestionModal from "@/components/mentors/AskQuestionModal";
+import { questionsLeftThisWeek } from "@/lib/actions/mentors";
+import { WEEKLY_QUESTION_LIMIT } from "@/lib/mentorLimits";
 import { Reveal } from "@/components/ui/Reveal";
 
 export default function MentorsPage() {
@@ -16,21 +18,45 @@ export default function MentorsPage() {
 
   const [mentors, setMentors] = useState<Mentor[]>([]);
   const [questions, setQuestions] = useState<MentorQuestion[]>([]);
+  const [feed, setFeed] = useState<MentorQuestion[]>([]);
   const [ratedQuestionIds, setRatedQuestionIds] = useState<Set<string>>(new Set());
-  const [tab, setTab] = useState<"all" | "mine">("all");
+  const [questionsLeft, setQuestionsLeft] = useState(0);
   const [loading, setLoading] = useState(true);
   const [showAsk, setShowAsk] = useState(false);
 
+  // Two separate loads, because they are two different things now.
+  //
+  // `questions` is yours — every question you have asked, answered or not.
+  // `feed` is the handful of answers picked for the week, read by everyone,
+  // and deliberately selected WITHOUT joining the asker, so there is no way
+  // for the client to work out who asked what.
   async function loadQuestions() {
-    const { data } = await supabase
-      .from("mentor_questions")
-      .select(
-        "id, question_text, answer_text, asked_by, mentor_id, answered_by, created_at, asker:profiles!mentor_questions_asked_by_fkey(first_name), answerer:mentors!mentor_questions_answered_by_fkey(display_name)"
-      )
-      .eq("is_public", true)
-      .order("created_at", { ascending: false })
-      .limit(30);
-    setQuestions((data ?? []) as unknown as MentorQuestion[]);
+    if (!profile) return;
+
+    const [mine, published, left] = await Promise.all([
+      supabase
+        .from("mentor_questions")
+        .select(
+          "id, question_text, answer_text, asked_by, mentor_id, answered_by, created_at, answerer:mentors!mentor_questions_answered_by_fkey(display_name)"
+        )
+        .eq("asked_by", profile.id)
+        .order("created_at", { ascending: false })
+        .limit(30),
+      supabase
+        .from("mentor_questions")
+        .select(
+          "id, question_text, answer_text, mentor_id, answered_by, created_at, answerer:mentors!mentor_questions_answered_by_fkey(display_name)"
+        )
+        .eq("is_published", true)
+        .not("answer_text", "is", null)
+        .order("published_at", { ascending: false })
+        .limit(20),
+      questionsLeftThisWeek(),
+    ]);
+
+    setQuestions((mine.data ?? []) as unknown as MentorQuestion[]);
+    setFeed((published.data ?? []) as unknown as MentorQuestion[]);
+    setQuestionsLeft(left);
   }
 
   useEffect(() => {
@@ -62,9 +88,6 @@ export default function MentorsPage() {
   if (!profile) {
     return <p className="text-sm font-semibold text-gray-400">Loading...</p>;
   }
-
-  const visibleQuestions =
-    tab === "mine" ? questions.filter((q) => q.asked_by === profile.id) : questions;
 
   return (
     <div className="flex flex-col gap-5 pb-16">
@@ -104,48 +127,59 @@ export default function MentorsPage() {
       </Reveal>
 
       <div className="mt-1">
-        <h2 className="text-lg font-extrabold text-[#1E1B4B]">❓ Ask them anything</h2>
+        <h2 className="text-lg font-extrabold text-[#1E1B4B]">❓ Your questions</h2>
         <p className="text-sm text-gray-500">
-          Post a question — the best ones get answered publicly every week
+          Only you, the mentors and the LinkY101 team can see these
         </p>
-      </div>
-
-      <div className="flex gap-2 rounded-full border border-gray-200 bg-white p-1 shadow-sm">
-        {(["all", "mine"] as const).map((t) => (
-          <button
-            key={t}
-            type="button"
-            onClick={() => setTab(t)}
-            className={`flex-1 rounded-full py-2 text-xs font-bold transition-all ${
-              tab === t ? "grad-brand text-white" : "text-gray-500"
-            }`}
-          >
-            {t === "all" ? "All questions" : "My questions"}
-          </button>
-        ))}
       </div>
 
       {loading ? (
         <p className="text-sm font-semibold text-gray-400">Loading...</p>
-      ) : visibleQuestions.length === 0 ? (
+      ) : questions.length === 0 ? (
         <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm">
           <span className="text-4xl">❓</span>
-          <p className="mt-2 font-bold text-[#1E1B4B]">
-            {tab === "mine" ? "You haven't asked anything yet" : "No questions yet"}
+          <p className="mt-2 font-bold text-[#1E1B4B]">You haven&apos;t asked anything yet</p>
+          <p className="mx-auto mt-1 max-w-xs text-sm text-gray-500">
+            You get {WEEKLY_QUESTION_LIMIT} a week. Ask the thing you&apos;d actually want to
+            know from someone who has done it.
           </p>
-          <p className="text-sm text-gray-500">
-            Tap + and ask — what would you love to know from a real founder?
-          </p>
+          <button
+            type="button"
+            onClick={() => setShowAsk(true)}
+            className="grad-brand mt-4 rounded-full px-5 py-2.5 text-sm font-bold text-white transition-transform active:scale-95"
+          >
+            Ask all our mentors
+          </button>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          {visibleQuestions.map((q) => (
+          {questions.map((q) => (
             <QuestionCard
               key={q.id}
               question={q}
               currentUserId={profile.id}
               alreadyRated={ratedQuestionIds.has(q.id)}
             />
+          ))}
+        </div>
+      )}
+
+      <div className="mt-2">
+        <h2 className="text-lg font-extrabold text-[#1E1B4B]">🏆 This week&apos;s answers</h2>
+        <p className="text-sm text-gray-500">
+          The best questions members asked — names removed
+        </p>
+      </div>
+
+      {feed.length === 0 ? (
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm">
+          <p className="font-bold text-[#1E1B4B]">Nothing published yet</p>
+          <p className="text-sm text-gray-500">The first answers go up this week.</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {feed.map((q) => (
+            <QuestionCard key={q.id} question={q} anonymous />
           ))}
         </div>
       )}
@@ -165,7 +199,7 @@ export default function MentorsPage() {
 
       <AskQuestionModal
         isOpen={showAsk}
-        mentors={mentors}
+        questionsLeft={questionsLeft}
         onClose={() => setShowAsk(false)}
         onSubmitted={loadQuestions}
       />

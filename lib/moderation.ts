@@ -102,10 +102,16 @@ export function moderateContent(text: string): ModerationResult {
     };
   }
   if (containsAny(lower, SELF_HARM_KEYWORDS)) {
+    // LinkY101 is not a support service and deliberately does not try to be:
+    // this never reaches a mentor and is never published. But declining in
+    // silence is not good enough on a platform used by 13-19 year olds, so
+    // the refusal names people whose actual job this is. Keep it short and
+    // undramatic — a wall of concern makes people close the tab.
     return {
       approved: false,
       flagged: true,
-      reason: "This mentions self-harm. If you're struggling, please talk to a trusted adult or a helpline.",
+      reason:
+        "We can't help with this one, sorry — it's not what LinkY101 is for. Please talk to someone who can: Childline on 0800 1111, or text SHOUT to 85258. Both are free and open right now.",
     };
   }
   if (containsAny(lower, BULLYING_KEYWORDS)) {

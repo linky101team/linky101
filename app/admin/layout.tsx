@@ -16,6 +16,7 @@ const SECTIONS = [
   { href: "/admin/quizzes", label: "Quizzes", emoji: "🧠" },
   { href: "/admin/opportunities", label: "Opportunities", emoji: "🎯" },
   { href: "/admin/mentors", label: "Mentors", emoji: "🤝" },
+  { href: "/admin/questions", label: "Questions", emoji: "❓" },
   { href: "/admin/shop", label: "Shop", emoji: "🛍️" },
   { href: "/admin/faq", label: "FAQ", emoji: "❓" },
 ];
