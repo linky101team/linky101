@@ -359,7 +359,7 @@ export default function LandingPage() {
                   pilots running this term.
                 </p>
                 <span className="mt-4 inline-block text-sm font-extrabold text-[#B45309]">
-                  Talk to us →
+                  Email us →
                 </span>
               </div>
             </Link>
@@ -467,6 +467,9 @@ export default function LandingPage() {
             <Link href="#safety" className="hover:text-[#7C3AED]">
               Safety
             </Link>
+            <a href="mailto:linky101team@gmail.com" className="hover:text-[#7C3AED]">
+              Contact
+            </a>
           </div>
         </div>
       </footer>
