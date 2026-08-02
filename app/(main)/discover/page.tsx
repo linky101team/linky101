@@ -17,7 +17,7 @@ import { UK_REGIONS } from "@/lib/regions";
 
 const HUB = [
   {
-    href: "/mentors",
+    href: "/ambassadors",
     icon: Star,
     label: "Ambassadors",
     body: "Real founders sharing one hard-won lesson each",
@@ -136,10 +136,10 @@ export default function DiscoverPage() {
         <AmbassadorGrid />
 
         <Link
-          href="/mentors"
+          href="/ambassadors"
           className="mt-4 block rounded-2xl border border-gray-200 bg-white py-3 text-center text-sm font-bold text-[#7C3AED]"
         >
-          Ask them a question →
+          See all ambassadors →
         </Link>
       </section>
 

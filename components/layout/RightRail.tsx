@@ -94,7 +94,7 @@ export default function RightRail({ profile }: RightRailProps) {
 
       <Reveal index={2}>
         <Link
-          href="/mentors"
+          href="/ambassadors"
           className="block rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition-transform hover:-translate-y-0.5"
         >
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-gray-400">Ambassador spotlight</p>

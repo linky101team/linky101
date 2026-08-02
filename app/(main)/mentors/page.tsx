@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { createClientSupabase } from "@/lib/supabase/client";
 import { useProfile } from "@/hooks/useProfile";
-import AmbassadorGrid from "@/components/discover/AmbassadorGrid";
 import type { Mentor } from "@/components/mentors/MentorCard";
 import MentorGrid from "@/components/mentors/MentorGrid";
 import QuestionCard, { type MentorQuestion } from "@/components/mentors/QuestionCard";
@@ -72,9 +71,9 @@ export default function MentorsPage() {
       <Reveal>
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-extrabold text-[#1E1B4B]">Ambassadors ⭐</h1>
+            <h1 className="text-2xl font-extrabold text-[#1E1B4B]">Mentors 🛡️</h1>
             <p className="text-sm text-gray-500">
-              Real founders sharing one hard-won lesson each
+              DBS-checked adults. Ask anything — answers go up publicly.
             </p>
           </div>
           <button
@@ -87,33 +86,22 @@ export default function MentorsPage() {
         </div>
       </Reveal>
 
-      <AmbassadorGrid />
+      <MentorGrid mentors={mentors} />
 
       <Reveal>
-        <div className="grad-gold rounded-2xl border border-[#F59E0B]/40 p-5">
-          <p className="font-extrabold text-[#92400E]">💡 Become an Ambassador</p>
+        <Link
+          href="/ambassadors"
+          className="block rounded-2xl border border-[#F59E0B]/40 bg-[#FEF3C7] p-5 transition-transform active:scale-[0.99]"
+        >
+          <p className="font-extrabold text-[#92400E]">⭐ Meet the ambassadors</p>
           <p className="mt-1 text-sm leading-relaxed text-[#92400E]">
-            Give ten minutes of your story and inspire the next generation of founders.
+            Founders from across the UK sharing how they actually got started.
           </p>
-          <Link
-            href="/feedback"
-            className="mt-3 inline-block rounded-full bg-[#1E1B4B] px-5 py-2 text-sm font-bold text-white transition-transform active:scale-95"
-          >
-            Get in touch →
-          </Link>
-        </div>
+          <span className="mt-3 inline-block text-sm font-bold text-[#92400E]">
+            Browse ambassadors →
+          </span>
+        </Link>
       </Reveal>
-
-      {/* Mentors were being loaded and then never rendered — they only ever
-          reached the ask-a-question dropdown. They belong on the page. */}
-      <div className="mt-1">
-        <h2 className="text-lg font-extrabold text-[#1E1B4B]">🛡️ Verified mentors</h2>
-        <p className="text-sm text-gray-500">
-          DBS-checked adults. Everyone can see them and ask — answers are public.
-        </p>
-      </div>
-
-      <MentorGrid mentors={mentors} />
 
       <div className="mt-1">
         <h2 className="text-lg font-extrabold text-[#1E1B4B]">❓ Ask them anything</h2>

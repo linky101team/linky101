@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, Home, BookOpen, Mic, Compass, User, Star, Sparkles, Wrench, Trophy, Crown } from "lucide-react";
+import { Bell, Home, BookOpen, Mic, Compass, User, Star, ShieldCheck, Sparkles, Wrench, Trophy, Crown } from "lucide-react";
 import type { Profile } from "@/hooks/useProfile";
 
 const PRIMARY = [
@@ -14,7 +14,11 @@ const PRIMARY = [
 ];
 
 const SECONDARY = [
-  { href: "/mentors", icon: Star, color: "#7C3AED", tint: "#F3E8FF", label: "Ambassadors" },
+  // Two separate entries on purpose. Ambassadors are founders telling their
+  // story; mentors are DBS-checked adults you can ask a question. Collapsing
+  // them into one link hid that difference from members and from parents.
+  { href: "/ambassadors", icon: Star, color: "#F59E0B", tint: "#FEF3C7", label: "Ambassadors" },
+  { href: "/mentors", icon: ShieldCheck, color: "#10B981", tint: "#D1FAE5", label: "Mentors" },
   { href: "/dreams", icon: Sparkles, color: "#EC4899", tint: "#FCE7F3", label: "Dream Wall" },
   { href: "/tools", icon: Wrench, color: "#06B6D4", tint: "#CFFAFE", label: "Founder Tools" },
 ];
